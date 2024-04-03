@@ -1,0 +1,379 @@
+% LaTeX Parameters File
+\newcommand{\nrTimesteps}{\#_{timesteps}}
+\newcommand{\nrTimestepsValue}{200}
+\newcommand{\nrTimestepsDesc}{number of timesteps}
+\newcommand{\nrMonteCarlo}{\#_{MonteCarlo}}
+\newcommand{\nrMonteCarloValue}{50}
+\newcommand{\nrMonteCarloDesc}{number of Monte Carlo repetitions}
+\newcommand{\maxNumberOfMatchingRounds}{{\#^{matching}_{rounds}}_{max}}
+\newcommand{\maxNumberOfMatchingRoundsValue}{50}
+\newcommand{\maxNumberOfMatchingRoundsDesc}{maximum number of rounds in a market during matching}
+\newcommand{\epsilonPrecision}{\epsilon_{precision}}
+\newcommand{\epsilonPrecisionValue}{0.001}
+\newcommand{\epsilonPrecisionDesc}{precision parameter to avoid floating point errors}
+\newcommand{\adaptiveExpectation}{\alpha_{exp}}
+\newcommand{\adaptiveExpectationValue}{0.5}
+\newcommand{\adaptiveExpectationDesc}{adaptive expectation parameter}
+\newcommand{\logitCompetitionParam}{\gamma^{logit}}
+\newcommand{\logitCompetitionParamValue}{5}
+\newcommand{\logitCompetitionParamDesc}{logit competition parameter}
+\newcommand{\finalGoodBuffer}{\beta_{FG}}
+\newcommand{\finalGoodBufferValue}{0.1}
+\newcommand{\finalGoodBufferDesc}{final good inventory buffer parameter}
+\newcommand{\materialBuffer}{\beta_{M}}
+\newcommand{\materialBufferValue}{0.3}
+\newcommand{\materialBufferDesc}{material inventory buffer parameter}
+\newcommand{\energyBuffer}{\beta_{E}}
+\newcommand{\energyBufferValue}{0.5}
+\newcommand{\energyBufferDesc}{desired excess capacity of the energy grid}
+\newcommand{\cashBuffer}{\beta_{cash}}
+\newcommand{\cashBufferValue}{0.5}
+\newcommand{\cashBufferDesc}{how much cash a firm would want to keep}
+\newcommand{\muMarkup}{\mu_{FN_{markup}}}
+\newcommand{\muMarkupValue}{0.02}
+\newcommand{\muMarkupDesc}{Folded Normal Distribution expected value for markup adjustment}
+\newcommand{\sigmaSqMarkup}{\sigma^2_{FN_{markup}}}
+\newcommand{\sigmaSqMarkupValue}{0.008}
+\newcommand{\sigmaSqMarkupDesc}{Folded Normal Distribution variance for markup adjustment}
+\newcommand{\fgLaborProductivity}{\alpha^{FG}}
+\newcommand{\fgLaborProductivityValue}{15}
+\newcommand{\fgLaborProductivityDesc}{ labor productivity in final good sector}
+\newcommand{\fgCapitalLifeSpan}{\tau^{K_{FG}}}
+\newcommand{\fgCapitalLifeSpanValue}{10}
+\newcommand{\fgCapitalLifeSpanDesc}{useful lifespan of final good capital}
+\newcommand{\fgCapitalDepreciationRate}{\delta^{K_{FG}}}
+\newcommand{\fgCapitalDepreciationRateValue}{0.1}
+\newcommand{\fgCapitalDepreciationRateDesc}{depreciation rate of final good capital}
+\newcommand{\fgCapitalLoanDuration}{\eta^{K_{FG}}}
+\newcommand{\fgCapitalLoanDurationValue}{10}
+\newcommand{\fgCapitalLoanDurationDesc}{duration of a loan to cover final good capital investment}
+\newcommand{\fgCapitalDeliveryTime}{{dt}^{{K}_{FG}}}
+\newcommand{\fgCapitalDeliveryTimeValue}{1}
+\newcommand{\fgCapitalDeliveryTimeDesc}{time to deliver final good capital}
+\newcommand{\fgEntryProbability}{{prob}^{FG}}
+\newcommand{\fgEntryProbabilityValue}{0}
+\newcommand{\fgEntryProbabilityDesc}{entry probability of a final good firm}
+\newcommand{\reLaborProductivity}{\alpha^{RE}}
+\newcommand{\reLaborProductivityValue}{10}
+\newcommand{\reLaborProductivityDesc}{ labor productivity in renewable energy sector}
+\newcommand{\feLaborProductivity}{\alpha^{FE}}
+\newcommand{\feLaborProductivityValue}{10}
+\newcommand{\feLaborProductivityDesc}{ labor productivity in fossil-fuel energy sector}
+\newcommand{\feFuelProductivity}{\phi}
+\newcommand{\feFuelProductivityValue}{20}
+\newcommand{\feFuelProductivityDesc}{thermal efficiency (energy-output-to-fuel-input ratio)}
+\newcommand{\fuelPrice}{p_{fuel}}
+\newcommand{\fuelPriceValue}{0.1}
+\newcommand{\fuelPriceDesc}{fuel price}
+\newcommand{\fuelPriceDrift}{\mu_{p_{fuel}}}
+\newcommand{\fuelPriceDriftValue}{0.002}
+\newcommand{\fuelPriceDriftDesc}{fuel price drift}
+\newcommand{\fuelPriceVolatility}{\sigma_{p_{fuel}}}
+\newcommand{\fuelPriceVolatilityValue}{3e-05}
+\newcommand{\fuelPriceVolatilityDesc}{fuel price volatility (variance of the Brownian motion)}
+\newcommand{\fuelPriceSensitivity}{\beta_{fuel}}
+\newcommand{\fuelPriceSensitivityValue}{0}
+\newcommand{\fuelPriceSensitivityDesc}{sensitivity of fuel price to fuel demand}
+\newcommand{\energyProductivity}{\varepsilon}
+\newcommand{\energyProductivityValue}{2}
+\newcommand{\energyProductivityDesc}{energy productivity in final good sector}
+\newcommand{\energyPricing}{{pricing}_{E}}
+\newcommand{\energyPricingValue}{0}
+\newcommand{\energyPricingDesc}{energy market pricing: 0 for weighted average, 1 for marginal}
+\newcommand{\reCapitalLifeSpan}{\tau^{K_{RE}}}
+\newcommand{\reCapitalLifeSpanValue}{20}
+\newcommand{\reCapitalLifeSpanDesc}{useful lifespan of renewable energy capital}
+\newcommand{\feCapitalLifeSpan}{\tau^{K_{FE}}}
+\newcommand{\feCapitalLifeSpanValue}{30}
+\newcommand{\feCapitalLifeSpanDesc}{useful lifespan of fossil-fuel energy capital}
+\newcommand{\reCapitalDepreciationRate}{\delta^{K_{RE}}}
+\newcommand{\reCapitalDepreciationRateValue}{0.05}
+\newcommand{\reCapitalDepreciationRateDesc}{depreciation rate of renewable energy capital}
+\newcommand{\feCapitalDepreciationRate}{\delta^{K_{FE}}}
+\newcommand{\feCapitalDepreciationRateValue}{0.0333}
+\newcommand{\feCapitalDepreciationRateDesc}{depreciation rate of fossil-fuel energy capital}
+\newcommand{\reCapitalLoanDuration}{\eta^{K_{RE}}}
+\newcommand{\reCapitalLoanDurationValue}{20}
+\newcommand{\reCapitalLoanDurationDesc}{duration of a loan to cover renewable energy capital investment}
+\newcommand{\feCapitalLoanDuration}{\eta^{K_{FE}}}
+\newcommand{\feCapitalLoanDurationValue}{30}
+\newcommand{\feCapitalLoanDurationDesc}{duration of a loan to cover fossil-fuel energy capital investment}
+\newcommand{\reCapitalDeliveryTime}{{dt}^{{K}_{RE}}}
+\newcommand{\reCapitalDeliveryTimeValue}{1}
+\newcommand{\reCapitalDeliveryTimeDesc}{time to deliver renewable energy capital}
+\newcommand{\feCapitalDeliveryTime}{{dt}^{{K}_{FE}}}
+\newcommand{\feCapitalDeliveryTimeValue}{1}
+\newcommand{\feCapitalDeliveryTimeDesc}{time to deliver fossil-fuel energy capital}
+\newcommand{\mLaborProductivity}{\alpha^{M}}
+\newcommand{\mLaborProductivityValue}{10}
+\newcommand{\mLaborProductivityDesc}{ labor productivity in material sector}
+\newcommand{\oreProductivity}{\rho}
+\newcommand{\oreProductivityValue}{1}
+\newcommand{\oreProductivityDesc}{ore productivity in material sector}
+\newcommand{\oreCostParamOne}{\gamma^{ore}_1}
+\newcommand{\oreCostParamOneValue}{0.3}
+\newcommand{\oreCostParamOneDesc}{ore extraction cost parameter 1 (ore cost of newly explored ore deposit)}
+\newcommand{\oreCostParamTwo}{\gamma^{ore}_2}
+\newcommand{\oreCostParamTwoValue}{0.5}
+\newcommand{\oreCostParamTwoDesc}{ore extraction cost parameter 2 (controls speed of ore cost increase)}
+\newcommand{\muOreDeposit}{\mu_{R^{D}}}
+\newcommand{\muOreDepositValue}{150}
+\newcommand{\muOreDepositDesc}{average ore deposit of the newly explored mining site}
+\newcommand{\minimumViableOreDeposit}{R^{D}_{min}}
+\newcommand{\minimumViableOreDepositValue}{7.5}
+\newcommand{\minimumViableOreDepositDesc}{minimum ore deposit that is viable for mining}
+\newcommand{\sigmaSqOreDeposit}{\sigma^2_{R^{D}}}
+\newcommand{\sigmaSqOreDepositValue}{400}
+\newcommand{\sigmaSqOreDepositDesc}{variance of ore deposit of the newly explored mining site}
+\newcommand{\sigmaOreCostParamOne}{\sigma^2_{\gamma^{ore}_1}}
+\newcommand{\sigmaOreCostParamOneValue}{0.05}
+\newcommand{\sigmaOreCostParamOneDesc}{variance of ore cost parameter 1}
+\newcommand{\materialPricing}{{pricing}_{M}}
+\newcommand{\materialPricingValue}{0}
+\newcommand{\materialPricingDesc}{material market pricing: 0 for weighted average, 1 for marginal}
+\newcommand{\randomPickOreDeposit}{\chi^{R^{D}}}
+\newcommand{\randomPickOreDepositValue}{0}
+\newcommand{\randomPickOreDepositDesc}{randomly pick ore deposit}
+\newcommand{\miningSiteExplorationProbability}{{prob}^{R^{D}}}
+\newcommand{\miningSiteExplorationProbabilityValue}{0.5}
+\newcommand{\miningSiteExplorationProbabilityDesc}{exploration probability of a mining site}
+\newcommand{\logitCompetitionParamMining}{\gamma^{logit}_{mining}}
+\newcommand{\logitCompetitionParamMiningValue}{10}
+\newcommand{\logitCompetitionParamMiningDesc}{logit competition parameter for mining site selection}
+\newcommand{\adaptiveExpectationMaterialPrice}{\alpha_{exp}^{p_{M,t}}}
+\newcommand{\adaptiveExpectationMaterialPriceValue}{0.5}
+\newcommand{\adaptiveExpectationMaterialPriceDesc}{adaptive expectation parameter for material price}
+\newcommand{\mCapitalLifeSpan}{\tau^{K_{M}}}
+\newcommand{\mCapitalLifeSpanValue}{30}
+\newcommand{\mCapitalLifeSpanDesc}{useful lifespan of material capital}
+\newcommand{\mCapitalDepreciationRate}{\delta^{K_{M}}}
+\newcommand{\mCapitalDepreciationRateValue}{0.0333}
+\newcommand{\mCapitalDepreciationRateDesc}{depreciation rate of material capital}
+\newcommand{\mCapitalLoanDuration}{\eta^{K_{M}}}
+\newcommand{\mCapitalLoanDurationValue}{30}
+\newcommand{\mCapitalLoanDurationDesc}{duration of a loan to cover material capital investment}
+\newcommand{\mCapitalDeliveryTime}{{dt}^{{K}_{M}}}
+\newcommand{\mCapitalDeliveryTimeValue}{1}
+\newcommand{\mCapitalDeliveryTimeDesc}{time to deliver material capital}
+\newcommand{\materialDeliveryTime}{{dt}^{M}}
+\newcommand{\materialDeliveryTimeValue}{0}
+\newcommand{\materialDeliveryTimeDesc}{time to deliver material}
+\newcommand{\fgcMaterialProductivity}{m^{K_{FG}}}
+\newcommand{\fgcMaterialProductivityValue}{1}
+\newcommand{\fgcMaterialProductivityDesc}{material productivity in final good capital sector}
+\newcommand{\recMaterialProductivity}{m^{K_{RE}}}
+\newcommand{\recMaterialProductivityValue}{2}
+\newcommand{\recMaterialProductivityDesc}{material productivity in renewable energy capital sector}
+\newcommand{\fecMaterialProductivity}{m^{K_{FE}}}
+\newcommand{\fecMaterialProductivityValue}{15}
+\newcommand{\fecMaterialProductivityDesc}{material productivity in fossil-fuel energy capital sector}
+\newcommand{\mcMaterialProductivity}{m^{K_{M}}}
+\newcommand{\mcMaterialProductivityValue}{7}
+\newcommand{\mcMaterialProductivityDesc}{material productivity in material capital sector}
+\newcommand{\wage}{w}
+\newcommand{\wageValue}{0.1}
+\newcommand{\wageDesc}{wage rate}
+\newcommand{\unemploymentBenefit}{u}
+\newcommand{\unemploymentBenefitValue}{0.05}
+\newcommand{\unemploymentBenefitDesc}{unemployment benefit}
+\newcommand{\propensityIncome}{c_{Y}^{HH}}
+\newcommand{\propensityIncomeValue}{0.8}
+\newcommand{\propensityIncomeDesc}{propensity to consume out of income}
+\newcommand{\propensityWealth}{c_{D}^{HH}}
+\newcommand{\propensityWealthValue}{0.1}
+\newcommand{\propensityWealthDesc}{propensity to consume out of wealth}
+\newcommand{\taxRate}{\theta^{tax}}
+\newcommand{\taxRateValue}{0.3}
+\newcommand{\taxRateDesc}{tax rate}
+\newcommand{\dividendRate}{\theta^{div}}
+\newcommand{\dividendRateValue}{0.01}
+\newcommand{\dividendRateDesc}{dividend payout ratio}
+\newcommand{\RDbudgetFraction}{\nu^{R\&D}}
+\newcommand{\RDbudgetFractionValue}{0.1}
+\newcommand{\RDbudgetFractionDesc}{fraction of net profit allocated for the R\&D}
+\newcommand{\imitationFraction}{\chi^{imit}}
+\newcommand{\imitationFractionValue}{0}
+\newcommand{\imitationFractionDesc}{fraction of the R\&D budget allocated towards imitation}
+\newcommand{\innovationFraction}{\chi^{innov}}
+\newcommand{\innovationFractionValue}{1}
+\newcommand{\innovationFractionDesc}{fraction of the R\&D budget allocated towards innovation}
+\newcommand{\RDsuccessParam}{\rho^{R\&D}}
+\newcommand{\RDsuccessParamValue}{0.8}
+\newcommand{\RDsuccessParamDesc}{parameter managing success probability of the R\&D process}
+\newcommand{\muProductInnovation}{\mu_{FN^{product}_{innov}}}
+\newcommand{\muProductInnovationValue}{0.003}
+\newcommand{\muProductInnovationDesc}{Folded Normal Distribution expected value for product innovation}
+\newcommand{\sigmaSqProductInnovation}{\sigma^2_{FN^{product}_{innov}}}
+\newcommand{\sigmaSqProductInnovationValue}{0.0008}
+\newcommand{\sigmaSqProductInnovationDesc}{Folded Normal Distribution variance for product innovation}
+\newcommand{\muProcessInnovation}{\mu_{FN^{process}_{innov}}}
+\newcommand{\muProcessInnovationValue}{0.002}
+\newcommand{\muProcessInnovationDesc}{Folded Normal Distribution expected value for process innovation}
+\newcommand{\sigmaSqProcessInnovation}{\sigma^2_{FN^{process}_{innov}}}
+\newcommand{\sigmaSqProcessInnovationValue}{0.0008}
+\newcommand{\sigmaSqProcessInnovationDesc}{Folded Normal Distribution variance for process innovation}
+\newcommand{\loanParamCritLeverage}{\lambda^{loan}_1}
+\newcommand{\loanParamCritLeverageValue}{0.5}
+\newcommand{\loanParamCritLeverageDesc}{critical value of leverage ratio, under which probability of granting loan falls below 0.5}
+\newcommand{\loanParamSpeedLeverage}{\lambda^{loan}_2}
+\newcommand{\loanParamSpeedLeverageValue}{10}
+\newcommand{\loanParamSpeedLeverageDesc}{bank's lending decision sensitivivity to borrower'leverage ratio bank}
+\newcommand{\bnkMaxLoanToDepositRatio}{\lambda^{loan}_3}
+\newcommand{\bnkMaxLoanToDepositRatioValue}{500}
+\newcommand{\bnkMaxLoanToDepositRatioDesc}{maximum loan to deposit ratio of a bank}
+\newcommand{\CBloanInterestRate}{r^{L_{CB}}}
+\newcommand{\CBloanInterestRateValue}{0.00015}
+\newcommand{\CBloanInterestRateDesc}{loan interest rate of the central bank}
+\newcommand{\CBdepositInterestRate}{r^{D_{CB}}}
+\newcommand{\CBdepositInterestRateValue}{0.0005}
+\newcommand{\CBdepositInterestRateDesc}{deposit interest rate of the central bank}
+\newcommand{\shortTermLoanDuration}{\tau^{short}}
+\newcommand{\shortTermLoanDurationValue}{10}
+\newcommand{\shortTermLoanDurationDesc}{duration of a short-term loan}
+\newcommand{\loanInterestRate}{r^{L}}
+\newcommand{\loanInterestRateValue}{0.001}
+\newcommand{\loanInterestRateDesc}{loan interest rate}
+\newcommand{\depositInterestRate}{r^{D}}
+\newcommand{\depositInterestRateValue}{0.0001}
+\newcommand{\depositInterestRateDesc}{deposit interest rate}
+\newcommand{\nrHouseholds}{\#_{HH}}
+\newcommand{\nrHouseholdsValue}{100}
+\newcommand{\nrHouseholdsDesc}{number of households}
+\newcommand{\nrFinalGoodCapitalFirms}{\#_{FGC}}
+\newcommand{\nrFinalGoodCapitalFirmsValue}{1}
+\newcommand{\nrFinalGoodCapitalFirmsDesc}{number of final good capital firms}
+\newcommand{\nrFinalGoodFirms}{\#_{FG}}
+\newcommand{\nrFinalGoodFirmsValue}{10}
+\newcommand{\nrFinalGoodFirmsDesc}{number of final good firms}
+\newcommand{\nrCommercialBanks}{\#_{BNK}}
+\newcommand{\nrCommercialBanksValue}{1}
+\newcommand{\nrCommercialBanksDesc}{number of commercial banks}
+\newcommand{\nrFossilFuelEnergyPowerPlants}{\#_{FE}}
+\newcommand{\nrFossilFuelEnergyPowerPlantsValue}{10}
+\newcommand{\nrFossilFuelEnergyPowerPlantsDesc}{number of fossil-fuel energy power plants}
+\newcommand{\nrRenewableEnergyPowerPlants}{\#_{RE}}
+\newcommand{\nrRenewableEnergyPowerPlantsValue}{2}
+\newcommand{\nrRenewableEnergyPowerPlantsDesc}{number of renewable energy power plants}
+\newcommand{\nrMaterialFirms}{\#_{M}}
+\newcommand{\nrMaterialFirmsValue}{5}
+\newcommand{\nrMaterialFirmsDesc}{number of material firms}
+\newcommand{\nrMiningSites}{\#_{R^{D}}}
+\newcommand{\nrMiningSitesValue}{100}
+\newcommand{\nrMiningSitesDesc}{number of mining sites}
+\newcommand{\nrFossilFuelEnergyCapitalFirms}{\#_{FEC}}
+\newcommand{\nrFossilFuelEnergyCapitalFirmsValue}{1}
+\newcommand{\nrFossilFuelEnergyCapitalFirmsDesc}{number of fossil-fuel energy capital firms}
+\newcommand{\nrRenewableEnergyCapitalFirms}{\#_{REC}}
+\newcommand{\nrRenewableEnergyCapitalFirmsValue}{1}
+\newcommand{\nrRenewableEnergyCapitalFirmsDesc}{number of renewable energy capital firms}
+\newcommand{\nrMaterialCapitalFirms}{\#_{MC}}
+\newcommand{\nrMaterialCapitalFirmsValue}{1}
+\newcommand{\nrMaterialCapitalFirmsDesc}{number of material capital firms}
+\newcommand{\fgMarkupInitial}{\mu_{FG,0}}
+\newcommand{\fgMarkupInitialValue}{0.1}
+\newcommand{\fgMarkupInitialDesc}{initial markup of a final good firm}
+\newcommand{\mMarkupInitial}{\mu_{M,0}}
+\newcommand{\mMarkupInitialValue}{0.3}
+\newcommand{\mMarkupInitialDesc}{initial markup of a material firm}
+\newcommand{\eMarkup}{\mu_{E}}
+\newcommand{\eMarkupValue}{0.3}
+\newcommand{\eMarkupDesc}{markup for the energy sector}
+\newcommand{\fgcMarkup}{\mu_{FGC}}
+\newcommand{\fgcMarkupValue}{0.5}
+\newcommand{\fgcMarkupDesc}{markup for the final good capital sector}
+\newcommand{\mcMarkup}{\mu_{MC}}
+\newcommand{\mcMarkupValue}{0.5}
+\newcommand{\mcMarkupDesc}{markup for the material capital sector}
+\newcommand{\recMarkup}{\mu_{K_{RE}}}
+\newcommand{\recMarkupValue}{0.5}
+\newcommand{\recMarkupDesc}{markup for the renewable energy capital sector}
+\newcommand{\fecMarkup}{\mu_{K_{FE}}}
+\newcommand{\fecMarkupValue}{0.5}
+\newcommand{\fecMarkupDesc}{markup for the fossil-fuel energy capital sector}
+\newcommand{\fgcLaborProductivityInitial}{\alpha^{K_{FG}}_{i, 0}}
+\newcommand{\fgcLaborProductivityInitialValue}{10}
+\newcommand{\fgcLaborProductivityInitialDesc}{initial labor productivity in final good capital sector}
+\newcommand{\recLaborProductivityInitial}{\alpha^{K_{RE}}_{i, 0}}
+\newcommand{\recLaborProductivityInitialValue}{10}
+\newcommand{\recLaborProductivityInitialDesc}{initial labor productivity in renewable energy capital sector}
+\newcommand{\fecLaborProductivityInitial}{\alpha^{K_{FE}}_{i, 0}}
+\newcommand{\fecLaborProductivityInitialValue}{10}
+\newcommand{\fecLaborProductivityInitialDesc}{initial labor productivity in fossil-fuel energy capital sector}
+\newcommand{\mcLaborProductivityInitial}{\alpha^{K_M}_{i, 0}}
+\newcommand{\mcLaborProductivityInitialValue}{10}
+\newcommand{\mcLaborProductivityInitialDesc}{initial labor productivity in material capital sector}
+\newcommand{\fgcCapitalProductivityInitial}{\kappa^{K_{FG}}_{i, 0}}
+\newcommand{\fgcCapitalProductivityInitialValue}{2}
+\newcommand{\fgcCapitalProductivityInitialDesc}{initial productivity of capital for final good sector}
+\newcommand{\fecCapitalProductivityInitial}{\kappa^{K_{FE}}_{i, 0}}
+\newcommand{\fecCapitalProductivityInitialValue}{2}
+\newcommand{\fecCapitalProductivityInitialDesc}{initial productivity of capital for fossil-fuel energy sector}
+\newcommand{\recCapitalProductivityInitial}{\kappa^{K_{RE}}_{i, 0}}
+\newcommand{\recCapitalProductivityInitialValue}{2}
+\newcommand{\recCapitalProductivityInitialDesc}{initial productivity of capital for renewable energy sector}
+\newcommand{\mcCapitalProductivityInitial}{\kappa^{K_{M}}_{i, 0}}
+\newcommand{\mcCapitalProductivityInitialValue}{2}
+\newcommand{\mcCapitalProductivityInitialDesc}{initial productivity of capital for material sector}
+\newcommand{\fgDepositInitial}{D^{FG}_{i,0}}
+\newcommand{\fgDepositInitialValue}{0}
+\newcommand{\fgDepositInitialDesc}{initial deposit of a final good firm}
+\newcommand{\fgcDepositInitial}{D^{K_{FG}}_{i,0}}
+\newcommand{\fgcDepositInitialValue}{3}
+\newcommand{\fgcDepositInitialDesc}{initial deposit of a final good capital firm}
+\newcommand{\mDepositInitial}{D^{M}_{i,0}}
+\newcommand{\mDepositInitialValue}{0}
+\newcommand{\mDepositInitialDesc}{initial deposit of a material firm}
+\newcommand{\mcDepositInitial}{D^{K_{M}}_{i,0}}
+\newcommand{\mcDepositInitialValue}{300}
+\newcommand{\mcDepositInitialDesc}{initial deposit of a material capital firm}
+\newcommand{\feDepositInitial}{D^{FE}_{i,0}}
+\newcommand{\feDepositInitialValue}{0}
+\newcommand{\feDepositInitialDesc}{initial deposit of a fossil-fuel energy power plant}
+\newcommand{\reDepositInitial}{D^{RE}_{i,0}}
+\newcommand{\reDepositInitialValue}{0}
+\newcommand{\reDepositInitialDesc}{initial deposit of a renewable energy power plant}
+\newcommand{\fecDepositInitial}{D^{K_{FE}}_{i,0}}
+\newcommand{\fecDepositInitialValue}{3}
+\newcommand{\fecDepositInitialDesc}{initial deposit of a fossil-fuel energy capital firm}
+\newcommand{\recDepositInitial}{D^{K_{RE}}_{i,0}}
+\newcommand{\recDepositInitialValue}{3}
+\newcommand{\recDepositInitialDesc}{initial deposit of a renewable energy capital firm}
+\newcommand{\hhDepositInitial}{D^{HH}_{i,0}}
+\newcommand{\hhDepositInitialValue}{0.01}
+\newcommand{\hhDepositInitialDesc}{initial deposit of a household}
+\newcommand{\fgOutputInventoryInitial}{inv^{FG}_{i,0}}
+\newcommand{\fgOutputInventoryInitialValue}{0}
+\newcommand{\fgOutputInventoryInitialDesc}{initial output inventory of a final good firm}
+\newcommand{\mOutputInventoryInitial}{inv^{M}_{i,0}}
+\newcommand{\mOutputInventoryInitialValue}{0}
+\newcommand{\mOutputInventoryInitialDesc}{initial output inventory of a material firm}
+\newcommand{\fgCapitalStockInitial}{K^{FG}_{i,0}}
+\newcommand{\fgCapitalStockInitialValue}{1}
+\newcommand{\fgCapitalStockInitialDesc}{initial capital stock of a final good firm}
+\newcommand{\mCapitalStockInitial}{K^{M}_{i,0}}
+\newcommand{\mCapitalStockInitialValue}{1}
+\newcommand{\mCapitalStockInitialDesc}{initial capital stock of a material firm}
+\newcommand{\feCapitalStockInitial}{K^{FE}_{i,0}}
+\newcommand{\feCapitalStockInitialValue}{1}
+\newcommand{\feCapitalStockInitialDesc}{initial capital stock of a fossil-fuel energy power plant}
+\newcommand{\reCapitalStockInitial}{K^{RE}_{i,0}}
+\newcommand{\reCapitalStockInitialValue}{1}
+\newcommand{\reCapitalStockInitialDesc}{initial capital stock of a renewable energy power plant}
+\newcommand{\fgcMaterialInventoryInitial}{M^{K_{FG}}_{i,0}}
+\newcommand{\fgcMaterialInventoryInitialValue}{0}
+\newcommand{\fgcMaterialInventoryInitialDesc}{initial material inventory of a final good capital firm}
+\newcommand{\recMaterialInventoryInitial}{M^{K_{RE}}_{i,0}}
+\newcommand{\recMaterialInventoryInitialValue}{0}
+\newcommand{\recMaterialInventoryInitialDesc}{initial material inventory of a renewable energy capital firm}
+\newcommand{\fecMaterialInventoryInitial}{M^{K_{FE}}_{i,0}}
+\newcommand{\fecMaterialInventoryInitialValue}{0}
+\newcommand{\fecMaterialInventoryInitialDesc}{initial material inventory of a fossil-fuel energy capital firm}
+\newcommand{\mcMaterialInventoryInitial}{M^{K_{M}}_{i,0}}
+\newcommand{\mcMaterialInventoryInitialValue}{0}
+\newcommand{\mcMaterialInventoryInitialDesc}{initial material inventory of a material capital firm}
+\newcommand{\foreignEconomyFuelInventoryInitial}{\hat{F}^{FE}_{i,0}}
+\newcommand{\foreignEconomyFuelInventoryInitialValue}{1000000000}
+\newcommand{\foreignEconomyFuelInventoryInitialDesc}{initial fuel inventory of the foreign economy}
+\newcommand{\feFuelInventoryInitial}{F_{i,0}}
+\newcommand{\feFuelInventoryInitialValue}{0}
+\newcommand{\feFuelInventoryInitialDesc}{initial fuel inventory of a fossil-fuel energy power plant}
