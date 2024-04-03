@@ -5,6 +5,8 @@ import re
 
 class Parameters:
     def __init__(self):
+        self.miningSiteShocks = {"val": 0, "symbol": r"\varepsilon_{R^{D}}", "desc": "shocks to mining site deposits"}
+        self.oreCostShocks = {"val": 0, "symbol": r"\varepsilon_{\gamma^{ore}_1}", "desc": "shocks to ore extraction cost parameter 1"}
 
         # Simulation parameters
         self.nrTimesteps={"val": 200, "symbol": r"\#_{timesteps}", "desc": "number of timesteps"}

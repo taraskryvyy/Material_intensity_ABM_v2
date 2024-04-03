@@ -184,44 +184,60 @@ class SimulationStep(Parent):
             i.labor_force.empty_inventory()
 
         ########################### MINING SITE ENTRY DYNAMICS ###################
-        if (self.t == 50 or 
-            self.t == 75 or 
-            self.t == 100 or 
-            self.t == 125 or 
-            self.t == 150
-            ):
-            for i in MiningSite.get_all_instances():
-                if random.random() < 0.8:
-                    i.frozen_ore_deposit = i.ore_inventory.goods[0].quantity
-                    i.ore_inventory.goods[0].quantity = 0.00000000001
-            prob_to_explore_mining_site = 0
-        if (self.t == 55 or 
-            self.t == 80 or 
-            self.t == 105 or 
-            self.t == 130 or 
-            self.t == 155
-            ):
-            for i in MiningSite.get_all_instances():
-                if i.frozen_ore_deposit > 0:
-                    i.ore_inventory.goods[0].quantity = i.frozen_ore_deposit
-                    i.frozen_ore_deposit = 0
-        if ((self.t > 55 and self.t < 75) or 
-            (self.t >80 and self.t < 100) or 
-            (self.t > 105 and self.t < 125) or 
-            (self.t > 130 and self.t < 150) or 
-            (self.t > 155)# and self.t < 175)
-            ):
+        if params.miningSiteShocks['val'] == 1:
+            if (self.t == 50 or 
+                self.t == 75 or 
+                self.t == 100 or 
+                self.t == 125 or 
+                self.t == 150
+                ):
+                for i in MiningSite.get_all_instances():
+                    if random.random() < 0.8:
+                        i.frozen_ore_deposit = i.ore_inventory.goods[0].quantity
+                        i.ore_inventory.goods[0].quantity = 0.00000000001
+                prob_to_explore_mining_site = 0
+            if (self.t == 55 or 
+                self.t == 80 or 
+                self.t == 105 or 
+                self.t == 130 or 
+                self.t == 155
+                ):
+                for i in MiningSite.get_all_instances():
+                    if i.frozen_ore_deposit > 0:
+                        i.ore_inventory.goods[0].quantity = i.frozen_ore_deposit
+                        i.frozen_ore_deposit = 0
+            if ((self.t > 55 and self.t < 75) or 
+                (self.t >80 and self.t < 100) or 
+                (self.t > 105 and self.t < 125) or 
+                (self.t > 130 and self.t < 150) or 
+                (self.t > 155)# and self.t < 175)
+                ):
+                prob_to_explore_mining_site = params.miningSiteExplorationProbability['val']
+            # prob_to_explore_mining_site = 1/(
+            #     1 + math.exp(-params.miningSiteExplorationParam['val'] * 
+                            #  mat_cap_prod_growth))
+            # if self.t < 50 or self.t > 100:
+                # prob_to_explore_mining_site = params.miningSiteExplorationProbability['val']
+                if random.random() < prob_to_explore_mining_site:
+                    # MiningSite.original_oreCostParamOne *= 0.9
+                    # MiningSite.original_sigmaOreCostParamOne *= 0.9
+                    ms = MiningSite(params)
+                    if params.oreCostShocks['val'] > 0:
+                        ms.oreCostParamOne *= (1 - self.t / params.oreCostShocks['val'])
+                    ms.open_deposit_account(
+                        bank = random.choice(CommercialBank.get_all_instances()))
+                    # print("Mining site discovered with ore deposit {:.2f}.".format(
+                    #     ms.initial_ore_deposit))
+                    ms.compute_extraction_cost()
+        # if no miningSiteShocks
+        else:
             prob_to_explore_mining_site = params.miningSiteExplorationProbability['val']
-        # prob_to_explore_mining_site = 1/(
-        #     1 + math.exp(-params.miningSiteExplorationParam['val'] * 
-                        #  mat_cap_prod_growth))
-        # if self.t < 50 or self.t > 100:
-            # prob_to_explore_mining_site = params.miningSiteExplorationProbability['val']
             if random.random() < prob_to_explore_mining_site:
                 # MiningSite.original_oreCostParamOne *= 0.9
                 # MiningSite.original_sigmaOreCostParamOne *= 0.9
                 ms = MiningSite(params)
-                ms.oreCostParamOne *= (1 - self.t / 250)
+                if params.oreCostShocks['val'] > 0:
+                    ms.oreCostParamOne *= (1 - self.t / params.oreCostShocks['val'])
                 ms.open_deposit_account(
                     bank = random.choice(CommercialBank.get_all_instances()))
                 # print("Mining site discovered with ore deposit {:.2f}.".format(
