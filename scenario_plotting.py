@@ -75,7 +75,7 @@ scenario_set = [
                 ]
 scenario_filter = [scen in scenario_set for scen in all_scenarios]
 
-df = df.loc[scenario_filter]
+# df = df.loc[scenario_filter]
 
 # df = df.loc[df.index.get_level_values('Scenario') == "logitCompetitionParameter_0.01"]
 

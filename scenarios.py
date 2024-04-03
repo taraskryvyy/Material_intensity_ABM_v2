@@ -2,9 +2,15 @@ from parameters import Parameters
 
 scenarios = {
     # "baseline": {}
-    "miningSiteExplorationProbability_0": {"miningSiteExplorationProbability": 0},
-    "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
-    "base_miningSiteExplorationProbability_0.5": {"miningSiteExplorationProbability": 0.5},
+
+    "extreme renewables material intensity": {"recMaterialProductivity": 0.75},
+    "higher renewables material intensity": {"recMaterialProductivity": 1.25},
+    "baseline renewables material intensity": {"recMaterialProductivity": 2},
+    # "lower renewables material intensity": {"recMaterialProductivity": 3},
+
+    # "miningSiteExplorationProbability_0": {"miningSiteExplorationProbability": 0},
+    # "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
+    # "base_miningSiteExplorationProbability_0.5": {"miningSiteExplorationProbability": 0.5},
 
     # "logitCompetitionParamMining_0.01": {"logitCompetitionParamMining": 0.01},
     # "logitCompetitionParamMining_1": {"logitCompetitionParamMining": 1},
