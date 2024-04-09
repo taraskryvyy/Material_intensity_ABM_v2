@@ -3,10 +3,27 @@ from parameters import Parameters
 scenarios = {
     # "baseline": {}
 
-    "extreme renewables material intensity": {"recMaterialProductivity": 0.75},
-    "higher renewables material intensity": {"recMaterialProductivity": 1.25},
-    "baseline renewables material intensity": {"recMaterialProductivity": 2},
-    # "lower renewables material intensity": {"recMaterialProductivity": 3},
+    # "extreme renewables material intensity": {"recMaterialProductivity": 0.75},
+    # "higher renewables material intensity": {"recMaterialProductivity": 1.25},
+    # "baseline renewables material intensity": {"recMaterialProductivity": 2},
+    ##### "lower renewables material intensity": {"recMaterialProductivity": 3},"
+
+    "ore extraction costs stable": {"oreCostShocks": 0,
+                                  "recMaterialProductivity": 1.25},
+    "ore extraction costs drop slightly": {"oreCostShocks": 400,
+                                  "recMaterialProductivity": 1.25},
+    "ore extraction costs drop": {"oreCostShocks": 250,
+                                  "recMaterialProductivity": 1.25},
+    "ore extraction costs drop sharply": {"oreCostShocks": 201,
+                                  "recMaterialProductivity": 1.25},
+
+
+    # "low fuel price growth": {"fuelPriceDrift": 0.0003,
+    #                           "recMaterialProductivity": 1.25},
+    # "base fuel price growth": {"fuelPriceDrift": 0.002,
+    #                            "recMaterialProductivity": 1.25},
+    # "high fuel price growth": {"fuelPriceDrift": 0.006,
+    #                            "recMaterialProductivity": 1.25},
 
     # "miningSiteExplorationProbability_0": {"miningSiteExplorationProbability": 0},
     # "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
@@ -27,10 +44,6 @@ scenarios = {
     # "fuelPriceVolatility_0.00000001": {"fuelPriceVolatility": 0.00000001},
     # "base_fuelPriceVolatility_0.00003": {"fuelPriceVolatility": 0.00003},
     # "fuelPriceVolatility_0.0005": {"fuelPriceVolatility": 0.0005},
-
-    # "fuelPriceDrift_0.0002": {"fuelPriceDrift": 0.0002},
-    # "base_fuelPriceDrift_0.002": {"fuelPriceDrift": 0.002},
-    # "fuelPriceDrift_0.02": {"fuelPriceDrift": 0.02},
 
     # "oreCostParamOne_0.1": {"oreCostParamOne": 0.1},
     # "base_oreCostParamOne_0.3": {"oreCostParamOne": 0.3},

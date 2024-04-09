@@ -222,7 +222,7 @@ class SimulationStep(Parent):
                     # MiningSite.original_oreCostParamOne *= 0.9
                     # MiningSite.original_sigmaOreCostParamOne *= 0.9
                     ms = MiningSite(params)
-                    if params.oreCostShocks['val'] > 0:
+                    if params.oreCostShocks['val'] != 0:
                         ms.oreCostParamOne *= (1 - self.t / params.oreCostShocks['val'])
                     ms.open_deposit_account(
                         bank = random.choice(CommercialBank.get_all_instances()))
@@ -236,7 +236,7 @@ class SimulationStep(Parent):
                 # MiningSite.original_oreCostParamOne *= 0.9
                 # MiningSite.original_sigmaOreCostParamOne *= 0.9
                 ms = MiningSite(params)
-                if params.oreCostShocks['val'] > 0:
+                if params.oreCostShocks['val'] != 0:
                     ms.oreCostParamOne *= (1 - self.t / params.oreCostShocks['val'])
                 ms.open_deposit_account(
                     bank = random.choice(CommercialBank.get_all_instances()))

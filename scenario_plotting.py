@@ -8,11 +8,13 @@ import numpy as np
 save_figs = True
 show_figs = False
 merge_figs = False
-format = 'pdf'
-fig_size = (12, 4)
+format = 'tiff'#'pdf'
+fig_size = (6, 4)
 errorbar_format = ("se", 1)
 
-df = pd.read_csv('results.csv', index_col=['Metric',
+# df = pd.read_csv('results.csv', 
+df = pd.read_csv('new_run/ore_cost_drop_100_sims.csv', 
+                 index_col=['Metric',
                                            'Timestep Number',
                                            'Scenario',
                                            'Simulation Number'])
@@ -22,9 +24,15 @@ df = pd.read_csv('results.csv', index_col=['Metric',
 
 all_scenarios = df.index.get_level_values('Scenario')
 scenario_set = [
-    "miningSiteExplorationProbability_0",
-    "miningSiteExplorationProbability_0.1",
-    "base_miningSiteExplorationProbability_0.5",
+    # "miningSiteExplorationProbability_0",
+    # "miningSiteExplorationProbability_0.1",
+    # "base_miningSiteExplorationProbability_0.5",
+
+
+    "ore extraction costs stable",
+    "ore extraction costs drop slightly",
+    "ore extraction costs drop sharply",
+
     # "miningSiteExplorationProbability_0.01",
     # "miningSiteExplorationProbability_0.5",
     # "miningSiteExplorationProbability_1",
@@ -81,6 +89,56 @@ scenario_filter = [scen in scenario_set for scen in all_scenarios]
 
 # df = df.loc[df.index.get_level_values('Simulation Number') == 29]
 
+
+#'Renewable Energy capital price'
+renewable_energy_capital_price_df = df.loc[["Renewable Energy capital price"]]
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=renewable_energy_capital_price_df,#df.loc[["Renewable energy capital price"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Renewable Energy Capital Price')
+plt.xlabel('Timestep Number')
+plt.ylabel('Renewable Energy Capital Price')
+if save_figs:
+    plt.savefig('scenario_renewable_energy_capital_price.'+format)
+if show_figs:
+    plt.show()
+plt.close()
+
+#'Net Rewable Energy NPV'
+net_renewable_energy_npv_df = df.loc[["Net Renewable Energy NPV"]]
+max_ylim = np.percentile(net_renewable_energy_npv_df['Value'], 99)
+min_ylim = np.percentile(net_renewable_energy_npv_df['Value'], 1)
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=net_renewable_energy_npv_df,#df.loc[["Net Renewable Energy NPV"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Net Renewable Energy NPV')
+plt.xlabel('Timestep Number')
+plt.ylabel('Net Renewable Energy NPV')
+if save_figs:
+    plt.savefig('scenario_net_renewable_energy_npv.'+format)
+if show_figs:
+    plt.show()
+plt.ylim(min_ylim, max_ylim)  # Set the vertical axis limits
+plt.title('Net Renewable Energy NPV')
+if save_figs:
+    plt.savefig('scenario_net_renewable_energy_npv_zoomed.'+format)
+if show_figs:
+    plt.show()
+plt.close()
+
+
+
+
+
+
 total_NPL_balance_df = df.loc[["Total NPL balance"]]
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number',
@@ -89,7 +147,7 @@ sns.lineplot(x='Timestep Number',
                 hue='Scenario',
                 errorbar=errorbar_format
                 )
-plt.title('Total NPL balance vs Timestep Number')
+plt.title('Total NPL balance')
 plt.xlabel('Timestep Number')
 plt.ylabel('Total NPL balance')
 if save_figs:
@@ -106,7 +164,7 @@ sns.lineplot(x='Timestep Number',
             hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Commercial bank loan-to-deposit-ratio vs Timestep Number')
+plt.title('Commercial bank loan-to-deposit-ratio')
 plt.xlabel('Timestep Number')
 plt.ylabel('Commercial bank loan-to-deposit-ratio')
 if save_figs:
@@ -123,7 +181,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Cumulative Number of Bankruptcies vs Timestep Number')
+plt.title('Cumulative Number of Bankruptcies')
 plt.xlabel('Timestep Number')
 plt.ylabel('Cumulative Number of Bankruptcies')
 if save_figs:
@@ -140,7 +198,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Cumulative Number of Bankrupt Material Firms vs Timestep Number')
+plt.title('Cumulative Number of Bankrupt Material Firms')
 plt.xlabel('Timestep Number')
 plt.ylabel('Cumulative Number of Bankrupt Material Firms')
 if save_figs:
@@ -158,7 +216,7 @@ plt.close()
 #                 hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Average Age of Bankrupt Material Firms vs Timestep Number')
+# plt.title('Average Age of Bankrupt Material Firms')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Average Age of Bankrupt Material Firms')
 # if save_figs:
@@ -176,7 +234,7 @@ sns.lineplot(x='Timestep Number',
                 hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Material Inventory of Bankrupt Material Firms vs Timestep Number')
+plt.title('Material Inventory of Bankrupt Material Firms')
 plt.xlabel('Timestep Number')
 plt.ylabel('Material Inventory of Bankrupt Material Firms')
 if save_figs:
@@ -193,7 +251,7 @@ plt.close()
 #              hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Cumulative Number of Bankrupt Power Plants vs Timestep Number')
+# plt.title('Cumulative Number of Bankrupt Power Plants')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Cumulative Number of Bankrupt Power Plants')
 # if save_figs:
@@ -210,7 +268,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Cumulative Number of Bankrupt Final Good Firms vs Timestep Number')
+plt.title('Cumulative Number of Bankrupt Final Good Firms')
 plt.xlabel('Timestep Number')
 plt.ylabel('Cumulative Number of Bankrupt Final Good Firms')
 if save_figs:
@@ -227,7 +285,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Total Output vs Timestep Number')
+plt.title('Total Output')
 plt.xlabel('Timestep Number')
 plt.ylabel('Total Output')
 if save_figs:
@@ -244,7 +302,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Total Consumption Budget vs Timestep Number')
+plt.title('Total Consumption Budget')
 plt.xlabel('Timestep Number')
 plt.ylabel('Total Consumption Budget')
 if save_figs:
@@ -261,7 +319,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Total Household Dividend Income vs Timestep Number')
+plt.title('Total Household Dividend Income')
 plt.xlabel('Timestep Number')
 plt.ylabel('Total Household Dividend Income')
 if save_figs:
@@ -285,7 +343,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Electricity Price vs Timestep Number')
+plt.title('Electricity Price')
 plt.xlabel('Timestep Number')
 plt.ylabel('Electricity Price')
 if save_figs:
@@ -293,7 +351,7 @@ if save_figs:
 if show_figs:
     plt.show()
 plt.ylim(min_ylim, max_ylim)  # Set the vertical axis limits
-plt.title('Electricity Price vs Timestep Number (zoomed in)')
+plt.title('Electricity Price (zoomed in)')
 if save_figs:
     plt.savefig('scenario_electricity_price_zoomed.'+format)
 if show_figs:
@@ -315,7 +373,7 @@ sns.lineplot(x='Timestep Number',
                 hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Weighted Average Sell Price of Final Good vs Timestep Number')
+plt.title('Weighted Average Sell Price of Final Good')
 plt.xlabel('Timestep Number')
 plt.ylabel('Weighted Average Sell Price of Final Good')
 if save_figs:
@@ -323,7 +381,7 @@ if save_figs:
 if show_figs:
     plt.show()
 plt.ylim(min_ylim, max_ylim)  # Set the vertical axis limits
-plt.title('Weighted Average Sell Price of Final Good vs Timestep Number (zoomed in)')
+plt.title('Weighted Average Sell Price of Final Good (zoomed in)')
 if save_figs:
     plt.savefig('scenario_weighted_average_sell_price_of_final_good_zoomed.'+format)
 if show_figs:
@@ -339,7 +397,7 @@ plt.close()
 #              hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Number of Renewable Energy Power Plants vs Timestep Number')
+# plt.title('Number of Renewable Energy Power Plants')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Number of Renewable Energy Power Plants')
 # if save_figs:
@@ -357,7 +415,7 @@ plt.close()
 #              hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Number of Fossil Fuel Energy Power Plants vs Timestep Number')
+# plt.title('Number of Fossil Fuel Energy Power Plants')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Number of Fossil Fuel Energy Power Plants')
 # if save_figs:
@@ -373,9 +431,9 @@ plt.close()
 #                 y='Value',
 #                 data=fuel_price_df,#df.loc[["Fuel price"]],
 #                 hue='Scenario',
-            #  errorbar=errorbar_format
-            #  )
-# plt.title('Fuel Price vs Timestep Number')
+#              errorbar=errorbar_format
+#              )
+# plt.title('Fuel Price')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Fuel Price')
 # if save_figs:
@@ -392,7 +450,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Renewable Energy Market Share vs Timestep Number')
+plt.title('Renewable Energy Market Share')
 plt.xlabel('Timestep Number')
 plt.ylabel('Renewable Energy Market Share')
 if save_figs:
@@ -411,7 +469,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Electricity Price vs Timestep Number')
+plt.title('Electricity Price')
 plt.xlabel('Timestep Number')
 plt.ylabel('Electricity Price')
 if save_figs:
@@ -419,7 +477,7 @@ if save_figs:
 if show_figs:
     plt.show()
 plt.ylim(min_ylim, max_ylim)  # Set the vertical axis limits
-plt.title('Electricity Price vs Timestep Number (zoomed in)')
+plt.title('Electricity Price (zoomed in)')
 if save_figs:
     plt.savefig('scenario_electricity_price_zoomed.'+format)
 if show_figs:
@@ -436,7 +494,7 @@ plt.close()
 #                 hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Total Energy Deficit vs Timestep Number')
+# plt.title('Total Energy Deficit')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Total Energy Deficit')
 # if save_figs:
@@ -453,7 +511,7 @@ plt.close()
 #              hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Total Supply of Material vs Timestep Number')
+# plt.title('Total Supply of Material')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Total Supply of Material')
 # if save_figs:
@@ -471,7 +529,7 @@ plt.close()
 #              hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Total Demand for Material vs Timestep Number')
+# plt.title('Total Demand for Material')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Total Demand for Material')
 # if save_figs:
@@ -489,7 +547,7 @@ plt.close()
 #                 hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Total Material Deficit vs Timestep Number')
+# plt.title('Total Material Deficit')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Total Material Deficit')
 # if save_figs:
@@ -508,7 +566,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Material Price vs Timestep Number')
+plt.title('Material Price')
 plt.xlabel('Timestep Number')
 plt.ylabel('Material Price')
 if save_figs:
@@ -516,7 +574,7 @@ if save_figs:
 if show_figs:
     plt.show()
 plt.ylim(min_ylim, max_ylim)  # Set the vertical axis limits
-plt.title('Material Price vs Timestep Number (zoomed in)')
+plt.title('Material Price (zoomed in)')
 if save_figs:
     plt.savefig('scenario_material_price_zoomed.'+format)
 if show_figs:
@@ -531,7 +589,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Average Ore Extraction Cost vs Timestep Number')
+plt.title('Average Ore Extraction Cost')
 plt.xlabel('Timestep Number')
 plt.ylabel('Average Ore Extraction Cost')
 if save_figs:
@@ -549,7 +607,7 @@ sns.lineplot(x='Timestep Number',
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Total Ore Reserves vs Timestep Number')
+plt.title('Total Ore Reserves')
 plt.xlabel('Timestep Number')
 plt.ylabel('Total Ore Reserves')
 if save_figs:
@@ -567,7 +625,7 @@ plt.close()
 #              hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Number of Mining Sites vs Timestep Number')
+# plt.title('Number of Mining Sites')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Number of Mining Sites')
 # if save_figs:
@@ -585,7 +643,7 @@ plt.close()
 #                 hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Profit of Material Capital Firms vs Timestep Number')
+# plt.title('Profit of Material Capital Firms')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Profit of Material Capital Firms')
 # if save_figs:
@@ -603,7 +661,7 @@ plt.close()
 #                 hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('RnD Budget of Material Capital Firms vs Timestep Number')
+# plt.title('RnD Budget of Material Capital Firms')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('RnD Budget of Material Capital Firms')
 # if save_figs:
@@ -621,7 +679,7 @@ sns.lineplot(x='Timestep Number',
                 hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Material Capital Productivity vs Timestep Number')
+plt.title('Material Capital Productivity')
 plt.xlabel('Timestep Number')
 plt.ylabel('Material Capital Productivity')
 if save_figs:
@@ -639,7 +697,7 @@ sns.lineplot(x='Timestep Number',
                 hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Final Good Capital Productivity vs Timestep Number')
+plt.title('Final Good Capital Productivity')
 plt.xlabel('Timestep Number')
 plt.ylabel('Final Good Capital Productivity')
 if save_figs:
@@ -657,7 +715,7 @@ sns.lineplot(x='Timestep Number',
                 hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Renewable Energy Capital Productivity vs Timestep Number')
+plt.title('Renewable Energy Capital Productivity')
 plt.xlabel('Timestep Number')
 plt.ylabel('Renewable Energy Capital Productivity')
 if save_figs:
@@ -675,7 +733,7 @@ sns.lineplot(x='Timestep Number',
                 hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Fossil Fuel Energy Capital Productivity vs Timestep Number')
+plt.title('Fossil Fuel Energy Capital Productivity')
 plt.xlabel('Timestep Number')
 plt.ylabel('Fossil Fuel Energy Capital Productivity')
 if save_figs:
@@ -693,7 +751,7 @@ plt.close()
 #                 hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Total Deposit Balance in Capital Sector vs Timestep Number')
+# plt.title('Total Deposit Balance in Capital Sector')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Total Deposit Balance in Capital Sector')
 # if save_figs:
@@ -711,7 +769,7 @@ plt.close()
 #                 hue='Scenario',
             #  errorbar=errorbar_format
             #  )
-# plt.title('Total Deposit Balance in Material Capital Sector vs Timestep Number')
+# plt.title('Total Deposit Balance in Material Capital Sector')
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Total Deposit Balance in Material Capital Sector')
 # if save_figs:
