@@ -325,7 +325,7 @@ for t in range(params.nrTimesteps['val']):
             #                                                                         len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) > 0 else -1,
             # 'Material inventory of bankrupt material firms': sum([x.output_inventory.compute_capacity() for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
             'Cumulative number of bankruptcies': len(Firm.cumulative_bankruptcy_list),
-            'Bankruptcy rate': len(Firm.bankruptcy_list)/len(x for x in all_agents if isinstance(x, Firm)),
+            'Bankruptcy rate': len(Firm.bankruptcy_list)/len([x for x in all_agents if isinstance(x, Firm)]),
             'Cumulative number of bankrupt material firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, MaterialFirm)]),
             # 'Cumulative number of bankrupt power plants': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, PowerPlant)]),
             'Cumulative number of bankrupt final good firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, FinalGoodFirm)]),
