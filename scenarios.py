@@ -13,31 +13,22 @@ scenarios = {
     #                                      "miningSiteShocks": 1,
     #                                      "oreCostShocks": 200},
 
-    "Low R material intensity": {"recMaterialProductivity": 2},
-    "Base R material intensity": {"recMaterialProductivity": 1.25},
-    "High R material intensity": {"recMaterialProductivity": 0.75},
+    # "Low R material intensity": {"recMaterialProductivity": 2},
+    # "Base R material intensity": {"recMaterialProductivity": 1.25},
+    # "High R material intensity": {"recMaterialProductivity": 0.75},
 
     # "extreme renewables material intensity": {"recMaterialProductivity": 0.75},
     # "higher renewables material intensity": {"recMaterialProductivity": 1.25},
     # "baseline renewables material intensity": {"recMaterialProductivity": 2},
     ##### "lower renewables material intensity": {"recMaterialProductivity": 3},"
 
-    # "ore extraction costs stable": {"oreCostShocks": 0,
-    #                               "recMaterialProductivity": 1.25},
-    # "ore extraction costs drop slightly": {"oreCostShocks": 400,
-    #                               "recMaterialProductivity": 1.25},
-    # "ore extraction costs drop": {"oreCostShocks": 250,
-    #                               "recMaterialProductivity": 1.25},
-    # "ore extraction costs drop sharply": {"oreCostShocks": 201,
-    #                               "recMaterialProductivity": 1.25},
+    "Stable ore cost": {"oreCostShocks": 0},
+    "Declining ore cost": {"oreCostShocks": 400},
+    "Sharply declining ore cost": {"oreCostShocks": 200},
 
-
-    # "low fuel price growth": {"fuelPriceDrift": 0.0003,
-    #                           "recMaterialProductivity": 1.25},
-    # "base fuel price growth": {"fuelPriceDrift": 0.002,
-    #                            "recMaterialProductivity": 1.25},
-    # "high fuel price growth": {"fuelPriceDrift": 0.006,
-    #                            "recMaterialProductivity": 1.25},
+    # "Low fuel price growth": {"fuelPriceDrift": 0.0003},
+    # "Base fuel price growth": {"fuelPriceDrift": 0.002},
+    # "High fuel price growth": {"fuelPriceDrift": 0.006},
 
     # "miningSiteExplorationProbability_0": {"miningSiteExplorationProbability": 0},
     # "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},

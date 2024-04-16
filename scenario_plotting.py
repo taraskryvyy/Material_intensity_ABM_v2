@@ -459,23 +459,23 @@ plt.close()
 #     plt.show()
 # plt.close()
 
-# 'Fuel price'
-# fuel_price_df = df.loc[["Fuel price"]]
-# plt.figure(figsize=fig_size)
-# sns.lineplot(x='Timestep Number',
-#                 y='Value',
-#                 data=fuel_price_df,#df.loc[["Fuel price"]],
-#                 hue='Scenario',
-#              errorbar=errorbar_format
-#              )
-# plt.title('Fuel Price')
-# plt.xlabel('Timestep Number')
-# plt.ylabel('Fuel Price')
-# if save_figs:
-#     plt.savefig('scenario_fuel_price.'+format)
-# if show_figs:
-#     plt.show()
-# plt.close()
+'Fuel price'
+fuel_price_df = df.loc[["Fuel price"]]
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=fuel_price_df,#df.loc[["Fuel price"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Fuel Price')
+plt.xlabel('Timestep Number')
+plt.ylabel('Fuel Price')
+if save_figs:
+    plt.savefig('scenario_fuel_price.'+format)
+if show_figs:
+    plt.show()
+plt.close()
 
 renewable_energy_market_share_df = df.loc[["Renewable Energy market share"]]
 plt.figure(figsize=fig_size)
