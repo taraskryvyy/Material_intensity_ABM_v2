@@ -10,7 +10,7 @@ class Parameters:
 
         # Simulation parameters
         self.nrTimesteps={"val": 200, "symbol": r"\#_{timesteps}", "desc": "number of timesteps"}
-        self.nrMonteCarlo={"val": 50, "symbol": r"\#_{MonteCarlo}", "desc": "number of Monte Carlo repetitions"}
+        self.nrMonteCarlo={"val": 100, "symbol": r"\#_{MonteCarlo}", "desc": "number of Monte Carlo repetitions"}
         self.maxNumberOfMatchingRounds={"val": 50, "symbol": r"{\#^{matching}_{rounds}}_{max}", "desc": "maximum number of rounds in a market during matching"}
         self.epsilonPrecision={"val": 0.001, "symbol": r"\epsilon_{precision}", "desc": "precision parameter to avoid floating point errors"}
 
@@ -77,7 +77,7 @@ class Parameters:
         # self.fecRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{FE}}", "desc": "risk aversion of firms in fossil-fuel energy capital sector"}
         # self.mcRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{M}}", "desc": "risk aversion of firms in material capital sector"}
         self.fgcMaterialProductivity={"val": 1, "symbol": r"m^{K_{FG}}", "desc": "material productivity in final good capital sector"}
-        self.recMaterialProductivity={"val": 2, "symbol": r"m^{K_{RE}}", "desc": "material productivity in renewable energy capital sector"}
+        self.recMaterialProductivity={"val": 1.25, "symbol": r"m^{K_{RE}}", "desc": "material productivity in renewable energy capital sector"}
         self.fecMaterialProductivity={"val": 15, "symbol": r"m^{K_{FE}}", "desc": "material productivity in fossil-fuel energy capital sector"}
         self.mcMaterialProductivity={"val": 7, "symbol": r"m^{K_{M}}", "desc": "material productivity in material capital sector"}
         # self.loanDurationInCapitalSector={"val": 10, "symbol": r"\eta^{K}", "desc": "duration of a loan in capital sectors"}

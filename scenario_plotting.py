@@ -8,12 +8,12 @@ import numpy as np
 save_figs = True
 show_figs = False
 merge_figs = False
-format = 'tiff'#'pdf'
+format = 'pdf'#'tiff'
 fig_size = (6, 4)
 errorbar_format = ("se", 1)
 
-# df = pd.read_csv('results.csv', 
-df = pd.read_csv('new_run/ore_cost_drop_100_sims.csv', 
+df = pd.read_csv('results.csv', 
+# df = pd.read_csv('new_run/ore_cost_drop_100_sims.csv', 
                  index_col=['Metric',
                                            'Timestep Number',
                                            'Scenario',
@@ -81,7 +81,7 @@ scenario_set = [
 #     # "oreProductivity_1",
 #     # "oreProductivity_2",
                 ]
-scenario_filter = [scen in scenario_set for scen in all_scenarios]
+# scenario_filter = [scen in scenario_set for scen in all_scenarios]
 
 # df = df.loc[scenario_filter]
 

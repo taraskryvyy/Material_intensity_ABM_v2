@@ -3,19 +3,29 @@ from parameters import Parameters
 scenarios = {
     # "baseline": {}
 
+    "No ore deposit exploration": {"miningSiteExplorationProbability": 0,
+                                   "miningSiteShocks": 1,
+                                   "oreCostShocks": 200},
+    "Infrequent ore deposit exploration": {"miningSiteExplorationProbability": 0.1,
+                                           "miningSiteShocks": 1,
+                                           "oreCostShocks": 200},
+    "Frequent ore deposit exploration": {"miningSiteExplorationProbability": 0.5,
+                                         "miningSiteShocks": 1,
+                                         "oreCostShocks": 200},
+
     # "extreme renewables material intensity": {"recMaterialProductivity": 0.75},
     # "higher renewables material intensity": {"recMaterialProductivity": 1.25},
     # "baseline renewables material intensity": {"recMaterialProductivity": 2},
     ##### "lower renewables material intensity": {"recMaterialProductivity": 3},"
 
-    "ore extraction costs stable": {"oreCostShocks": 0,
-                                  "recMaterialProductivity": 1.25},
-    "ore extraction costs drop slightly": {"oreCostShocks": 400,
-                                  "recMaterialProductivity": 1.25},
-    "ore extraction costs drop": {"oreCostShocks": 250,
-                                  "recMaterialProductivity": 1.25},
-    "ore extraction costs drop sharply": {"oreCostShocks": 201,
-                                  "recMaterialProductivity": 1.25},
+    # "ore extraction costs stable": {"oreCostShocks": 0,
+    #                               "recMaterialProductivity": 1.25},
+    # "ore extraction costs drop slightly": {"oreCostShocks": 400,
+    #                               "recMaterialProductivity": 1.25},
+    # "ore extraction costs drop": {"oreCostShocks": 250,
+    #                               "recMaterialProductivity": 1.25},
+    # "ore extraction costs drop sharply": {"oreCostShocks": 201,
+    #                               "recMaterialProductivity": 1.25},
 
 
     # "low fuel price growth": {"fuelPriceDrift": 0.0003,

@@ -323,8 +323,9 @@ for t in range(params.nrTimesteps['val']):
             # 'Average age of bankrupt material firms': sum([x.age for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) /
             #                                                                         len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) if
             #                                                                         len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) > 0 else -1,
-            'Material inventory of bankrupt material firms': sum([x.output_inventory.compute_capacity() for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
+            # 'Material inventory of bankrupt material firms': sum([x.output_inventory.compute_capacity() for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
             'Cumulative number of bankruptcies': len(Firm.cumulative_bankruptcy_list),
+            'Bankruptcy rate': len(Firm.bankruptcy_list)/len(x for x in all_agents if isinstance(x, Firm)),
             'Cumulative number of bankrupt material firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, MaterialFirm)]),
             # 'Cumulative number of bankrupt power plants': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, PowerPlant)]),
             'Cumulative number of bankrupt final good firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, FinalGoodFirm)]),
@@ -340,7 +341,10 @@ for t in range(params.nrTimesteps['val']):
             # 'Total deposit balance in capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, CapitalFirm)]),
             # 'Total deposit balance in material capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
             # 'Total deposit balance in households': sum([x.deposit.balance for x in all_agents if isinstance(x, Household)]),
+            'Total loan balance': sum([x.balance for x in CommercialBank.instances[0].loans]),
             'Total NPL balance': sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]),
+            'NPL ratio': sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]) / sum([x.balance for x in CommercialBank.instances[0].loans + 
+                                                                                                           CommercialBank.instances[0].non_performing_loans]),
             'Commercial bank loan-to-deposit-ratio': CommercialBank.instances[0].loan_to_deposit_ratio
       }
 
