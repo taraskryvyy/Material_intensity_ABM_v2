@@ -135,7 +135,42 @@ if show_figs:
 plt.close()
 
 
+'Bankruptcy rate'
+bankruptcy_rate_df = df.loc[["Bankruptcy rate"]]
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=bankruptcy_rate_df,#df.loc[["Bankruptcy rate"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Bankruptcy Rate')
+plt.xlabel('Timestep Number')
+plt.ylabel('Bankruptcy Rate')
+if save_figs:
+    plt.savefig('scenario_bankruptcy_rate.'+format)
+if show_figs:
+    plt.show()
+plt.close()
 
+
+'NPL ratio'
+NPL_ratio_df = df.loc[["NPL ratio"]]
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=NPL_ratio_df,#df.loc[["NPL ratio"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('NPL Ratio')
+plt.xlabel('Timestep Number')
+plt.ylabel('NPL Ratio')
+if save_figs:
+    plt.savefig('scenario_NPL_ratio.'+format)
+if show_figs:
+    plt.show()
+plt.close()
 
 
 
@@ -225,23 +260,23 @@ plt.close()
 #     plt.show()
 # plt.close()
 
-'Material inventory of bankrupt material firms'
-material_inventory_of_bankrupt_material_firms_df = df.loc[["Material inventory of bankrupt material firms"]]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=material_inventory_of_bankrupt_material_firms_df,#df.loc[["Material inventory of bankrupt material firms"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Material Inventory of Bankrupt Material Firms')
-plt.xlabel('Timestep Number')
-plt.ylabel('Material Inventory of Bankrupt Material Firms')
-if save_figs:
-    plt.savefig('scenario_material_inventory_of_bankrupt_material_firms.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Material inventory of bankrupt material firms'
+# material_inventory_of_bankrupt_material_firms_df = df.loc[["Material inventory of bankrupt material firms"]]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=material_inventory_of_bankrupt_material_firms_df,#df.loc[["Material inventory of bankrupt material firms"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Material Inventory of Bankrupt Material Firms')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Material Inventory of Bankrupt Material Firms')
+# if save_figs:
+#     plt.savefig('scenario_material_inventory_of_bankrupt_material_firms.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
 # cumulative_number_of_bankrupt_power_plants_df = df.loc[["Cumulative number of bankrupt power plants"]]
 # plt.figure(figsize=fig_size)
