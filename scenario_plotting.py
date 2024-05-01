@@ -8,19 +8,79 @@ import numpy as np
 save_figs = True
 show_figs = False
 merge_figs = False
+smooth_figs = ['Renewable Energy capital price', "Average ore extraction cost", "Material price", "Bankruptcy rate", "Total household dividend income"]
+smooth_window = 10
 format = 'pdf'#'tiff'
 fig_size = (6, 4)
 errorbar_format = ("se", 1)
 
-df = pd.read_csv('results.csv', 
-# df = pd.read_csv('new_run/ore_cost_drop_100_sims.csv', 
-                 index_col=['Metric',
-                                           'Timestep Number',
-                                           'Scenario',
-                                           'Simulation Number'])
+# df = pd.read_csv('results.csv', 
+# df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/mat_intensity.csv', 
+# df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/declining_ore_cost.csv',
+df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/fuel_price_growth.csv',
+# df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/geoshock.csv',
+# df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/mat_intensity.csv',
+                 index_col=['Scenario',
+                            'Simulation Number',
+                            'Timestep Number',
+                            'Metric'])
+
+# df_tabular = df.pivot_table(index=['Scenario', 'Simulation Number', 'Timestep Number'], columns='Metric', values='Value')
+
+# df_tabular = df.pivot_table(index=['Timestep Number'], columns=['Scenario', 'Simulation Number', 'Metric'], values='Value').rolling(10).mean()
+
 
 # df = df.loc[df.index.get_level_values('Timestep Number') > 25]
-# df = df.loc[df.index.get_level_values('Simulation Number') == 1]
+# df = df.loc[df.index.get_level_values('Simulation Number') == 80]
+# df = df.loc[df.index.get_level_values('Scenario') == 'Sharply declining ore cost']
+
+# df = df.loc[df.index.get_level_values('Metric') == "Total NPL balance"][df.index.get_level_values('Scenario') == "High R material intensity"][df['Value']>1000]
+# weird_index = df[df['Value']>1000].loc[("Total NPL balance", "High R material intensity")].index.get_level_values('Simulation Number').drop_duplicates()
+# df = df.iloc[df.index.get_level_values('Simulation Number').isin(weird_index)]
+
+# print(df.groupby('Scenario').count())
+
+# print(df.index.get_level_values('Simulation Number'))
+
+# print(df_tabular.groupby('Scenario').count().pivot_table(index='Scenario').mean(axis=1))
+
+try:
+    df = df.drop(index=pd.IndexSlice["High R material intensity", 28])
+except KeyError:
+    pass
+
+try:
+    df = df.drop(index=pd.IndexSlice["Sharply declining ore cost", 80])
+except KeyError:
+    pass
+
+# df.loc['High R material intensity', 28]
+
+new_order = ['Metric', 'Scenario', 'Simulation Number', 'Timestep Number']
+df = df.reorder_levels(new_order)
+
+
+def smooth(df, window=10):
+    metrics_unique = df.index.get_level_values('Metric').unique()
+    scenarios_unique = df.index.get_level_values('Scenario').unique()
+    simulations_unique = df.index.get_level_values('Simulation Number').unique()
+    timesteps_unique = df.index.get_level_values('Timestep Number').unique()
+
+    for metric in metrics_unique:
+        for scenario in scenarios_unique:
+            for simulation_number in simulations_unique:
+                try:
+                    Smooth_Value = df.loc[(metric, scenario, simulation_number), 'Value'].rolling(window).mean()
+                except KeyError:
+                    pass
+                # df.loc[(metric, scenario, simulation_number)]['Value'] = Smooth_Value
+                for timestep in timesteps_unique:
+                    try:
+                        df.loc[(metric, scenario, simulation_number, timestep), 'Value'] = Smooth_Value[timestep]
+                    except KeyError:
+                        pass
+                print(df.loc[metric, scenario, simulation_number])
+
 
 all_scenarios = df.index.get_level_values('Scenario')
 scenario_set = [
@@ -92,6 +152,8 @@ scenario_set = [
 
 #'Renewable Energy capital price'
 renewable_energy_capital_price_df = df.loc[["Renewable Energy capital price"]]
+if "Renewable Energy capital price" in smooth_figs:
+    smooth(renewable_energy_capital_price_df, smooth_window)
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number',
                 y='Value',
@@ -137,6 +199,8 @@ plt.close()
 
 'Bankruptcy rate'
 bankruptcy_rate_df = df.loc[["Bankruptcy rate"]]
+if "Bankruptcy rate" in smooth_figs:
+    smooth(bankruptcy_rate_df, smooth_window)
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number',
                 y='Value',
@@ -592,6 +656,8 @@ plt.close()
 # plt.close()
 
 material_price_df = df.loc[["Material price"]]
+if "Material price" in smooth_figs:
+    smooth(material_price_df, smooth_window)
 max_ylim = np.percentile(electricity_price_df['Value'], 99)
 min_ylim = min(electricity_price_df['Value'])
 plt.figure(figsize=fig_size)
@@ -617,6 +683,8 @@ if show_figs:
 plt.close()
 
 average_ore_extraction_cost_df = df.loc[["Average ore extraction cost"]]
+if "Average ore extraction cost" in smooth_figs:
+    smooth(average_ore_extraction_cost_df, smooth_window)
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number', 
              y='Value', 

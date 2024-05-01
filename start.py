@@ -6,6 +6,7 @@ import gc
 import csv
 import json
 import subprocess
+import pandas as pd
 
 def rename_file(filename, counter=0):
     new_filename = f"results{counter}.csv"
@@ -29,32 +30,32 @@ scenarios = generate_scenarios()
 # params = Parameters()
 
 for scenario_name, params in scenarios.items():
-      # params
-      # attributes = [attr for attr in vars(params) if not attr.startswith('__')]
+    # params
+    # attributes = [attr for attr in vars(params) if not attr.startswith('__')]
 
-      print("#####################################################################")
-      print("#####################################################################")
-      print("#                       START OF SIMULATION                         #")
-      print("#####################################################################")
-      print("#####################################################################")
+    print("#####################################################################")
+    print("#####################################################################")
+    print("#                       START OF SIMULATION                         #")
+    print("#####################################################################")
+    print("#####################################################################")
 
-      for sim in range(params.nrMonteCarlo['val']):
-          # script path /Users/tagger/Documents/GitHub/Material_intensity_ABM/Material_intensity_ABM/simulation.py
-          # run the script here with arguments: scenario_name, params and sim
-                  # Serialize the Parameters instance to JSON
-            params_json = json.dumps(params.to_dict())
+    for sim in range(params.nrMonteCarlo['val']):
+        # script path /Users/tagger/Documents/GitHub/Material_intensity_ABM/Material_intensity_ABM/simulation.py
+        # run the script here with arguments: scenario_name, params and sim
+                # Serialize the Parameters instance to JSON
+        params_json = json.dumps(params.to_dict())
 
-            # Construct the command to run the external script
-            subprocess_command = [
-                  "python",  # or "python3" depending on your system
-                  "simulation.py",
-                  scenario_name,
-                  params_json,
-                  str(sim),
-            ]
+        # Construct the command to run the external script
+        subprocess_command = [
+                "python",  # or "python3" depending on your system
+                "simulation.py",
+                scenario_name,
+                params_json,
+                str(sim),
+        ]
 
-            # Run the subprocess
-            try:
-                subprocess.run(subprocess_command, check=True)
-            except subprocess.CalledProcessError as e:
-                print(e.output)
+        # Run the subprocess
+        try:
+            subprocess.run(subprocess_command, check=True)
+        except subprocess.CalledProcessError as e:
+            print(e.output)
