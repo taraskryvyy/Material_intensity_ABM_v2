@@ -63,9 +63,9 @@ scenarios = {
     # "base_mcMaterialProductivity_7": {"mcMaterialProductivity": 7},
     "mcMaterialProductivity_10": {"mcMaterialProductivity": 10},
 
-    "recCapitalLifeSpan_15": {"recCapitalLifeSpan": 15},
+    "reCapitalLifeSpan_15": {"reCapitalLifeSpan": 15},
     # "base_reCapitalLifeSpan_20" : {"reCapitalLifeSpan": 20},
-    "recCapitalLifeSpan_25": {"recCapitalLifeSpan": 25},
+    "reCapitalLifeSpan_25": {"reCapitalLifeSpan": 25},
 
     "oreProductivity_0.75": {"oreProductivity": 0.75},
     # "base_oreProductivity_1": {"oreProductivity": 1},
