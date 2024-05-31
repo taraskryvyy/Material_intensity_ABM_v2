@@ -8,16 +8,16 @@ import numpy as np
 save_figs = True
 show_figs = False
 merge_figs = False
-smooth_figs = ['Renewable Energy capital price', "Average ore extraction cost", "Material price", "Bankruptcy rate", "Total household dividend income"]
+smooth_figs = ['Renewable Energy capital price', "Average ore extraction cost", "Material price", "Bankruptcy rate", "Total household dividend income", "Electricity price"]
 smooth_window = 10
 format = 'pdf'#'tiff'
 fig_size = (6, 4)
 errorbar_format = ("se", 1)
 
-# df = pd.read_csv('results.csv', 
+df = pd.read_csv('results.csv', 
 # df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/mat_intensity.csv', 
 # df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/declining_ore_cost.csv',
-df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/fuel_price_growth.csv',
+# df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/fuel_price_growth.csv',
 # df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/geoshock.csv',
 # df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/mat_intensity.csv',
                  index_col=['Scenario',
@@ -25,8 +25,12 @@ df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/
                             'Timestep Number',
                             'Metric'])
 
-# df_tabular = df.pivot_table(index=['Scenario', 'Simulation Number', 'Timestep Number'], columns='Metric', values='Value')
+# df_grouped = df.groupby('Scenario')
+# df_grouped = df_grouped.filter(lambda x: x['Value'].mean() > 0.1)
+# .mean(filter_func=lambda x: x['Value'].mean() > 0.1)
 
+df_tabular = df.pivot_table(index=['Scenario', 'Simulation Number', 'Timestep Number'], columns='Metric', values='Value')
+# df_tabular.to_csv('results_tabular.csv')
 # df_tabular = df.pivot_table(index=['Timestep Number'], columns=['Scenario', 'Simulation Number', 'Metric'], values='Value').rolling(10).mean()
 
 
@@ -51,6 +55,11 @@ except KeyError:
 
 try:
     df = df.drop(index=pd.IndexSlice["Sharply declining ore cost", 80])
+except KeyError:
+    pass
+
+try:
+    df = df.drop(index=pd.IndexSlice["baseline", 14])
 except KeyError:
     pass
 
@@ -84,14 +93,23 @@ def smooth(df, window=10):
 
 all_scenarios = df.index.get_level_values('Scenario')
 scenario_set = [
+
+    "High R material intensity",
+    "Base R material intensity",
+    "Low R material intensity",
+
+    # "recMaterialProductivity_0.9",
+    # "baseline",
+    # "recMaterialProductivity_2"
+
     # "miningSiteExplorationProbability_0",
     # "miningSiteExplorationProbability_0.1",
     # "base_miningSiteExplorationProbability_0.5",
 
 
-    "ore extraction costs stable",
-    "ore extraction costs drop slightly",
-    "ore extraction costs drop sharply",
+    # "ore extraction costs stable",
+    # "ore extraction costs drop slightly",
+    # "ore extraction costs drop sharply",
 
     # "miningSiteExplorationProbability_0.01",
     # "miningSiteExplorationProbability_0.5",
@@ -141,13 +159,31 @@ scenario_set = [
 #     # "oreProductivity_1",
 #     # "oreProductivity_2",
                 ]
-# scenario_filter = [scen in scenario_set for scen in all_scenarios]
+scenario_filter = [scen in scenario_set for scen in all_scenarios]
 
 # df = df.loc[scenario_filter]
+
+
+# # custom reordering
+# count = 0
+# for i in scenario_set:
+#     scenario_filter_i = [scen in i for scen in all_scenarios]
+#     if count == 0:
+#         temp_df = df.loc[scenario_filter_i]
+#         count += 1
+#     else:
+#         temp_df = pd.concat([temp_df, df.loc[scenario_filter_i]])
+
+# df = temp_df
 
 # df = df.loc[df.index.get_level_values('Scenario') == "logitCompetitionParameter_0.01"]
 
 # df = df.loc[df.index.get_level_values('Simulation Number') == 29]
+
+# df = df.loc[df.index.get_level_values('Scenario') == "baseline"]
+
+# df = df.loc[df.index.get_level_values('Simulation Number') == 14]
+
 
 
 #'Renewable Energy capital price'
@@ -430,11 +466,14 @@ plt.close()
 
 
 
-
-
 electricity_price_df = df.loc[["Electricity price"]]
-max_ylim = np.percentile(electricity_price_df['Value'], 99)
-min_ylim = min(electricity_price_df['Value'])
+if "Electricity price" in smooth_figs:
+    smooth(electricity_price_df, smooth_window)
+    max_ylim = np.nanpercentile(electricity_price_df['Value'], 99)
+    min_ylim = np.nanmin(electricity_price_df['Value'])
+else:
+    max_ylim = np.percentile(electricity_price_df['Value'], 99)
+    min_ylim = electricity_price_df['Value']
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number', 
              y='Value', 
@@ -449,6 +488,7 @@ if save_figs:
     plt.savefig('scenario_electricity_price.'+format)
 if show_figs:
     plt.show()
+print(min_ylim, max_ylim)
 plt.ylim(min_ylim, max_ylim)  # Set the vertical axis limits
 plt.title('Electricity Price (zoomed in)')
 if save_figs:
@@ -457,7 +497,6 @@ if show_figs:
     plt.show()
 
 plt.close()
-
 
 
 
