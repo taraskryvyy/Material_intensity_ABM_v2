@@ -13,6 +13,13 @@ The model consists of the following sectors:
 - Capital Sectors: Provide capital required for producing final goods, renewable energy, fossil-fuel-based energy, and materials.
 - Banking Sector: Finances capital investments and short-term liquidity needs.
 
+### Flow of goods and services 
+<img width="420" alt="image" src="https://github.com/user-attachments/assets/6dccbc11-0a9e-468e-b559-dcd273e1ef2b"> 
+
+### Money flow
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/4504ecc7-cafd-43e7-800a-026ed98ea694">
+
+
 ## Installation
 To run the model, follow these steps:
 1. Clone the repository to your local machine.
