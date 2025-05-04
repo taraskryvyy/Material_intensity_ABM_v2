@@ -58,6 +58,7 @@ class Household(Agent):
             self.params, endowment, self.wage))
 
     def compute_consumption_budget(self):
+        # TODO - make sure income afrter tax is used
         self.consumption_budget = (self.propensityIncome * 
                                    self.income_statement.net_profit + 
                                    self.propensityWealth * 

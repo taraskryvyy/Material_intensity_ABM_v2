@@ -103,7 +103,7 @@ class Parameters:
         self.bnkMaxLoanToDepositRatio={"val": 500, "symbol": r"\lambda^{loan}_3", "desc": "maximum loan to deposit ratio of a bank"}
         self.CBloanInterestRate={"val": 0.00015, "symbol": r"r^{L_{CB}}", "desc": "loan interest rate of the central bank"}
         self.CBdepositInterestRate={"val": 0.0005, "symbol": r"r^{D_{CB}}", "desc": "deposit interest rate of the central bank"}
-        self.shortTermLoanDuration={"val": 10, "symbol": r"\tau^{short}", "desc": "duration of a short-term loan"}
+        self.shortTermLoanDuration={"val": 5, "symbol": r"\tau^{short}", "desc": "duration of a short-term loan"}
         self.loanInterestRate={"val": 0.001, "symbol": r"r^{L}", "desc": "loan interest rate"}
         self.depositInterestRate={"val": 0.0001, "symbol": r"r^{D}", "desc": "deposit interest rate"}
 

@@ -17,6 +17,7 @@ class Bank(Agent):
         # income statement items
         self.interest_income: float = 0
         self.interest_expense: float = 0
+        self.short_term_loan_duration = params.shortTermLoanDuration['val']
 
     def execute_payment(self, sender: Agent, amount: float, recipient: Agent,
                         comment: str = None):
@@ -34,7 +35,7 @@ class Bank(Agent):
                     loan_principal = amount * (1 + sender.cash_buffer)
                 sender.apply_for_loan(
                     principal=loan_principal, #amount-sender.deposit.balance,
-                    duration=5,
+                    duration=self.short_term_loan_duration,
                     grace_period=0,
                     comment=comment)
         if (sender.deposit.balance - amount) >= 0:

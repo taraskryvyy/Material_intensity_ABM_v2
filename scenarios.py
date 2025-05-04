@@ -1,7 +1,7 @@
 from parameters import Parameters
 
 scenarios = {
-    "baseline": {},
+    # "baseline": {},
 
     # "No ore deposit exploration": {"miningSiteExplorationProbability": 0,
     #                                "miningSiteShocks": 1,
@@ -26,14 +26,14 @@ scenarios = {
     # "Declining ore cost": {"oreCostShocks": 400},
     # "Sharply declining ore cost": {"oreCostShocks": 200},
 
-    "Slow decline of ore cost": {"oreCostShocks": 400},
-    "Fast decline of ore cost": {"oreCostShocks": 200},
+    # "Slow decline of ore cost": {"oreCostShocks": 400},
+    # "Fast decline of ore cost": {"oreCostShocks": 200},
 
     # "Low fuel price growth": {"fuelPriceDrift": 0.0003},
     # "Base fuel price growth": {"fuelPriceDrift": 0.002},
     # "High fuel price growth": {"fuelPriceDrift": 0.006},
 
-    # "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
+    "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
     # # "base_miningSiteExplorationProbability_0.5": {"miningSiteExplorationProbability": 0.5},
     # "miningSiteExplorationProbability_0.25": {"miningSiteExplorationProbability": 0.25},
     # "miningSiteExplorationProbability_0.9": {"miningSiteExplorationProbability": 0.9},
