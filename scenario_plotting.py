@@ -14,7 +14,7 @@ format = 'pdf'#'tiff'
 fig_size = (6, 4)
 errorbar_format = ("se", 1)
 
-df = pd.read_csv('results.csv', 
+df = pd.read_csv('results.csv', #'carbon_tax.csv'
 # df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/mat_intensity.csv', 
 # df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/declining_ore_cost.csv',
 # df = pd.read_csv('/Users/tagger/Github_repos/Model output temporary/100sims_run/fuel_price_growth.csv',
@@ -25,11 +25,22 @@ df = pd.read_csv('results.csv',
                             'Timestep Number',
                             'Metric'])
 
+
+# df2 = pd.read_csv('results2.csv', #'carbon_tax.csv'
+#                  index_col=['Scenario',
+#                             'Simulation Number',
+#                             'Timestep Number',
+#                             'Metric'])
+
+# df = pd.concat([df2, df])
+
+# df = df[df.index.get_level_values('Scenario').isin(['Zero carbon tax', '100pct carbon tax', '1000pct carbon tax'])]
+
 # df_grouped = df.groupby('Scenario')
 # df_grouped = df_grouped.filter(lambda x: x['Value'].mean() > 0.1)
 # .mean(filter_func=lambda x: x['Value'].mean() > 0.1)
 
-df_tabular = df.pivot_table(index=['Scenario', 'Simulation Number', 'Timestep Number'], columns='Metric', values='Value')
+# df_tabular = df.pivot_table(index=['Scenario', 'Simulation Number', 'Timestep Number'], columns='Metric', values='Value')
 # df_tabular.to_csv('results_tabular.csv')
 # df_tabular = df.pivot_table(index=['Timestep Number'], columns=['Scenario', 'Simulation Number', 'Metric'], values='Value').rolling(10).mean()
 
@@ -201,197 +212,197 @@ mapping = {'Declining ore cost': 'Slow decline of ore cost',
 
 # df = df.loc[df.index.get_level_values('Simulation Number') == 63]
 
-gdp_vars = ['Final good GDP',
-            'Material GDP',
-            'Renewable Energy GDP',
-            'Fossil Fuel Energy GDP',
-            'Final good capital GDP',
-            'Renewable Energy capital GDP',
-            'Fossil Fuel Energy capital GDP',
-            'Material capital GDP']
+# gdp_vars = ['Final good GDP',
+#             'Material GDP',
+#             'Renewable Energy GDP',
+#             'Fossil Fuel Energy GDP',
+#             'Final good capital GDP',
+#             'Renewable Energy capital GDP',
+#             'Fossil Fuel Energy capital GDP',
+#             'Material capital GDP']
 
-gdp_df = df.loc[gdp_vars]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=gdp_df,#df.loc[gdp_vars],
-                hue='Metric',
-                errorbar=errorbar_format
-                )
-plt.title('GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('GDP')
-if save_figs:
-    plt.savefig('scenario_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# gdp_df = df.loc[gdp_vars]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=gdp_df,#df.loc[gdp_vars],
+#                 hue='Metric',
+#                 errorbar=errorbar_format
+#                 )
+# plt.title('GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('GDP')
+# if save_figs:
+#     plt.savefig('scenario_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
 
-# Stacked plot for sectoral GDP
-sectoral_gdp_df = df.loc[gdp_vars].reset_index()
-sectoral_gdp_df = sectoral_gdp_df.pivot(index=['Scenario', 'Simulation Number', 'Timestep Number'], columns='Metric', values='Value').reset_index()
+# # Stacked plot for sectoral GDP
+# sectoral_gdp_df = df.loc[gdp_vars].reset_index()
+# sectoral_gdp_df = sectoral_gdp_df.pivot(index=['Scenario', 'Simulation Number', 'Timestep Number'], columns='Metric', values='Value').reset_index()
 
-# Calculate cumulative sum for stacking
-sectoral_gdp_df[gdp_vars] = sectoral_gdp_df[gdp_vars].cumsum(axis=1)
+# # Calculate cumulative sum for stacking
+# sectoral_gdp_df[gdp_vars] = sectoral_gdp_df[gdp_vars].cumsum(axis=1)
 
-plt.figure(figsize=fig_size*2)
-for gdp_var in gdp_vars:
-    sns.lineplot(x='Timestep Number', y=gdp_var, data=sectoral_gdp_df, hue='Scenario', errorbar=errorbar_format, label=gdp_var)
+# plt.figure(figsize=fig_size*2)
+# for gdp_var in gdp_vars:
+#     sns.lineplot(x='Timestep Number', y=gdp_var, data=sectoral_gdp_df, hue='Scenario', errorbar=errorbar_format, label=gdp_var)
 
-plt.title('Stacked Sectoral GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Cumulative GDP')
-plt.legend(title='Sector')
-if save_figs:
-    plt.savefig('scenario_stacked_sectoral_gdp.' + format)
-if show_figs:
-    plt.show()
-plt.close()
+# plt.title('Stacked Sectoral GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Cumulative GDP')
+# plt.legend(title='Sector')
+# if save_figs:
+#     plt.savefig('scenario_stacked_sectoral_gdp.' + format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Final good GDP'
-final_good_gdp_df = df.loc[['Final good GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=final_good_gdp_df,#df.loc[["Weighted average sell price of final good"]] * df.loc[["Final good output"]],
-                hue='Scenario',
-                errorbar=errorbar_format
-                )
-plt.title('Final Good GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Final Good GDP')
-if save_figs:
-    plt.savefig('scenario_final_good_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Final good GDP'
+# final_good_gdp_df = df.loc[['Final good GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=final_good_gdp_df,#df.loc[["Weighted average sell price of final good"]] * df.loc[["Final good output"]],
+#                 hue='Scenario',
+#                 errorbar=errorbar_format
+#                 )
+# plt.title('Final Good GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Final Good GDP')
+# if save_figs:
+#     plt.savefig('scenario_final_good_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Material GDP'
-material_gdp_df = df.loc[['Material GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=material_gdp_df,#df.loc[["Material GDP"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Material GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Material GDP')
-if save_figs:
-    plt.savefig('scenario_material_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Material GDP'
+# material_gdp_df = df.loc[['Material GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=material_gdp_df,#df.loc[["Material GDP"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Material GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Material GDP')
+# if save_figs:
+#     plt.savefig('scenario_material_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Renewable Energy GDP'
-renewable_energy_gdp_df = df.loc[['Renewable Energy GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=renewable_energy_gdp_df,#df.loc[["Renewable Energy GDP"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Renewable Energy GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Renewable Energy GDP')
-if save_figs:
-    plt.savefig('scenario_renewable_energy_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Renewable Energy GDP'
+# renewable_energy_gdp_df = df.loc[['Renewable Energy GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=renewable_energy_gdp_df,#df.loc[["Renewable Energy GDP"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Renewable Energy GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Renewable Energy GDP')
+# if save_figs:
+#     plt.savefig('scenario_renewable_energy_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Fossil Fuel Energy GDP'
-fossil_fuel_energy_gdp_df = df.loc[['Fossil Fuel Energy GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=fossil_fuel_energy_gdp_df,#df.loc[["Fossil Fuel Energy GDP"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Fossil Fuel Energy GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Fossil Fuel Energy GDP')
-if save_figs:
-    plt.savefig('scenario_fossil_fuel_energy_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Fossil Fuel Energy GDP'
+# fossil_fuel_energy_gdp_df = df.loc[['Fossil Fuel Energy GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=fossil_fuel_energy_gdp_df,#df.loc[["Fossil Fuel Energy GDP"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Fossil Fuel Energy GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Fossil Fuel Energy GDP')
+# if save_figs:
+#     plt.savefig('scenario_fossil_fuel_energy_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Final good capital GDP'
-final_good_capital_gdp_df = df.loc[['Final good capital GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=final_good_capital_gdp_df,#df.loc[["Final good capital GDP"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Final Good Capital GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Final Good Capital GDP')
-if save_figs:
-    plt.savefig('scenario_final_good_capital_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Final good capital GDP'
+# final_good_capital_gdp_df = df.loc[['Final good capital GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=final_good_capital_gdp_df,#df.loc[["Final good capital GDP"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Final Good Capital GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Final Good Capital GDP')
+# if save_figs:
+#     plt.savefig('scenario_final_good_capital_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Renewable Energy capital GDP'
-renewable_energy_capital_gdp_df = df.loc[['Renewable Energy capital GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=renewable_energy_capital_gdp_df,#df.loc[["Renewable Energy capital GDP"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Renewable Energy Capital GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Renewable Energy Capital GDP')
-if save_figs:
-    plt.savefig('scenario_renewable_energy_capital_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Renewable Energy capital GDP'
+# renewable_energy_capital_gdp_df = df.loc[['Renewable Energy capital GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=renewable_energy_capital_gdp_df,#df.loc[["Renewable Energy capital GDP"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Renewable Energy Capital GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Renewable Energy Capital GDP')
+# if save_figs:
+#     plt.savefig('scenario_renewable_energy_capital_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Fossil Fuel Energy capital GDP'
-fossil_fuel_energy_capital_gdp_df = df.loc[['Fossil Fuel Energy capital GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=fossil_fuel_energy_capital_gdp_df,#df.loc[["Fossil Fuel Energy capital GDP"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Fossil Fuel Energy Capital GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Fossil Fuel Energy Capital GDP')
-if save_figs:
-    plt.savefig('scenario_fossil_fuel_energy_capital_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Fossil Fuel Energy capital GDP'
+# fossil_fuel_energy_capital_gdp_df = df.loc[['Fossil Fuel Energy capital GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=fossil_fuel_energy_capital_gdp_df,#df.loc[["Fossil Fuel Energy capital GDP"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Fossil Fuel Energy Capital GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Fossil Fuel Energy Capital GDP')
+# if save_figs:
+#     plt.savefig('scenario_fossil_fuel_energy_capital_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
-'Material capital GDP'
-material_capital_gdp_df = df.loc[['Material capital GDP']]
-plt.figure(figsize=fig_size)
-sns.lineplot(x='Timestep Number',
-                y='Value',
-                data=material_capital_gdp_df,#df.loc[["Material capital GDP"]],
-                hue='Scenario',
-             errorbar=errorbar_format
-             )
-plt.title('Material Capital GDP')
-plt.xlabel('Timestep Number')
-plt.ylabel('Material Capital GDP')
-if save_figs:
-    plt.savefig('scenario_material_capital_gdp.'+format)
-if show_figs:
-    plt.show()
-plt.close()
+# 'Material capital GDP'
+# material_capital_gdp_df = df.loc[['Material capital GDP']]
+# plt.figure(figsize=fig_size)
+# sns.lineplot(x='Timestep Number',
+#                 y='Value',
+#                 data=material_capital_gdp_df,#df.loc[["Material capital GDP"]],
+#                 hue='Scenario',
+#              errorbar=errorbar_format
+#              )
+# plt.title('Material Capital GDP')
+# plt.xlabel('Timestep Number')
+# plt.ylabel('Material Capital GDP')
+# if save_figs:
+#     plt.savefig('scenario_material_capital_gdp.'+format)
+# if show_figs:
+#     plt.show()
+# plt.close()
 
 
 #'Renewable Energy capital price'

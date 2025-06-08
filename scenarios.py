@@ -3,6 +3,19 @@ from parameters import Parameters
 scenarios = {
     # "baseline": {},
 
+    'Zero carbon tax': {"carbonTax": 0},
+    '50pct carbon tax': {"carbonTax": 0.5},
+    '100pct carbon tax': {"carbonTax": 1},
+    # '200pct carbon tax': {"carbonTax": 2},
+    # '500pct carbon tax': {"carbonTax": 5},
+    # '1000pct carbon tax': {"carbonTax": 10},
+
+    # "Zero material buffer": {"materialBuffer": 0},
+
+    # "Baseline material buffer (0.3)": {"materialBuffer": 0.3},
+
+    # "High material buffer (0.6)": {"materialBuffer": 0.6},
+
     # "No ore deposit exploration": {"miningSiteExplorationProbability": 0,
     #                                "miningSiteShocks": 1,
     #                                "oreCostShocks": 200},
@@ -33,7 +46,7 @@ scenarios = {
     # "Base fuel price growth": {"fuelPriceDrift": 0.002},
     # "High fuel price growth": {"fuelPriceDrift": 0.006},
 
-    "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
+    # "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
     # # "base_miningSiteExplorationProbability_0.5": {"miningSiteExplorationProbability": 0.5},
     # "miningSiteExplorationProbability_0.25": {"miningSiteExplorationProbability": 0.25},
     # "miningSiteExplorationProbability_0.9": {"miningSiteExplorationProbability": 0.9},

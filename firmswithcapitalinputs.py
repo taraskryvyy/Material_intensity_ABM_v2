@@ -257,6 +257,9 @@ class MaterialFirm(FirmWithCapitalInputs):
         self.mining_site: MiningSite = mining_site
         return mining_site
     
+    # def compute_extra_material_buffer(self, ):
+
+
     def compute_desired_production(self):
         self.desired_production = max(0, (self.expected_demand * 
                                    (1 + self.material_buffer) - 
@@ -436,11 +439,12 @@ class ForeignEconomy(Agent):
         self.output_inventory = FuelInventory(params, self)
         self.fuel_demand = 0
 
-    def compute_fuel_price(self):
+    def compute_fuel_price(self, carbon_tax=0):
         rand = norm.rvs(loc=0, scale=1, size = 1)[0]
         self.fuel_price *= math.exp(self.fuel_price_drift - 
                                     self.fuel_price_volatility / 2 +
                                     self.fuel_price_volatility ** 0.5 * rand)
+        self.fuel_price *= (1 + carbon_tax)
         # self.fuel_price = (self.minimum_fuel_price + 
         #                    self.fuel_price_sensitivity * self.fuel_demand)
         self.fuel_demand = 0

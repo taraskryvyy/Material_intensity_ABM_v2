@@ -9,7 +9,7 @@
 \newcommand{\nrTimestepsValue}{200}
 \newcommand{\nrTimestepsDesc}{number of timesteps}
 \newcommand{\nrMonteCarlo}{\#_{MonteCarlo}}
-\newcommand{\nrMonteCarloValue}{100}
+\newcommand{\nrMonteCarloValue}{50}
 \newcommand{\nrMonteCarloDesc}{number of Monte Carlo repetitions}
 \newcommand{\maxNumberOfMatchingRounds}{{\#^{matching}_{rounds}}_{max}}
 \newcommand{\maxNumberOfMatchingRoundsValue}{50}
@@ -27,7 +27,7 @@
 \newcommand{\finalGoodBufferValue}{0.1}
 \newcommand{\finalGoodBufferDesc}{final good inventory buffer parameter}
 \newcommand{\materialBuffer}{\beta_{M}}
-\newcommand{\materialBufferValue}{0.3}
+\newcommand{\materialBufferValue}{0.01}
 \newcommand{\materialBufferDesc}{material inventory buffer parameter}
 \newcommand{\energyBuffer}{\beta_{E}}
 \newcommand{\energyBufferValue}{0.5}
@@ -41,6 +41,9 @@
 \newcommand{\sigmaSqMarkup}{\sigma^2_{FN_{markup}}}
 \newcommand{\sigmaSqMarkupValue}{0.008}
 \newcommand{\sigmaSqMarkupDesc}{Folded Normal Distribution variance for markup adjustment}
+\newcommand{\carbonTax}{\theta^{carbon}}
+\newcommand{\carbonTaxValue}{0}
+\newcommand{\carbonTaxDesc}{carbon tax rate}
 \newcommand{\fgLaborProductivity}{\alpha^{FG}}
 \newcommand{\fgLaborProductivityValue}{15}
 \newcommand{\fgLaborProductivityDesc}{ labor productivity in final good sector}
@@ -69,7 +72,7 @@
 \newcommand{\feFuelProductivityValue}{20}
 \newcommand{\feFuelProductivityDesc}{thermal efficiency (energy-output-to-fuel-input ratio)}
 \newcommand{\fuelPrice}{p_{fuel}}
-\newcommand{\fuelPriceValue}{0.1}
+\newcommand{\fuelPriceValue}{0.07}
 \newcommand{\fuelPriceDesc}{fuel price}
 \newcommand{\fuelPriceDrift}{\mu_{p_{fuel}}}
 \newcommand{\fuelPriceDriftValue}{0.002}
@@ -165,7 +168,7 @@
 \newcommand{\materialDeliveryTimeValue}{0}
 \newcommand{\materialDeliveryTimeDesc}{time to deliver material}
 \newcommand{\fgcMaterialProductivity}{m^{K_{FG}}}
-\newcommand{\fgcMaterialProductivityValue}{1}
+\newcommand{\fgcMaterialProductivityValue}{2}
 \newcommand{\fgcMaterialProductivityDesc}{material productivity in final good capital sector}
 \newcommand{\recMaterialProductivity}{m^{K_{RE}}}
 \newcommand{\recMaterialProductivityValue}{1.25}

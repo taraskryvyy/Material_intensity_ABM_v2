@@ -155,7 +155,10 @@ class SimulationStep(Parent):
             i.produce_output()
             i.compute_price()
 
-        ForeignEconomy.instances[0].compute_fuel_price()
+        if t != 100:
+            ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=0)
+        else:
+            ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=params.carbonTax['val'])
 
         if sum([x.output for x in PowerPlant.get_all_instances()]) == 0:
             print("No electricity produced.")
