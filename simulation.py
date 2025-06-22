@@ -223,6 +223,9 @@ for t in range(params.nrTimesteps['val']):
             # 'Scenario': scenario_name,
             # 'Simulation Number': sim, # change this number for each simulation
             # 'Timestep Number': t, # assuming t is defined in the code
+            'Carbon tax': Agent.government.carbon_tax,
+            'Carbon tax growthrate': Agent.government.carbon_tax_actual_growth_rate,
+            'Transition risk index': Agent.government.transition_risk_index,
             'Total consumption budget': max([x.total_consumption_budget for x in all_markets if isinstance(x, FinalGoodMarket)]),
             'Weighted average sell price of final good': max([x.weighted_average_price_start for x in all_markets if isinstance(x, FinalGoodMarket)]),
             # 'Total output': sum([x.output for x in all_agents if hasattr(x, 'output')]),

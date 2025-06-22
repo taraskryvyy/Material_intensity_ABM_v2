@@ -3,9 +3,9 @@ from parameters import Parameters
 scenarios = {
     # "baseline": {},
 
-    'Zero carbon tax': {"carbonTax": 0},
-    '50pct carbon tax': {"carbonTax": 0.5},
-    '100pct carbon tax': {"carbonTax": 1},
+    'Near-zero target carbon tax': {"targetFinalCarbonTax": 0.0001},
+    '10pct target carbon tax': {"targetFinalCarbonTax": 0.1},
+    '50pct target carbon tax': {"targetFinalCarbonTax": 0.5},
     # '200pct carbon tax': {"carbonTax": 2},
     # '500pct carbon tax': {"carbonTax": 5},
     # '1000pct carbon tax': {"carbonTax": 10},

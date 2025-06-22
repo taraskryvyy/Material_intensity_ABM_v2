@@ -431,7 +431,8 @@ class ForeignEconomy(Agent):
     def __init__(self, params: Parameters):
         super().__init__(params)
         self.__class__.instances.append(self)
-        self.fuel_price = params.fuelPrice['val']
+        self.fuel_price_no_tax = params.fuelPrice['val']
+        self.fuel_price = self.fuel_price_no_tax * (1 + params.startCarbonTax['val'])
         self.minimum_fuel_price = params.fuelPrice['val']
         self.fuel_price_sensitivity = params.fuelPriceSensitivity['val']
         self.fuel_price_drift = params.fuelPriceDrift['val']
@@ -441,10 +442,10 @@ class ForeignEconomy(Agent):
 
     def compute_fuel_price(self, carbon_tax=0):
         rand = norm.rvs(loc=0, scale=1, size = 1)[0]
-        self.fuel_price *= math.exp(self.fuel_price_drift - 
+        self.fuel_price_no_tax *= math.exp(self.fuel_price_drift - 
                                     self.fuel_price_volatility / 2 +
                                     self.fuel_price_volatility ** 0.5 * rand)
-        self.fuel_price *= (1 + carbon_tax)
+        self.fuel_price = self.fuel_price_no_tax * (1 + carbon_tax)
         # self.fuel_price = (self.minimum_fuel_price + 
         #                    self.fuel_price_sensitivity * self.fuel_demand)
         self.fuel_demand = 0

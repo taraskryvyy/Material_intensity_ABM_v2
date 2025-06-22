@@ -22,7 +22,6 @@ class SimulationStep(Parent):
         Firm.bankruptcy_list = []
 
 
-
         # entrance of the new firms 
 
         ############################ FINAL GOOD MARKET ############################
@@ -155,10 +154,23 @@ class SimulationStep(Parent):
             i.produce_output()
             i.compute_price()
 
-        if t != 100:
-            ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=0)
+
+        vulnerability_index = 1
+        if sum([x.output for x in PowerPlant.get_all_instances() if isinstance(x, PowerPlant)]) > 0:
+            share_of_renewables = sum([x.output for x in RenewableEnergyPowerPlant.get_all_instances()]) / sum([x.output for x in PowerPlant.get_all_instances()])
         else:
-            ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=params.carbonTax['val'])
+            share_of_renewables = 0.5
+
+        Agent.government.compute_carbon_tax(t, 
+                                           share_of_renewables, 
+                                           vulnerability_index)
+
+        ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=Agent.government.carbon_tax)
+
+        # # if t != 100:
+        # #     ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=0)
+        # # else:
+        # #     ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=params.carbonTax['val'])
 
         if sum([x.output for x in PowerPlant.get_all_instances()]) == 0:
             print("No electricity produced.")

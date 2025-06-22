@@ -405,6 +405,66 @@ mapping = {'Declining ore cost': 'Slow decline of ore cost',
 # plt.close()
 
 
+'Carbon tax'
+carbon_tax_df = df.loc[["Carbon tax"]]
+if "Carbon tax" in smooth_figs:
+    smooth(carbon_tax_df, smooth_window)
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=carbon_tax_df,#df.loc[["Carbon tax"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Carbon Tax')
+plt.xlabel('Timestep Number')
+plt.ylabel('Carbon Tax')
+if save_figs:
+    plt.savefig('scenario_carbon_tax.'+format)
+if show_figs:
+    plt.show()
+plt.close()
+
+'Carbon tax growthrate'
+carbon_tax_growthrate_df = df.loc[["Carbon tax growthrate"]]
+if "Carbon tax growthrate" in smooth_figs:
+    smooth(carbon_tax_growthrate_df, smooth_window)
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=carbon_tax_growthrate_df,#df.loc[["Carbon tax growthrate"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Carbon Tax Growthrate')
+plt.xlabel('Timestep Number')
+plt.ylabel('Carbon Tax Growthrate')
+if save_figs:
+    plt.savefig('scenario_carbon_tax_growthrate.'+format)
+if show_figs:
+    plt.show()
+plt.close()
+
+'Transition risk index'
+transition_risk_index_df = df.loc[["Transition risk index"]]
+if "Transition risk index" in smooth_figs:
+    smooth(transition_risk_index_df, smooth_window)
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=transition_risk_index_df,#df.loc[["Transition risk index"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Transition Risk Index')
+plt.xlabel('Timestep Number')
+plt.ylabel('Transition Risk Index')
+if save_figs:
+    plt.savefig('scenario_transition_risk_index.'+format)
+if show_figs:
+    plt.show()
+plt.close()
+
 #'Renewable Energy capital price'
 renewable_energy_capital_price_df = df.loc[["Renewable Energy capital price"]]
 if "Renewable Energy capital price" in smooth_figs:
