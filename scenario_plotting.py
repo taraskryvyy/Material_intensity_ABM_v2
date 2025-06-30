@@ -439,6 +439,7 @@ sns.lineplot(x='Timestep Number',
 plt.title('Carbon Tax Growthrate')
 plt.xlabel('Timestep Number')
 plt.ylabel('Carbon Tax Growthrate')
+plt.ylim(0, 0.02)
 if save_figs:
     plt.savefig('scenario_carbon_tax_growthrate.'+format)
 if show_figs:

@@ -4,8 +4,8 @@ scenarios = {
     # "baseline": {},
 
     'Near-zero target carbon tax': {"targetFinalCarbonTax": 0.0001},
-    '10pct target carbon tax': {"targetFinalCarbonTax": 0.1},
-    '50pct target carbon tax': {"targetFinalCarbonTax": 0.5},
+    '30pct target carbon tax': {"targetFinalCarbonTax": 0.3},
+    '70pct target carbon tax': {"targetFinalCarbonTax": 0.7},
     # '200pct carbon tax': {"carbonTax": 2},
     # '500pct carbon tax': {"carbonTax": 5},
     # '1000pct carbon tax': {"carbonTax": 10},

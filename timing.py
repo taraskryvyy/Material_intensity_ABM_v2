@@ -155,7 +155,7 @@ class SimulationStep(Parent):
             i.compute_price()
 
 
-        vulnerability_index = 1
+        vulnerability_index = 10
         if sum([x.output for x in PowerPlant.get_all_instances() if isinstance(x, PowerPlant)]) > 0:
             share_of_renewables = sum([x.output for x in RenewableEnergyPowerPlant.get_all_instances()]) / sum([x.output for x in PowerPlant.get_all_instances()])
         else:
