@@ -9,7 +9,7 @@
 \newcommand{\nrTimestepsValue}{200}
 \newcommand{\nrTimestepsDesc}{number of timesteps}
 \newcommand{\nrMonteCarlo}{\#_{MonteCarlo}}
-\newcommand{\nrMonteCarloValue}{1}
+\newcommand{\nrMonteCarloValue}{100}
 \newcommand{\nrMonteCarloDesc}{number of Monte Carlo repetitions}
 \newcommand{\maxNumberOfMatchingRounds}{{\#^{matching}_{rounds}}_{max}}
 \newcommand{\maxNumberOfMatchingRoundsValue}{50}
@@ -27,8 +27,11 @@
 \newcommand{\finalGoodBufferValue}{0.1}
 \newcommand{\finalGoodBufferDesc}{final good inventory buffer parameter}
 \newcommand{\materialBuffer}{\beta_{M}}
-\newcommand{\materialBufferValue}{0.1}
+\newcommand{\materialBufferValue}{0.3}
 \newcommand{\materialBufferDesc}{material inventory buffer parameter}
+\newcommand{\entrantMaterialBuffer}{\beta_{M}^{entrant}}
+\newcommand{\entrantMaterialBufferValue}{0.3}
+\newcommand{\entrantMaterialBufferDesc}{material inventory buffer parameter for new entrants}
 \newcommand{\maximumMaterialBuffer}{\beta_{M}^{max}}
 \newcommand{\maximumMaterialBufferValue}{0.5}
 \newcommand{\maximumMaterialBufferDesc}{maximum material inventory buffer parameter}
@@ -51,7 +54,7 @@
 \newcommand{\targetFinalCarbonTaxValue}{0.0001}
 \newcommand{\targetFinalCarbonTaxDesc}{target carbon tax rate}
 \newcommand{\policyCommitment}{\theta^{policy}}
-\newcommand{\policyCommitmentValue}{0.5}
+\newcommand{\policyCommitmentValue}{0}
 \newcommand{\policyCommitmentDesc}{policy commitment parameter (0 for no commitment, 1 for full commitment)}
 \newcommand{\fgLaborProductivity}{\alpha^{FG}}
 \newcommand{\fgLaborProductivityValue}{15}
@@ -183,7 +186,7 @@
 \newcommand{\recMaterialProductivityValue}{1.25}
 \newcommand{\recMaterialProductivityDesc}{material productivity in renewable energy capital sector}
 \newcommand{\fecMaterialProductivity}{m^{K_{FE}}}
-\newcommand{\fecMaterialProductivityValue}{7}
+\newcommand{\fecMaterialProductivityValue}{15}
 \newcommand{\fecMaterialProductivityDesc}{material productivity in fossil-fuel energy capital sector}
 \newcommand{\mcMaterialProductivity}{m^{K_{M}}}
 \newcommand{\mcMaterialProductivityValue}{7}

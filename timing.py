@@ -419,7 +419,7 @@ class SimulationStep(Parent):
 
 
         total_material_inventory = sum([x.output_inventory.compute_capacity() for x in MaterialFirm.get_all_instances()])
-        material_buffer = params.materialBuffer['val']
+        entrant_material_buffer = params.entrantMaterialBuffer['val']
         total_material_gap = max(0, material_market.total_demand - material_market.total_supply)
 
         # material_market.expected_price += (params.adaptiveExpectationMaterialPrice['val'] *
@@ -439,7 +439,7 @@ class SimulationStep(Parent):
                 bank = random.choice(CommercialBank.get_all_instances()),
                 initial_deposit = MaterialFirm.retained_earnings)
             MaterialFirm.retained_earnings = 0
-            m.desired_production = max(total_material_gap * (1 + material_buffer),
+            m.desired_production = max(total_material_gap * (1 + entrant_material_buffer),
                                         # MaterialFirm.market_size * 
                                         # MaterialFirm.average_market_share,
                                         0

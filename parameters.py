@@ -10,7 +10,7 @@ class Parameters:
 
         # Simulation parameters
         self.nrTimesteps={"val": 200, "symbol": r"\#_{timesteps}", "desc": "number of timesteps"}
-        self.nrMonteCarlo={"val": 1, "symbol": r"\#_{MonteCarlo}", "desc": "number of Monte Carlo repetitions"}
+        self.nrMonteCarlo={"val": 100, "symbol": r"\#_{MonteCarlo}", "desc": "number of Monte Carlo repetitions"}
         self.maxNumberOfMatchingRounds={"val": 50, "symbol": r"{\#^{matching}_{rounds}}_{max}", "desc": "maximum number of rounds in a market during matching"}
         self.epsilonPrecision={"val": 0.001, "symbol": r"\epsilon_{precision}", "desc": "precision parameter to avoid floating point errors"}
 
@@ -18,7 +18,8 @@ class Parameters:
         self.adaptiveExpectation={"val": 0.5, "symbol": r"\alpha_{exp}", "desc": "adaptive expectation parameter"}
         self.logitCompetitionParam={"val": 5, "symbol": r"\gamma^{logit}", "desc": "logit competition parameter"}
         self.finalGoodBuffer={"val": 0.1, "symbol": r"\beta_{FG}", "desc": "final good inventory buffer parameter"}
-        self.materialBuffer={"val": 0.1, "symbol": r"\beta_{M}", "desc": "material inventory buffer parameter"}
+        self.materialBuffer={"val": 0.3, "symbol": r"\beta_{M}", "desc": "material inventory buffer parameter"}
+        self.entrantMaterialBuffer={"val": 0.3, "symbol": r"\beta_{M}^{entrant}", "desc": "material inventory buffer parameter for new entrants"}
         self.maximumMaterialBuffer={"val": 0.5, "symbol": r"\beta_{M}^{max}", "desc": "maximum material inventory buffer parameter"}
         self.energyBuffer={"val": 0.5, "symbol": r"\beta_{E}", "desc": "desired excess capacity of the energy grid"}
         self.cashBuffer={"val": 0.5, "symbol": r"\beta_{cash}", "desc": "how much cash a firm would want to keep"}
@@ -26,7 +27,7 @@ class Parameters:
         self.sigmaSqMarkup={"val": 0.008, "symbol": r"\sigma^2_{FN_{markup}}", "desc": "Folded Normal Distribution variance for markup adjustment"}
         self.startCarbonTax={"val": 0.00001, "symbol": r"\theta^{carbon}_{start}", "desc": "initial carbon tax rate at the beginning of a simulation"}
         self.targetFinalCarbonTax={"val": 0.0001, "symbol": r"\theta^{carbon}", "desc": "target carbon tax rate"}
-        self.policyCommitment={"val": 0.5, "symbol": r"\theta^{policy}", "desc": "policy commitment parameter (0 for no commitment, 1 for full commitment)"}
+        self.policyCommitment={"val": 0, "symbol": r"\theta^{policy}", "desc": "policy commitment parameter (0 for no commitment, 1 for full commitment)"}
         # Final Good Sector Parameters
         self.fgLaborProductivity={"val": 15, "symbol": r"\alpha^{FG}", "desc": " labor productivity in final good sector"}
         self.fgCapitalLifeSpan={"val": 10, "symbol": r"\tau^{K_{FG}}", "desc": "useful lifespan of final good capital"}
@@ -82,7 +83,7 @@ class Parameters:
         # self.mcRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{M}}", "desc": "risk aversion of firms in material capital sector"}
         self.fgcMaterialProductivity={"val": 1, "symbol": r"m^{K_{FG}}", "desc": "material productivity in final good capital sector"}
         self.recMaterialProductivity={"val": 1.25, "symbol": r"m^{K_{RE}}", "desc": "material productivity in renewable energy capital sector"}
-        self.fecMaterialProductivity={"val": 7, "symbol": r"m^{K_{FE}}", "desc": "material productivity in fossil-fuel energy capital sector"}
+        self.fecMaterialProductivity={"val": 15, "symbol": r"m^{K_{FE}}", "desc": "material productivity in fossil-fuel energy capital sector"}
         self.mcMaterialProductivity={"val": 7, "symbol": r"m^{K_{M}}", "desc": "material productivity in material capital sector"}
         # self.loanDurationInCapitalSector={"val": 10, "symbol": r"\eta^{K}", "desc": "duration of a loan in capital sectors"}
         # Household Parameters

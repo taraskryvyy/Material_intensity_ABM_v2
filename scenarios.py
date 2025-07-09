@@ -2,10 +2,23 @@ from parameters import Parameters
 
 scenarios = {
     # "baseline": {},
+    # "Fast decline of ore cost and 0.3 material buffer": {"oreCostShocks": 200,
+    #                                                       "materialBuffer": 0.3},
+    # "Fast decline of ore cost and 0.01 material buffer": {"oreCostShocks": 200,
+    #                                                         "materialBuffer": 0.01},
+    # "No decline of ore cost and 0.3 material buffer": {"materialBuffer": 0.3},
+    # "No decline of ore cost and 0.01 material buffer": {"materialBuffer": 0.01},
 
-    'Near-zero target carbon tax': {"targetFinalCarbonTax": 0.0001},
-    '30pct target carbon tax': {"targetFinalCarbonTax": 0.3},
-    '70pct target carbon tax': {"targetFinalCarbonTax": 0.7},
+    "Fast decline of ore cost and 0.3 entry material buffer": {"oreCostShocks": 200,
+                                                          "entrantMaterialBuffer": 0.3},
+    "Fast decline of ore cost and 0.01 entry material buffer": {"oreCostShocks": 200,
+                                                            "entrantMaterialBuffer": 0.01},
+    "No decline of ore cost and 0.3 entry material buffer": {"entrantMaterialBuffer": 0.3},
+    "No decline of ore cost and 0.01 entry material buffer": {"entrantMaterialBuffer": 0.01},
+
+    # 'Near-zero target carbon tax': {"targetFinalCarbonTax": 0.0001},
+    # '30pct target carbon tax': {"targetFinalCarbonTax": 0.3},
+    # '70pct target carbon tax': {"targetFinalCarbonTax": 0.7},
     # '200pct carbon tax': {"carbonTax": 2},
     # '500pct carbon tax': {"carbonTax": 5},
     # '1000pct carbon tax': {"carbonTax": 10},
