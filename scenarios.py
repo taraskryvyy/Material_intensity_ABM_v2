@@ -2,6 +2,18 @@ from parameters import Parameters
 
 scenarios = {
     # "baseline": {},
+
+    "0.5 reaction and 10pct target carbon tax": {"materialBufferReactionToCarbonTax": 0.5, "targetFinalCarbonTax": 0.1},
+    "2 reaction and 10pct target carbon tax": {"materialBufferReactionToCarbonTax": 2, "targetFinalCarbonTax": 0.1},
+
+
+    # "Fast decline of ore cost and 30pct target carbon tax": {"oreCostShocks": 200,
+    #                                                       "targetFinalCarbonTax": 0.3},
+    # "Fast decline of ore cost and 1pct target carbon tax": {"oreCostShocks": 200,
+    #                                                         "targetFinalCarbonTax": 0.01},
+    # "No decline of ore cost and 30pct target carbon tax": {"targetFinalCarbonTax": 0.3},
+    # "No decline of ore cost and 1pct target carbon tax": {"targetFinalCarbonTax": 0.01},
+
     # "Fast decline of ore cost and 0.3 material buffer": {"oreCostShocks": 200,
     #                                                       "materialBuffer": 0.3},
     # "Fast decline of ore cost and 0.01 material buffer": {"oreCostShocks": 200,
@@ -9,12 +21,12 @@ scenarios = {
     # "No decline of ore cost and 0.3 material buffer": {"materialBuffer": 0.3},
     # "No decline of ore cost and 0.01 material buffer": {"materialBuffer": 0.01},
 
-    "Fast decline of ore cost and 0.3 entry material buffer": {"oreCostShocks": 200,
-                                                          "entrantMaterialBuffer": 0.3},
-    "Fast decline of ore cost and 0.01 entry material buffer": {"oreCostShocks": 200,
-                                                            "entrantMaterialBuffer": 0.01},
-    "No decline of ore cost and 0.3 entry material buffer": {"entrantMaterialBuffer": 0.3},
-    "No decline of ore cost and 0.01 entry material buffer": {"entrantMaterialBuffer": 0.01},
+    # "Fast decline of ore cost and 0.3 entry material buffer": {"oreCostShocks": 200,
+    #                                                       "entrantMaterialBuffer": 0.3},
+    # "Fast decline of ore cost and 0.01 entry material buffer": {"oreCostShocks": 200,
+    #                                                         "entrantMaterialBuffer": 0.01},
+    # "No decline of ore cost and 0.3 entry material buffer": {"entrantMaterialBuffer": 0.3},
+    # "No decline of ore cost and 0.01 entry material buffer": {"entrantMaterialBuffer": 0.01},
 
     # 'Near-zero target carbon tax': {"targetFinalCarbonTax": 0.0001},
     # '30pct target carbon tax': {"targetFinalCarbonTax": 0.3},

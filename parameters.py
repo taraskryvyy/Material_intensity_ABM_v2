@@ -27,7 +27,8 @@ class Parameters:
         self.sigmaSqMarkup={"val": 0.008, "symbol": r"\sigma^2_{FN_{markup}}", "desc": "Folded Normal Distribution variance for markup adjustment"}
         self.startCarbonTax={"val": 0.00001, "symbol": r"\theta^{carbon}_{start}", "desc": "initial carbon tax rate at the beginning of a simulation"}
         self.targetFinalCarbonTax={"val": 0.0001, "symbol": r"\theta^{carbon}", "desc": "target carbon tax rate"}
-        self.policyCommitment={"val": 0, "symbol": r"\theta^{policy}", "desc": "policy commitment parameter (0 for no commitment, 1 for full commitment)"}
+        self.policyCommitment={"val": 1, "symbol": r"\theta^{policy}", "desc": "policy commitment parameter (0 for no commitment, 1 for full commitment)"}
+        self.materialBufferReactionToCarbonTax={"val": 0.5, "symbol": r"\beta_{M}^{carbon}", "desc": "material buffer reaction to carbon tax"}
         # Final Good Sector Parameters
         self.fgLaborProductivity={"val": 15, "symbol": r"\alpha^{FG}", "desc": " labor productivity in final good sector"}
         self.fgCapitalLifeSpan={"val": 10, "symbol": r"\tau^{K_{FG}}", "desc": "useful lifespan of final good capital"}
