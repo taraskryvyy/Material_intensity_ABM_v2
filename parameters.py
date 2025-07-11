@@ -21,6 +21,7 @@ class Parameters:
         self.materialBuffer={"val": 0.3, "symbol": r"\beta_{M}", "desc": "material inventory buffer parameter"}
         self.entrantMaterialBuffer={"val": 0.3, "symbol": r"\beta_{M}^{entrant}", "desc": "material inventory buffer parameter for new entrants"}
         self.maximumMaterialBuffer={"val": 0.5, "symbol": r"\beta_{M}^{max}", "desc": "maximum material inventory buffer parameter"}
+        self.constantMaterialBuffer={"val": 0, "symbol": r"\beta_{M}^{const}", "desc": "constant material buffer parameter (0 for no constant buffer, 1 for constant buffer)"}
         self.energyBuffer={"val": 0.5, "symbol": r"\beta_{E}", "desc": "desired excess capacity of the energy grid"}
         self.cashBuffer={"val": 0.5, "symbol": r"\beta_{cash}", "desc": "how much cash a firm would want to keep"}
         self.muMarkup={"val": 0.02, "symbol": r"\mu_{FN_{markup}}", "desc": "Folded Normal Distribution expected value for markup adjustment"}

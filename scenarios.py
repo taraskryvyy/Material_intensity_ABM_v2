@@ -3,8 +3,16 @@ from parameters import Parameters
 scenarios = {
     # "baseline": {},
 
-    "0.5 reaction and 10pct target carbon tax": {"materialBufferReactionToCarbonTax": 0.5, "targetFinalCarbonTax": 0.1},
-    "2 reaction and 10pct target carbon tax": {"materialBufferReactionToCarbonTax": 2, "targetFinalCarbonTax": 0.1},
+    "0.3 reaction and 40pct target carbon tax": {"materialBufferReactionToCarbonTax": 0.3, 
+                                                 "targetFinalCarbonTax": 0.4},
+    "3 reaction and 40pct target carbon tax": {"materialBufferReactionToCarbonTax": 3, 
+                                               "targetFinalCarbonTax": 0.4},
+    "0.3 reaction and 20pct target carbon tax": {"materialBufferReactionToCarbonTax": 0.3, 
+                                                 "targetFinalCarbonTax": 0.2},
+    "3 reaction and 20pct target carbon tax": {"materialBufferReactionToCarbonTax": 3, 
+                                               "targetFinalCarbonTax": 0.2},
+    "constant 0.3 m. buffer and 0.01pct target carbon tax": {"constantMaterialBuffer": 1, 
+                                                 "targetFinalCarbonTax": 0.0001},
 
 
     # "Fast decline of ore cost and 30pct target carbon tax": {"oreCostShocks": 200,
