@@ -26,8 +26,8 @@ class Parameters:
         self.cashBuffer={"val": 0.5, "symbol": r"\beta_{cash}", "desc": "how much cash a firm would want to keep"}
         self.muMarkup={"val": 0.02, "symbol": r"\mu_{FN_{markup}}", "desc": "Folded Normal Distribution expected value for markup adjustment"}
         self.sigmaSqMarkup={"val": 0.008, "symbol": r"\sigma^2_{FN_{markup}}", "desc": "Folded Normal Distribution variance for markup adjustment"}
-        self.startCarbonTax={"val": 0.00001, "symbol": r"\theta^{carbon}_{start}", "desc": "initial carbon tax rate at the beginning of a simulation"}
-        self.targetFinalCarbonTax={"val": 0.0001, "symbol": r"\theta^{carbon}", "desc": "target carbon tax rate"}
+        self.startCarbonTax={"val": 0, "symbol": r"\theta^{carbon}_{start}", "desc": "initial carbon tax rate at the beginning of a simulation"}
+        self.targetFinalCarbonTax={"val": 0, "symbol": r"\theta^{carbon}", "desc": "target carbon tax rate"}
         self.policyCommitment={"val": 1, "symbol": r"\theta^{policy}", "desc": "policy commitment parameter (0 for no commitment, 1 for full commitment)"}
         self.materialBufferReactionToCarbonTax={"val": 0.5, "symbol": r"\beta_{M}^{carbon}", "desc": "material buffer reaction to carbon tax"}
         # Final Good Sector Parameters

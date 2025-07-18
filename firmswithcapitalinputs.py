@@ -171,6 +171,8 @@ class MaterialFirm(FirmWithCapitalInputs):
 
         self.labor_productivity = params.mLaborProductivity['val']
         self.ore_productivity = params.oreProductivity['val']
+        self_minimum_material_buffer = params.materialBuffer['val']
+        self_maximum_material_buffer = params.maximumMaterialBuffer['val']
         self.material_buffer = params.materialBuffer['val']
         self.markup = params.mMarkupInitial['val']
         self.capital_loan_duration = params.mCapitalLoanDuration['val']
@@ -211,6 +213,11 @@ class MaterialFirm(FirmWithCapitalInputs):
     #     self.mining_site: MiningSite = mining_site
     #     return mining_site
     
+    def compute_material_buffer(self, carbon_tax_growth_rate=0):
+        self.material_buffer = max(self.minimum_material_buffer, 
+                                   min(self.maximum_material_buffer, 
+                                       carbon_tax_growth_rate))
+
     def pick_mining_site(self, mining_sites: list):
 
         mining_sites = [x for x in mining_sites if 

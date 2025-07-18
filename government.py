@@ -9,10 +9,13 @@ class Government(Agent):
         self.policy_commitment = params.policyCommitment['val']
         self.start_carbon_tax = params.startCarbonTax['val']
         self.carbon_tax = params.startCarbonTax['val']
-        self.carbon_tax_target_growth_rate = (params.targetFinalCarbonTax['val'] \
-                                        - params.startCarbonTax['val']) /params.nrTimesteps['val']
-        # self.carbon_tax_target_growth_rate = (params.targetFinalCarbonTax['val'] \
-                                            #   / params.startCarbonTax['val']) ** (1/params.nrTimesteps['val']) - 1
+        try:
+            self.carbon_tax_target_growth_rate = (params.targetFinalCarbonTax['val'] \
+                                            - params.startCarbonTax['val']) /params.nrTimesteps['val']
+            # self.carbon_tax_target_growth_rate = (params.targetFinalCarbonTax['val'] \
+                                                #   / params.startCarbonTax['val']) ** (1/params.nrTimesteps['val']) - 1
+        except ZeroDivisionError:
+            self.carbon_tax_target_growth_rate = 0
 
     def pay_unemployment_benefit(self, households):
         for hh in households:
