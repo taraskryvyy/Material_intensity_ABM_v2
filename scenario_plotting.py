@@ -178,12 +178,17 @@ scenario_filter = [scen in scenario_set for scen in all_scenarios]
 
 
 # Define the mapping
-mapping = {'Declining ore cost': 'Slow decline of ore cost', 
-           'Sharply declining ore cost': 'Fast decline of ore cost',
-           'Stable ore cost': 'Baseline'}
+# mapping = {'Declining ore cost': 'Slow decline of ore cost', 
+#            'Sharply declining ore cost': 'Fast decline of ore cost',
+#            'Stable ore cost': 'Baseline'}
 
+# mapping = {"0.1x reaction and 60pct target carbon tax": "alpha=0.1, theta_T=0.6",
+#     "2x reaction and 60pct target carbon tax": "alpha=2, theta_T=0.6",
+#     "0.1x reaction and 15pct target carbon tax": "alpha=0.1, theta_T=0.15",
+#     "2x reaction and 15pct target carbon tax": "alpha=2, theta_T=0.15",
+#     "baseline": "baseline"}
 
-# Rename the index values
+# # Rename the index values
 # df.index = df.index.set_levels(df.index.levels[1].map(mapping), level='Scenario')
 # df.index = df.index.map(mapping)
 
@@ -404,6 +409,25 @@ mapping = {'Declining ore cost': 'Slow decline of ore cost',
 #     plt.show()
 # plt.close()
 
+'Average material buffer'
+average_material_buffer_df = df.loc[["Average material buffer"]]
+if "Average material buffer" in smooth_figs:
+    smooth(average_material_buffer_df, smooth_window)
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+                y='Value',
+                data=average_material_buffer_df,#df.loc[["Average material buffer"]],
+                hue='Scenario',
+             errorbar=errorbar_format
+             )
+plt.title('Average Material Buffer')
+plt.xlabel('Timestep Number')
+plt.ylabel('Average Material Buffer')
+if save_figs:
+    plt.savefig('scenario_average_material_buffer.'+format)
+if show_figs:
+    plt.show()
+plt.close()
 
 'Carbon tax'
 carbon_tax_df = df.loc[["Carbon tax"]]

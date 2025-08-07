@@ -356,7 +356,8 @@ for t in range(params.nrTimesteps['val']):
             'Final good capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),
             'Renewable Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),
             'Fossil Fuel Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),
-            'Material capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)])
+            'Material capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Average material buffer': sum([x.material_buffer for x in all_agents if isinstance(x, MaterialFirm)]) / len([x for x in all_agents if isinstance(x, MaterialFirm)])
       }
 
       sim_nr = sim#esults["Simulation Number"]

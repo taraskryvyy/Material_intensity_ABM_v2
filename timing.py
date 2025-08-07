@@ -446,7 +446,8 @@ class SimulationStep(Parent):
                 bank = random.choice(CommercialBank.get_all_instances()),
                 initial_deposit = MaterialFirm.retained_earnings)
             MaterialFirm.retained_earnings = 0
-            m.desired_production = max(total_material_gap * (1 + entrant_material_buffer),
+            m.material_buffer = entrant_material_buffer
+            m.desired_production = max(total_material_gap * (1 + m.material_buffer),
                                         # MaterialFirm.market_size * 
                                         # MaterialFirm.average_market_share,
                                         0
