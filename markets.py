@@ -653,7 +653,7 @@ class EnergyCapitalGoodContract(Contract):
                                         FossilFuelEnergyPowerPlant.retained_earnings)
         PowerPlant.retained_earnings = 0
         RenewableEnergyPowerPlant.retained_earnings = 0
-        RenewableEnergyPowerPlant.retained_earnings = 0
+        FossilFuelEnergyPowerPlant.retained_earnings = 0
         if self.buyer.deposit.balance == 0:
             loan_principal = (quantity_temp * self.price * 
                               (1 + self.buyer.cash_buffer))

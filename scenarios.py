@@ -1,17 +1,17 @@
 from parameters import Parameters
 
 scenarios = {
-    # "baseline": {},
+    "baseline": {},
 
-    "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
-                                                 "targetFinalCarbonTax": 0.6},
-    "high tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
-                                               "targetFinalCarbonTax": 0.6},
-    "low tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
-                                                 "targetFinalCarbonTax": 0.15},
-    "low tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
-                                               "targetFinalCarbonTax": 0.15},
-    "baseline": {"constantMaterialBuffer": 1},
+    # "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+    #                                              "targetFinalCarbonTax": 0.6},
+    # "high tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+    #                                            "targetFinalCarbonTax": 0.6},
+    # "low tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+    #                                              "targetFinalCarbonTax": 0.15},
+    # "low tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+    #                                            "targetFinalCarbonTax": 0.15},
+    # "baseline": {"constantMaterialBuffer": 1},
 
     # "0.1x reaction and 60pct target carbon tax": {"materialBufferReactionToCarbonTax": 0.1, 
     #                                              "targetFinalCarbonTax": 0.6},
