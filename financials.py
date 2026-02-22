@@ -342,11 +342,11 @@ class BalanceSheet(Parent):
                 # pass
 
     def compute_leverage_ratio(self):
-        try:
-            self.leverage_ratio = self.total_liabilities / (self.equity 
-                                                            + self.total_liabilities)
-            if np.isnan(self.leverage_ratio):
-                self.leverage_ratio = 0
-        except ZeroDivisionError:
+        denominator = self.equity + self.total_liabilities
+        if abs(denominator) < 1e-12:
             self.leverage_ratio = 0
+        else:
+            self.leverage_ratio = self.total_liabilities / denominator
+            if not np.isfinite(self.leverage_ratio):
+                self.leverage_ratio = 0
         return self.leverage_ratio

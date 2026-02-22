@@ -206,17 +206,26 @@ for t in range(params.nrTimesteps['val']):
             print("Material sector has shut down")
             # break
 
-      try:
-            RenewableNPV = max([x.total_NPV for x in all_markets if isinstance(x, CapitalGoodMarket) and 
-            isinstance(x.sell_orders[0].seller, RenewableEnergyCapitalFirm)])
-      except AttributeError or IndexError:
-            RenewableNPV = 0
+      renewable_npvs = [
+            x.total_NPV
+            for x in all_markets
+            if isinstance(x, CapitalGoodMarket)
+            and x.sell_orders
+            and isinstance(x.sell_orders[0].seller, RenewableEnergyCapitalFirm)
+      ]
+      RenewableNPV = max(renewable_npvs, default=0)
 
-      try:
-            FossilFuelNPV = max([x.total_NPV for x in all_markets if isinstance(x, CapitalGoodMarket) and 
-            isinstance(x.sell_orders[0].seller, FossilFuelEnergyCapitalFirm)])
-      except AttributeError or IndexError:
-            FossilFuelNPV = 0
+      fossil_npvs = [
+            x.total_NPV
+            for x in all_markets
+            if isinstance(x, CapitalGoodMarket)
+            and x.sell_orders
+            and isinstance(x.sell_orders[0].seller, FossilFuelEnergyCapitalFirm)
+      ]
+      FossilFuelNPV = max(fossil_npvs, default=0)
+
+      material_firms = [x for x in all_agents if isinstance(x, MaterialFirm)]
+      total_material_output = sum(x.output for x in material_firms)
 
       # create a dictionary to store the results
       results = {
@@ -284,9 +293,10 @@ for t in range(params.nrTimesteps['val']):
             # 'Total material deficit': max([x.total_demand - x.total_supply for x in all_markets if isinstance(x, MaterialMarket)]),
             # 'Average ore extraction cost': sum([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]) / 
             #                                                                   len([x for x in all_agents if isinstance(x, MaterialFirm)]),
-            'Average ore extraction cost': sum([x.mining_site.extraction_cost * x.output /
-                                                sum([x.output for x in all_agents if isinstance(x, MaterialFirm)])
-                                                  for x in all_agents if isinstance(x, MaterialFirm)]),                           
+            'Average ore extraction cost': (
+                  sum(x.mining_site.extraction_cost * x.output for x in material_firms) / total_material_output
+                  if total_material_output > 0 else float('nan')
+            ),
             # 'Minimum ore extraction cost': min([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Maximum ore extraction cost': max([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]),
             'Fuel price': max([x.fuel_price for x in all_agents if isinstance(x, ForeignEconomy)]),
