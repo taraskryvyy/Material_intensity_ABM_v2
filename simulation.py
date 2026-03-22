@@ -17,19 +17,31 @@ import csv
 import json
 
 if __name__ == "__main__":
-    scenario_name = sys.argv[1]
-    params_json = sys.argv[2]
-    sim = int(sys.argv[3])
+    if len(sys.argv) >= 4:
+        scenario_name = sys.argv[1]
+        params_json = sys.argv[2]
+        sim = int(sys.argv[3])
+        output_file = sys.argv[4] if len(sys.argv) > 4 else "results.csv"
+        flush_every = int(sys.argv[5]) if len(sys.argv) > 5 else 25
 
-    # Deserialize the JSON into a dictionary
-    params_dict = json.loads(params_json)
+        # Deserialize the JSON into a dictionary
+        params_dict = json.loads(params_json)
 
-    # Create a Parameters instance from the dictionary
-    params = Parameters()
-    for param_name, param_val in params_dict.items():
-        getattr(params, param_name)["val"] = param_val["val"]
-    # params = Parameters.from_dict(params_dict)
-        
+        # Create a Parameters instance from the dictionary
+        params = Parameters()
+        for param_name, param_val in params_dict.items():
+            getattr(params, param_name)["val"] = param_val["val"]
+    else:
+        scenario_name = "baseline"
+        params = generate_scenarios()[scenario_name]
+        sim = 0
+        output_file = "results_debug.csv"
+        flush_every = 25
+        print(
+            "No command-line arguments provided; running debug defaults "
+            "(scenario='baseline', sim=0, output='results_debug.csv')."
+        )
+
     print_output = False
 
     energy_market_price = 0.3
@@ -38,6 +50,7 @@ if __name__ == "__main__":
 economy = Economy(params)     
 economy.initialise()
 Firm.cumulative_bankruptcy_list = []
+buffered_frames = []
 for t in range(params.nrTimesteps['val']):
       print("############## TimeStep: " + str(t) + " of simulation " + str(sim) + " of scenario " + scenario_name + " ##############")
       
@@ -395,12 +408,15 @@ for t in range(params.nrTimesteps['val']):
       # df.set_index(['Simulation Number', 'Timestep Number'], inplace=True)
 
       # Append the new results to the existing dataframe
-      csv_file = 'results.csv'
-
-      if os.path.isfile(csv_file):
-            df.to_csv(csv_file, mode='a', header=False)
-      else:
-            df.to_csv(csv_file)
+      buffered_frames.append(df)
+      if len(buffered_frames) >= flush_every:
+            batch_df = pd.concat(buffered_frames)
+            if os.path.isfile(output_file):
+                  batch_df.to_csv(output_file, mode='a', header=False)
+            else:
+                  batch_df.to_csv(output_file)
+            del batch_df
+            buffered_frames.clear()
       
       del df
       # print(df)
@@ -428,6 +444,15 @@ gc.collect()
 # all_objects_sizes = [sys.getsizeof(obj) for obj in all_objects]
 # print("Total size of all objects: " + str(round(sum(all_objects_sizes)/(1024^2),2)) + " megabytes")
 # pass
+
+if buffered_frames:
+      batch_df = pd.concat(buffered_frames)
+      if os.path.isfile(output_file):
+            batch_df.to_csv(output_file, mode='a', header=False)
+      else:
+            batch_df.to_csv(output_file)
+      del batch_df
+      buffered_frames.clear()
 # # Sort objects by size in descending order
 # sorted_objects = sorted(all_objects, key=lambda obj: sys.getsizeof(obj), reverse=True)
 

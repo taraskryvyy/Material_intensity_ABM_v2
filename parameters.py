@@ -125,7 +125,7 @@ class Parameters:
         self.nrFossilFuelEnergyPowerPlants={"val": 10, "symbol": r"\#_{FE}", "desc": "number of fossil-fuel energy power plants"}
         self.nrRenewableEnergyPowerPlants={"val": 2, "symbol": r"\#_{RE}", "desc": "number of renewable energy power plants"}
         self.nrMaterialFirms={"val": 5, "symbol": r"\#_{M}", "desc": "number of material firms"}
-        self.nrMiningSites={"val": 100, "symbol": r"\#_{R^{D}}", "desc": "number of mining sites"}
+        self.nrMiningSites={"val": 10, "symbol": r"\#_{R^{D}}", "desc": "number of mining sites"}
         self.nrFossilFuelEnergyCapitalFirms={"val": 1, "symbol": r"\#_{FEC}", "desc": "number of fossil-fuel energy capital firms"}
         self.nrRenewableEnergyCapitalFirms={"val": 1, "symbol": r"\#_{REC}", "desc": "number of renewable energy capital firms"}
         self.nrMaterialCapitalFirms={"val": 1, "symbol": r"\#_{MC}", "desc": "number of material capital firms"}
@@ -266,11 +266,11 @@ class Parameters:
         # Combine header, body, and footer to create the full table
         full_table = table_header + table_body + table_footer
         
-        if os.path.exists(output_filename):
-            os.remove(output_filename)
-        # Write the full table to the output .tex file
-        with open(output_filename, "w") as outfile:
+        # Write atomically to avoid races when multiple processes touch the same file.
+        temp_filename = f"{output_filename}.tmp"
+        with open(temp_filename, "w") as outfile:
             outfile.write(full_table)
+        os.replace(temp_filename, output_filename)
 
     # # Example input and output filenames
     # input_filename = "/mnt/data/sample_input.tex"
@@ -298,9 +298,9 @@ class Parameters:
     #         '''
 
 
-# Create an instance of the Parameters class
-scenario = Parameters()
-scenario.generate_latex_parameters_file()
-input_name = "latex_parameters_file.tex"
-output_name = "latex_parameters_table.tex"
-scenario.latex_file_to_table_to_file(output_name)
+if __name__ == "__main__":
+    # Optional helper output for documentation generation.
+    scenario = Parameters()
+    scenario.generate_latex_parameters_file()
+    output_name = "latex_parameters_table.tex"
+    scenario.latex_file_to_table_to_file(output_name)
