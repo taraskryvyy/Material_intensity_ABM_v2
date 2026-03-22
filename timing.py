@@ -367,101 +367,101 @@ class SimulationStep(Parent):
         mining_sites = MiningSite.get_all_instances()
         mining_sites = [x for x in mining_sites if 
                 x.ore_inventory.compute_capacity() > 
-                x.minimum_viable_ore_deposit] 
-        
-        mining_sites = [x for x in mining_sites if 
-                x.ore_inventory.compute_capacity() > 
-                params.minimumViableOreDeposit['val']]
+                params.minimumViableOreDeposit['val'] and len(x.miners) == 0]
 
-        phi = self.params.logitCompetitionParamMining['val']
+        best_site = None
+        if len(mining_sites) > 0:
+            phi = self.params.logitCompetitionParamMining['val']
 
-        for site in mining_sites:
-            site.compute_extraction_cost()
-        
-        criterion = [x.extraction_cost for x in mining_sites]
+            for site in mining_sites:
+                site.compute_extraction_cost()
+            
+            criterion = [x.extraction_cost for x in mining_sites]
 
-        denominator = sum([math.exp(-phi * math.log(x)) for x in criterion])
-        if denominator <= 0:
-            raise ValueError("Non-positive logit denominator")
-        else:
-            probabilties = []
-            for i in criterion:
-                numerator = math.exp(-phi * math.log(i))
-                probabilties.append(numerator/denominator)
-            try:
-                best_site = random.choices(mining_sites,
-                                            weights = probabilties,
-                                            k = 1)[0]
-            except ValueError:
-                print("There is no one to pick from on " + str(self.__class__.__name__))
-                best_site = None
+            denominator = sum([math.exp(-phi * math.log(x)) for x in criterion])
+            if denominator > 0:
+                probabilties = []
+                for i in criterion:
+                    numerator = math.exp(-phi * math.log(i))
+                    probabilties.append(numerator/denominator)
+                try:
+                    best_site = random.choices(mining_sites,
+                                                weights = probabilties,
+                                                k = 1)[0]
+                except ValueError:
+                    print("There is no one to pick from on " + str(self.__class__.__name__))
+                    best_site = None
         
 
-        current_reserve = best_site.ore_inventory.compute_capacity()
-        extraction = current_reserve / 2
+        if best_site is not None:
+            current_reserve = best_site.ore_inventory.compute_capacity()
+            extraction = current_reserve / 2
 
-        future_extraction_cost = best_site.oreCostParamOne * (
-        best_site.initial_ore_deposit / (current_reserve - extraction)
-        ) ** best_site.oreCostParamTwo
-        extraction_cost = (best_site.extraction_cost + 
-                                    future_extraction_cost) / 2
+            future_extraction_cost = best_site.oreCostParamOne * (
+            best_site.initial_ore_deposit / (current_reserve - extraction)
+            ) ** best_site.oreCostParamTwo
+            extraction_cost = (best_site.extraction_cost + 
+                                        future_extraction_cost) / 2
 
-        extration_unit_cost = extraction_cost / params.oreProductivity['val']
-        # extration_unit_cost = (
-        #     min([x.extraction_cost for x in MiningSite.get_all_instances()]) / 
-        #     params.oreProductivity['val'])
-        depr_rate = params.mCapitalDepreciationRate['val']
-        loan_int = params.loanInterestRate['val']
-        cap_price = min([x.price for x in MaterialCapitalFirm.get_all_instances()])
-        cap_prod = MaterialCapitalFirm.average_capital_productivity
-        # min_markup = min([x.markup for x in MaterialFirm.get_all_instances()])
-        markup = params.mMarkupInitial['val']
-        potential_unit_cost = (
-            wage_unit_cost + extration_unit_cost + 
-            (depr_rate + loan_int) * cap_price / cap_prod)
-        potential_price = potential_unit_cost * (1 + markup)#min_markup)
-
-
-        total_material_inventory = sum([x.output_inventory.compute_capacity() for x in MaterialFirm.get_all_instances()])
-        if params.constantMaterialBuffer['val'] == 1:
-            entrant_material_buffer = params.materialBuffer['val']#params.entrantMaterialBuffer['val']
-        else:
-            entrant_material_buffer = Agent.government.carbon_tax * params.materialBufferReactionToCarbonTax['val']
-        total_material_gap = max(0, material_market.total_demand - material_market.total_supply)
-
-        # material_market.expected_price += (params.adaptiveExpectationMaterialPrice['val'] *
-        #                                    (material_market.price - 
-        #                                     material_market.expected_price))
-
-        if ((
-            potential_price < material_market.expected_price 
-            or material_market.total_supply == 0
-            # or total_material_inventory < material_buffer * material_market.total_demand
-             ) 
-             or len(MaterialFirm.get_all_instances()) < 2):#params.nrMaterialFirms['val']):
-            # random.random() < 0.5)):
-            MaterialFirm.compute_market_shares()
-            m = MaterialFirm(params)
-            m.open_deposit_account(
-                bank = random.choice(CommercialBank.get_all_instances()),
-                initial_deposit = MaterialFirm.retained_earnings)
-            MaterialFirm.retained_earnings = 0
-            m.material_buffer = entrant_material_buffer
-            m.desired_production = max(total_material_gap * (1 + m.material_buffer),
-                                        # MaterialFirm.market_size * 
-                                        # MaterialFirm.average_market_share,
-                                        0
-                                        )
-            # m.desired_production = (
-            #     MaterialFirm.market_size * 
-            #     MaterialFirm.average_market_share)
-            # m.pick_mining_site(MiningSite.get_all_instances())
-            m.pick_mining_site([best_site])
-            m.inventory_unit_cost = (
-                m.wage / m.labor_productivity +
-                m.mining_site.extraction_cost / m.ore_productivity +
+            extration_unit_cost = extraction_cost / params.oreProductivity['val']
+            # extration_unit_cost = (
+            #     min([x.extraction_cost for x in MiningSite.get_all_instances()]) / 
+            #     params.oreProductivity['val'])
+            depr_rate = params.mCapitalDepreciationRate['val']
+            loan_int = params.loanInterestRate['val']
+            cap_price = min([x.price for x in MaterialCapitalFirm.get_all_instances()])
+            cap_prod = MaterialCapitalFirm.average_capital_productivity
+            # min_markup = min([x.markup for x in MaterialFirm.get_all_instances()])
+            markup = params.mMarkupInitial['val']
+            potential_unit_cost = (
+                wage_unit_cost + extration_unit_cost + 
                 (depr_rate + loan_int) * cap_price / cap_prod)
-            m.compute_price()
+            potential_price = potential_unit_cost * (1 + markup)#min_markup)
+
+
+            total_material_inventory = sum([x.output_inventory.compute_capacity() for x in MaterialFirm.get_all_instances()])
+            if params.constantMaterialBuffer['val'] == 1:
+                entrant_material_buffer = params.materialBuffer['val']#params.entrantMaterialBuffer['val']
+            else:
+                entrant_material_buffer = Agent.government.carbon_tax * params.materialBufferReactionToCarbonTax['val']
+            total_material_gap = max(0, material_market.total_demand - material_market.total_supply)
+
+            # material_market.expected_price += (params.adaptiveExpectationMaterialPrice['val'] *
+            #                                    (material_market.price - 
+            #                                     material_market.expected_price))
+
+            if ((
+                potential_price < material_market.expected_price 
+                or material_market.total_supply == 0
+                # or total_material_inventory < material_buffer * material_market.total_demand
+                 ) 
+                 or len(MaterialFirm.get_all_instances()) < 2):#params.nrMaterialFirms['val']):
+                # random.random() < 0.5)):
+                MaterialFirm.compute_market_shares()
+                m = MaterialFirm(params)
+                m.open_deposit_account(
+                    bank = random.choice(CommercialBank.get_all_instances()),
+                    initial_deposit = MaterialFirm.retained_earnings)
+                MaterialFirm.retained_earnings = 0
+                m.material_buffer = entrant_material_buffer
+                m.desired_production = max(total_material_gap * (1 + m.material_buffer),
+                                            # MaterialFirm.market_size * 
+                                            # MaterialFirm.average_market_share,
+                                            0
+                                            )
+                # m.desired_production = (
+                #     MaterialFirm.market_size * 
+                #     MaterialFirm.average_market_share)
+                # m.pick_mining_site(MiningSite.get_all_instances())
+                m.pick_mining_site([best_site])
+                if m.mining_site is not None:
+                    m.inventory_unit_cost = (
+                        m.wage / m.labor_productivity +
+                        m.mining_site.extraction_cost / m.ore_productivity +
+                        (depr_rate + loan_int) * cap_price / cap_prod)
+                else:
+                    m.inventory_unit_cost = potential_unit_cost
+                m.compute_price()
         for i in MaterialFirm.get_all_instances():
             i.sales_real = 0
 

@@ -1,7 +1,7 @@
 from parameters import Parameters
 
 scenarios = {
-    "baseline": {},
+    # "baseline": {},
 
     # "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
     #                                              "targetFinalCarbonTax": 0.6},
@@ -79,9 +79,9 @@ scenarios = {
     #                                      "miningSiteShocks": 1,
     #                                      "oreCostShocks": 200},
 
-    # "Low R material intensity": {"recMaterialProductivity": 2},
-    # "Base R material intensity": {"recMaterialProductivity": 1.25},
-    # "High R material intensity": {"recMaterialProductivity": 0.75},
+    "Low R material intensity": {"recMaterialProductivity": 2},
+    "Base R material intensity": {"recMaterialProductivity": 1.25},
+    "High R material intensity": {"recMaterialProductivity": 0.75},
 
     # "extreme renewables material intensity": {"recMaterialProductivity": 0.75},
     # "higher renewables material intensity": {"recMaterialProductivity": 1.25},

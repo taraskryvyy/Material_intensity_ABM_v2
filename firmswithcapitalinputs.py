@@ -220,9 +220,18 @@ class MaterialFirm(FirmWithCapitalInputs):
 
     def pick_mining_site(self, mining_sites: list):
 
+        if self.mining_site is not None:
+            if self in self.mining_site.miners:
+                self.mining_site.miners.remove(self)
+
         mining_sites = [x for x in mining_sites if 
                 x.ore_inventory.compute_capacity() > 
-                self.minimum_viable_ore_deposit]
+                self.minimum_viable_ore_deposit and len(x.miners) == 0]
+
+        if not mining_sites:
+            print("No viable mining sites available for", self.__class__.__name__)
+            self.mining_site = None
+            return None
 
         phi = self.params.logitCompetitionParamMining['val']
 
@@ -247,22 +256,11 @@ class MaterialFirm(FirmWithCapitalInputs):
                 print("There is no one to pick from on " + str(self.__class__.__name__))
                 best_site = None
 
-            best_site.miners.append(self)
+            if best_site is not None:
+                best_site.miners.append(self)
             self.mining_site: MiningSite = best_site
             
             return best_site
-
-
-        if random_pick:
-            mining_site = random.choice(mining_sites)
-        else:
-            for site in mining_sites:
-                site.compute_extraction_cost()
-            mining_site = min(mining_sites,
-                            key=lambda x: x.extraction_cost)
-        mining_site.miners.append(self)
-        self.mining_site: MiningSite = mining_site
-        return mining_site
     
     # def compute_extra_material_buffer(self, ):
 
@@ -288,7 +286,13 @@ class MaterialFirm(FirmWithCapitalInputs):
         if self.id == 210:
             pass
         if self.mining_site == None:
-            raise Exception("No mining site assigned")
+            # Try once more to find a site
+            self.pick_mining_site(MiningSite.get_all_instances())
+            if self.mining_site == None:
+                # No sites available; we cannot extract ore this step.
+                print("No mining site assigned to " + str(self.__class__.__name__))
+                self.ore_demand = 0
+                return
         # if self.mining_site.ore_inventory.compute_capacity() == 0:
         #     raise Exception("Mining site has no ore")
         run_out_of_ore = False
