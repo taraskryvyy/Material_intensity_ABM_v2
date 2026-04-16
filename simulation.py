@@ -30,7 +30,10 @@ if __name__ == "__main__":
         # Create a Parameters instance from the dictionary
         params = Parameters()
         for param_name, param_val in params_dict.items():
-            getattr(params, param_name)["val"] = param_val["val"]
+            if isinstance(param_val, dict) and "val" in param_val:
+                getattr(params, param_name)["val"] = param_val["val"]
+            else:
+                setattr(params, param_name, param_val)
     else:
         scenario_name = "baseline"
         params = generate_scenarios()[scenario_name]
@@ -240,6 +243,8 @@ for t in range(params.nrTimesteps['val']):
       material_firms = [x for x in all_agents if isinstance(x, MaterialFirm)]
       total_material_output = sum(x.output for x in material_firms)
 
+      active_mining_sites = [x for x in all_agents if isinstance(x, MiningSite) and x.ore_inventory.compute_capacity() > x.minimum_viable_ore_deposit]
+
       # create a dictionary to store the results
       results = {
             # 'Scenario': scenario_name,
@@ -316,8 +321,8 @@ for t in range(params.nrTimesteps['val']):
             # 'Employment': sum([x.labor_capacity for x in all_agents if isinstance(x, Firm)]),
             # 'Total material inventory': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),
             'Total ore reserves': sum([x.ore_inventory.compute_capacity() for x in all_agents if isinstance(x, MiningSite)]),
-            # 'Number of mining sites': len([x for x in all_agents if isinstance(x, MiningSite) and x.ore_inventory.compute_capacity() > 
-            # x.minimum_viable_ore_deposit]),
+            'Number of active mining sites': len(active_mining_sites),
+            'Average reserves per active mining site': sum(x.ore_inventory.compute_capacity() for x in active_mining_sites) / len(active_mining_sites) if len(active_mining_sites) > 0 else 0,
             # 'Number of material firms': len([x for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Average capital capacity of material firms': sum([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]) /
             #                                                                         len([x for x in all_agents if isinstance(x, MaterialFirm)]),

@@ -4,6 +4,30 @@ import seaborn as sns
 from matplotlib.backends.backend_pdf import PdfPages
 import numpy as np
 
+from scenarios import scenarios
+
+def get_scenario_colors(df):
+    colors = {}
+    for name, params_dict in scenarios.items():
+        if isinstance(params_dict, dict) and "color" in params_dict:
+            colors[name] = params_dict["color"]
+        elif hasattr(params_dict, "color"):
+            colors[name] = params_dict.color
+            
+    if not colors:
+        return None
+        
+    default_palette = sns.color_palette()
+    all_scenarios = df.index.get_level_values('Scenario').unique()
+    
+    color_idx = 0
+    for scenario in all_scenarios:
+        if scenario not in colors:
+            colors[scenario] = default_palette[color_idx % len(default_palette)]
+            color_idx += 1
+            
+    return colors
+
 def load_data(filepath='results.csv'):
     """Load results from CSV, handling multilevel indexing appropriately."""
     print(f"Reading from {filepath}...")
@@ -12,8 +36,8 @@ def load_data(filepath='results.csv'):
     df = df.reorder_levels(new_order)
     return df
 
-def plot_metrics_to_pdf(df, pdf_path='scenarios_plots_all.pdf'):
-    """Iterate through the desired metrics and plot them, saving output to a single PDF."""
+def plot_metrics_to_pdfs(df):
+    """Iterate through groups and create a separate PDF for each."""
     
     smooth_figs = [
         'Renewable Energy capital price', 
@@ -56,68 +80,102 @@ def plot_metrics_to_pdf(df, pdf_path='scenarios_plots_all.pdf'):
         ('Material price', 'Material Price (zoomed in)', 'Material Price', 'auto_zoom'),
         ('Average ore extraction cost', 'Average Ore Extraction Cost', 'Average Ore Extraction Cost', None),
         ('Total ore reserves', 'Total Ore Reserves', 'Total Ore Reserves', None),
+        ('Number of active mining sites', 'Number of Active Mining Sites', 'Number of Active Mining Sites', None),
+        ('Average reserves per active mining site', 'Average Reserves per Active Mining Site', 'Average Reserves per Active Mining Site', None),
         ('Material capital productivity', 'Material Capital Productivity', 'Material Capital Productivity', None),
         ('Final good capital productivity', 'Final Good Capital Productivity', 'Final Good Capital Productivity', None),
         ('Renewable Energy capital productivity', 'Renewable Energy Capital Productivity', 'Renewable Energy Capital Productivity', None),
         ('Fossil Fuel Energy capital productivity', 'Fossil Fuel Energy Capital Productivity', 'Fossil Fuel Energy Capital Productivity', None),
     ]
 
-    with PdfPages(pdf_path) as pdf:
-        for metric, title, ylabel, ylim in plots_to_make:
-            try:
-                # Use .copy() to avoid SettingWithCopyWarning
-                metric_df = df.loc[[metric]].copy()
-            except KeyError:
-                print(f"Metric '{metric}' not found in data. Skipping.")
-                continue
-            
-            if metric_df.empty:
-                print(f"Metric '{metric}' has no data. Skipping.")
-                continue
-
-            if metric in smooth_figs:
-                # Group by Scenario and Simulation Number, then apply rolling mean to smooth
-                metric_df['Value'] = metric_df.groupby(['Scenario', 'Simulation Number'])['Value'].transform(
-                    lambda x: x.rolling(smooth_window, min_periods=1).mean()
-                )
-            
-            plt.figure(figsize=fig_size)
-            sns.lineplot(
-                x='Timestep Number',
-                y='Value',
-                data=metric_df,
-                hue='Scenario',
-                errorbar=errorbar_format
-            )
-            plt.title(title)
-            plt.xlabel('Timestep Number')
-            plt.ylabel(ylabel)
-            
-            # Apply y-axis limits safely depending on the data
-            vals = metric_df['Value'].dropna()
-            if len(vals) > 0:
-                if ylim == 'auto_zoom':
-                    max_y = np.percentile(vals, 99)
-                    min_y = np.min(vals)
-                    plt.ylim(min_y, max_y)
-                elif ylim == 'auto_zoom2':
-                    max_y = np.mean(vals) * 2
-                    min_y = np.min(vals)
-                    plt.ylim(min_y, max_y)
-                elif ylim is not None:
-                    plt.ylim(ylim[0], ylim[1])
+    import re
+    def sanitize_filename(name):
+        return re.sub(r'[\\/*?:"<>|]', "", name).replace(" ", "_").strip("_")
+        
+    groups = {}
+    all_scenarios = df.index.get_level_values('Scenario').unique()
+    for s_name in all_scenarios:
+        s_group = "Ungrouped"
+        if s_name in scenarios:
+            params_dict = scenarios[s_name]
+            if isinstance(params_dict, dict) and "group" in params_dict:
+                s_group = params_dict["group"]
+            elif hasattr(params_dict, "group"):
+                s_group = params_dict.group
                 
-            plt.tight_layout()
-            pdf.savefig()
-            plt.close()
-            print(f"Added '{title}' to PDF.")
+        if s_group not in groups:
+            groups[s_group] = []
+        groups[s_group].append(s_name)
+        
+    colors = get_scenario_colors(df)
+    
+    for group_name, group_scenarios in groups.items():
+        group_mask = df.index.get_level_values('Scenario').isin(group_scenarios)
+        group_df = df[group_mask].copy()
+        
+        pdf_path = f'scenarios_plots_{sanitize_filename(group_name)}.pdf'
+        print(f"Generating PDF for group '{group_name}' -> {pdf_path}")
+        
+        with PdfPages(pdf_path) as pdf:
+            for metric, title, ylabel, ylim in plots_to_make:
+                try:
+                    # Use .copy() to avoid SettingWithCopyWarning
+                    metric_df = group_df.loc[[metric]].copy()
+                except KeyError:
+                    print(f"Metric '{metric}' not found in data for group '{group_name}'. Skipping.")
+                    continue
+                
+                if metric_df.empty:
+                    print(f"Metric '{metric}' has no data for group '{group_name}'. Skipping.")
+                    continue
+
+                if metric in smooth_figs:
+                    # Group by Scenario and Simulation Number, then apply rolling mean to smooth
+                    metric_df['Value'] = metric_df.groupby(['Scenario', 'Simulation Number'])['Value'].transform(
+                        lambda x: x.rolling(smooth_window, min_periods=1).mean()
+                    )
+                
+                plt.figure(figsize=fig_size)
+                plot_kwargs = {
+                    'x': 'Timestep Number',
+                    'y': 'Value',
+                    'data': metric_df,
+                    'hue': 'Scenario',
+                    'errorbar': errorbar_format
+                }
+                if colors:
+                    plot_kwargs['palette'] = colors
+                
+                sns.lineplot(**plot_kwargs)
+                plt.title(title)
+                plt.xlabel('Timestep Number')
+                plt.ylabel(ylabel)
+                
+                # Apply y-axis limits safely depending on the data
+                vals = metric_df['Value'].dropna()
+                if len(vals) > 0:
+                    if ylim == 'auto_zoom':
+                        max_y = np.percentile(vals, 99)
+                        min_y = np.min(vals)
+                        plt.ylim(min_y, max_y)
+                    elif ylim == 'auto_zoom2':
+                        max_y = np.mean(vals) * 2
+                        min_y = np.min(vals)
+                        plt.ylim(min_y, max_y)
+                    elif ylim is not None:
+                        plt.ylim(ylim[0], ylim[1])
+                    
+                plt.tight_layout()
+                pdf.savefig()
+                plt.close()
+                print(f"Added '{title}' to PDF.")
 
 if __name__ == '__main__':
     print("Initializing scenario plotting workflow...")
     try:
         df = load_data('results.csv')
-        print("Generating plots and saving to PDF...")
-        plot_metrics_to_pdf(df, 'scenarios_plots_all.pdf')
-        print("Done! Saved as scenarios_plots_all.pdf")
+        print("Generating plots and saving to PDFs...")
+        plot_metrics_to_pdfs(df)
+        print("Done! Saved PDFs successfully.")
     except FileNotFoundError:
         print("results.csv not found. Please ensure the simulation has been run and results are available.")

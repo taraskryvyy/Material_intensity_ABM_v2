@@ -125,7 +125,7 @@ class Parameters:
         self.nrFossilFuelEnergyPowerPlants={"val": 10, "symbol": r"\#_{FE}", "desc": "number of fossil-fuel energy power plants"}
         self.nrRenewableEnergyPowerPlants={"val": 2, "symbol": r"\#_{RE}", "desc": "number of renewable energy power plants"}
         self.nrMaterialFirms={"val": 5, "symbol": r"\#_{M}", "desc": "number of material firms"}
-        self.nrMiningSites={"val": 10, "symbol": r"\#_{R^{D}}", "desc": "number of mining sites"}
+        self.nrMiningSites={"val": 20, "symbol": r"\#_{R^{D}}", "desc": "number of mining sites"}
         self.nrFossilFuelEnergyCapitalFirms={"val": 1, "symbol": r"\#_{FEC}", "desc": "number of fossil-fuel energy capital firms"}
         self.nrRenewableEnergyCapitalFirms={"val": 1, "symbol": r"\#_{REC}", "desc": "number of renewable energy capital firms"}
         self.nrMaterialCapitalFirms={"val": 1, "symbol": r"\#_{MC}", "desc": "number of material capital firms"}
