@@ -7,30 +7,30 @@ scenario_groups = {
         "High R material intensity": {"recMaterialProductivity": 0.75, "color": "blue"}
     },
 
-    "The impact of the rising cost of fossil fuels": {
-        "Low fuel price growth": {"fuelPriceDrift": 0.0003, "color": "blue"},
-        "Base fuel price growth": {"fuelPriceDrift": 0.002, "color": "orange"},
-        "High fuel price growth": {"fuelPriceDrift": 0.006, "color": "green"}
-    },
+    # "The impact of the rising cost of fossil fuels": {
+    #     "Low fuel price growth": {"fuelPriceDrift": 0.0003, "color": "blue"},
+    #     "Base fuel price growth": {"fuelPriceDrift": 0.002, "color": "orange"},
+    #     "High fuel price growth": {"fuelPriceDrift": 0.006, "color": "green"}
+    # },
 
-    "A declining metal ore extraction costs": {
-        "Baseline": {"color": "blue"},
-        "Slow decline of ore cost": {"oreCostShocks": 400, "color": "orange"},
-        "Fast decline of ore cost": {"oreCostShocks": 200, "color": "green"}
-    },
+    # "A declining metal ore extraction costs": {
+    #     "Baseline": {"color": "blue"},
+    #     "Slow decline of ore cost": {"oreCostShocks": 400, "color": "orange"},
+    #     "Fast decline of ore cost": {"oreCostShocks": 200, "color": "green"}
+    # },
 
-    "The impact of carbon pricing on the energy transition pathways": {
-        # "baseline": {},
-        "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
-                                                     "targetFinalCarbonTax": 0.6},
-        "high tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
-                                                   "targetFinalCarbonTax": 0.6},
-        "low tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
-                                                     "targetFinalCarbonTax": 0.15},
-        "low tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
-                                                   "targetFinalCarbonTax": 0.15},
-        "baseline": {"constantMaterialBuffer": 1}
-        },
+    # "The impact of carbon pricing on the energy transition pathways": {
+    #     # "baseline": {},
+    #     "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+    #                                                  "targetFinalCarbonTax": 0.6},
+    #     "high tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+    #                                                "targetFinalCarbonTax": 0.6},
+    #     "low tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+    #                                                  "targetFinalCarbonTax": 0.15},
+    #     "low tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+    #                                                "targetFinalCarbonTax": 0.15},
+    #     "baseline": {"constantMaterialBuffer": 1}
+    #     },
 
         # "0.1x reaction and 60pct target carbon tax": {"materialBufferReactionToCarbonTax": 0.1, 
         #                                              "targetFinalCarbonTax": 0.6},

@@ -243,6 +243,23 @@ scenario_filter = [scen in scenario_set for scen in all_scenarios]
 #     plt.show()
 # plt.close()
 
+'Total GDP (Value Added)'
+total_gdp_va_df = df.loc[['Total GDP (Value Added)']]
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+             y='Value',
+             data=total_gdp_va_df,
+             hue='Scenario',
+             errorbar=errorbar_format)
+plt.title('Total GDP (Value Added)')
+plt.xlabel('Timestep Number')
+plt.ylabel('Total GDP (Value Added)')
+if save_figs:
+    plt.savefig('scenario_total_gdp_va.'+format)
+if show_figs:
+    plt.show()
+plt.close()
+
 
 # # Stacked plot for sectoral GDP
 # sectoral_gdp_df = df.loc[gdp_vars].reset_index()

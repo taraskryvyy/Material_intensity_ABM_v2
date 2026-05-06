@@ -31,8 +31,9 @@ def get_scenario_colors(df):
 def load_data(filepath='results.csv'):
     """Load results from CSV, handling multilevel indexing appropriately."""
     print(f"Reading from {filepath}...")
-    df = pd.read_csv(filepath, index_col=['Scenario', 'Simulation Number', 'Timestep Number', 'Metric'])
-    new_order = ['Metric', 'Scenario', 'Simulation Number', 'Timestep Number']
+    # The file has columns: Metric, Scenario, Timestep Number, mean, std, count, se
+    df = pd.read_csv(filepath, index_col=['Scenario', 'Timestep Number', 'Metric'])
+    new_order = ['Metric', 'Scenario', 'Timestep Number']
     df = df.reorder_levels(new_order)
     return df
 
@@ -45,7 +46,18 @@ def plot_metrics_to_pdfs(df):
         "Material price", 
         "Bankruptcy rate", 
         "Total household dividend income", 
-        "Electricity price"
+        "Electricity price",
+        'Total GDP (Value Added)',
+        'Final good GDP (Value Added)',
+        'Material GDP (Value Added)',
+        'Renewable Energy GDP (Value Added)',
+        'Fossil Fuel Energy GDP (Value Added)',
+        'Final good capital GDP (Value Added)',
+        'Renewable Energy capital GDP (Value Added)',
+        'Fossil Fuel Energy capital GDP (Value Added)',
+        'Material capital GDP (Value Added)',
+        'Mining GDP (Value Added)',
+        # 'Ratio of total ore extraction cost to Total GDP (Value Added)'
     ]
     smooth_window = 10
     fig_size = (6, 4)
@@ -53,6 +65,16 @@ def plot_metrics_to_pdfs(df):
     
     # List of tuples defining all plots: (Metric_Name, Title, Y_Label, Y_Axis_Limits)
     plots_to_make = [
+        ('Total GDP (Value Added)', 'Total GDP (Value Added)', 'Total GDP (Value Added)', None),
+        ('Final good GDP (Value Added)', 'Final Good GDP (Value Added)', 'Final Good GDP (Value Added)', None),
+        ('Material GDP (Value Added)', 'Material GDP (Value Added)', 'Material GDP (Value Added)', None),
+        ('Renewable Energy GDP (Value Added)', 'Renewable Energy GDP (Value Added)', 'Renewable Energy GDP (Value Added)', None),
+        ('Fossil Fuel Energy GDP (Value Added)', 'Fossil Fuel Energy GDP (Value Added)', 'Fossil Fuel Energy GDP (Value Added)', None),
+        ('Final good capital GDP (Value Added)', 'Final Good Capital GDP (Value Added)', 'Final Good Capital GDP (Value Added)', None),
+        ('Renewable Energy capital GDP (Value Added)', 'Renewable Energy Capital GDP (Value Added)', 'Renewable Energy Capital GDP (Value Added)', None),
+        ('Fossil Fuel Energy capital GDP (Value Added)', 'Fossil Fuel Energy Capital GDP (Value Added)', 'Fossil Fuel Energy Capital GDP (Value Added)', None),
+        ('Material capital GDP (Value Added)', 'Material Capital GDP (Value Added)', 'Material Capital GDP (Value Added)', None),
+        ('Mining GDP (Value Added)', 'Mining GDP (Value Added)', 'Mining GDP (Value Added)', None),
         ('Average material buffer', 'Average Material Buffer', 'Average Material Buffer', None),
         ('Carbon tax', 'Carbon Tax', 'Carbon Tax', None),
         ('Carbon tax growthrate', 'Carbon Tax Growthrate', 'Carbon Tax Growthrate', (0, 0.02)),
@@ -74,6 +96,7 @@ def plot_metrics_to_pdfs(df):
         ('Electricity price', 'Electricity Price (zoomed in)', 'Electricity Price', 'auto_zoom'),
         ('Weighted average sell price of final good', 'Weighted Average Sell Price of Final Good', 'Weighted Average Sell Price of Final Good', None),
         ('Weighted average sell price of final good', 'Weighted Average Sell Price of Final Good (zoomed in)', 'Weighted Average Sell Price of Final Good', 'auto_zoom2'),
+        ('Total GDP (Value Added)', 'Total GDP (Value Added)', 'Total GDP (Value Added)', None),
         ('Fuel price', 'Fuel Price', 'Fuel Price', None),
         ('Renewable Energy market share', 'Renewable Energy Market Share', 'Renewable Energy Market Share', None),
         ('Material price', 'Material Price', 'Material Price', None),
@@ -130,29 +153,38 @@ def plot_metrics_to_pdfs(df):
                     continue
 
                 if metric in smooth_figs:
-                    # Group by Scenario and Simulation Number, then apply rolling mean to smooth
-                    metric_df['Value'] = metric_df.groupby(['Scenario', 'Simulation Number'])['Value'].transform(
+                    # Smooth the mean and se
+                    metric_df['mean'] = metric_df.groupby('Scenario')['mean'].transform(
+                        lambda x: x.rolling(smooth_window, min_periods=1).mean()
+                    )
+                    metric_df['se'] = metric_df.groupby('Scenario')['se'].transform(
                         lambda x: x.rolling(smooth_window, min_periods=1).mean()
                     )
                 
                 plt.figure(figsize=fig_size)
-                plot_kwargs = {
-                    'x': 'Timestep Number',
-                    'y': 'Value',
-                    'data': metric_df,
-                    'hue': 'Scenario',
-                    'errorbar': errorbar_format
-                }
-                if colors:
-                    plot_kwargs['palette'] = colors
                 
-                sns.lineplot(**plot_kwargs)
+                # Reset index so we can access columns easily
+                plot_df = metric_df.reset_index()
+                
+                scenarios_in_data = plot_df['Scenario'].unique()
+                for scenario in scenarios_in_data:
+                    scen_df = plot_df[plot_df['Scenario'] == scenario]
+                    color = colors.get(scenario, 'blue') if colors else 'blue'
+                    
+                    x = scen_df['Timestep Number']
+                    y = scen_df['mean']
+                    y_err = scen_df['se']
+                    
+                    plt.plot(x, y, label=scenario, color=color)
+                    plt.fill_between(x, y - y_err, y + y_err, color=color, alpha=0.2)
+                
                 plt.title(title)
                 plt.xlabel('Timestep Number')
                 plt.ylabel(ylabel)
+                plt.legend(loc='best', fontsize='small')
                 
                 # Apply y-axis limits safely depending on the data
-                vals = metric_df['Value'].dropna()
+                vals = metric_df['mean'].dropna()
                 if len(vals) > 0:
                     if ylim == 'auto_zoom':
                         max_y = np.percentile(vals, 99)

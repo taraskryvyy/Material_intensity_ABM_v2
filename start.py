@@ -6,6 +6,10 @@ import os
 import subprocess
 import sys
 import time
+import pandas as pd
+import numpy as np
+
+KEEP_INDIVIDUAL_RUNS = False
 
 
 def backup_results_file(filename: str) -> None:
@@ -41,26 +45,44 @@ def run_single_simulation(task):
     return scenario_name, sim, output_file, completed.returncode, completed.stdout, completed.stderr
 
 
-def merge_csv_files(source_files, target_file):
-    header_written = False
-    with open(target_file, "w", encoding="utf-8", newline="") as out_f:
-        for source in source_files:
-            if not Path(source).exists():
-                continue
-            with open(source, "r", encoding="utf-8", newline="") as in_f:
-                for line_no, line in enumerate(in_f):
-                    if line_no == 0:
-                        if not header_written:
-                            out_f.write(line)
-                            header_written = True
-                        continue
-                    out_f.write(line)
+def aggregate_csv_files(source_files, target_file):
+    dfs = []
+    for f in source_files:
+        if Path(f).exists():
+            df = pd.read_csv(f)
+            dfs.append(df)
+            
+    if not dfs:
+        return
+        
+    full_df = pd.concat(dfs, ignore_index=True)
+    
+    # Check if this is the long format output from simulation.py
+    # Expected columns: Metric, Scenario, Simulation Number, Timestep Number, Value
+    if 'Metric' in full_df.columns and 'Value' in full_df.columns:
+        # Aggregate by Metric, Scenario, Timestep Number
+        agg_df = full_df.groupby(['Metric', 'Scenario', 'Timestep Number'])['Value'].agg(['mean', 'std', 'count']).reset_index()
+        # Calculate standard error (std / sqrt(n))
+        agg_df['se'] = agg_df['std'] / np.sqrt(agg_df['count'])
+        # Fill NaN standard errors with 0 (e.g. if count is 1)
+        agg_df['se'] = agg_df['se'].fillna(0)
+        
+        agg_df.to_csv(target_file, index=False)
+    else:
+        # Fallback if the format is different than expected
+        full_df.to_csv(target_file, index=False)
 
 
 if __name__ == "__main__":
     backup_results_file("results.csv")
 
     scenarios = generate_scenarios()
+    
+    print("Scheduled Scenarios:")
+    for name in scenarios.keys():
+        print(f"  - {name}")
+    print()
+    
     output_dir = Path(f"run_outputs_{time.strftime('%Y%m%d_%H%M%S')}")
     output_dir.mkdir(exist_ok=True)
 
@@ -93,9 +115,17 @@ if __name__ == "__main__":
             else:
                 print(f"Completed scenario={scenario_name}, sim={sim} -> {output_file.name}")
 
+    print("Aggregating output files...")
+    aggregate_csv_files(output_files, "results.csv")
+    
+    if not KEEP_INDIVIDUAL_RUNS:
+        print("Cleaning up unaggregated simulation runs...")
+        for f in output_files:
+            if f.exists():
+                f.unlink()
+        
     if failed:
-        print(f"{len(failed)} simulations failed. results.csv will not be merged.")
+        print(f"Finished with {len(failed)} failures.")
         sys.exit(1)
-
-    merge_csv_files(output_files, "results.csv")
-    print(f"Merged {len(output_files)} files into results.csv")
+    else:
+        print("All simulations completed successfully.")

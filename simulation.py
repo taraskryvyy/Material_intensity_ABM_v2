@@ -245,6 +245,32 @@ for t in range(params.nrTimesteps['val']):
 
       active_mining_sites = [x for x in all_agents if isinstance(x, MiningSite) and x.ore_inventory.compute_capacity() > x.minimum_viable_ore_deposit]
 
+      def get_va(x):
+            if isinstance(x, MiningSite):
+                  return x.income_statement.past_sales_income
+            return (x.output * x.price if hasattr(x, 'output') and hasattr(x, 'price') else 0) - \
+                   (x.income_statement.past_materials_cost +
+                    x.income_statement.past_energy_cost +
+                    x.income_statement.past_fuel_cost +
+                    x.income_statement.past_ore_extraction_cost)
+
+      final_good_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, FinalGoodFirm)])
+      material_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, MaterialFirm)])
+      renewable_energy_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)])
+      fossil_fuel_energy_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)])
+      final_good_capital_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, FinalGoodCapitalFirm)])
+      renewable_energy_capital_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)])
+      fossil_fuel_energy_capital_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)])
+      material_capital_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, MaterialCapitalFirm)])
+      mining_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, MiningSite)])
+
+      total_gdp_va = (final_good_gdp_va + material_gdp_va + renewable_energy_gdp_va +
+                      fossil_fuel_energy_gdp_va + final_good_capital_gdp_va +
+                      renewable_energy_capital_gdp_va + fossil_fuel_energy_capital_gdp_va +
+                      material_capital_gdp_va + mining_gdp_va)
+
+      total_ore_extraction_cost = sum([x.income_statement.past_ore_extraction_cost for x in all_agents if isinstance(x, Firm)])
+
       # create a dictionary to store the results
       results = {
             # 'Scenario': scenario_name,
@@ -377,14 +403,26 @@ for t in range(params.nrTimesteps['val']):
             'NPL ratio': sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]) / sum([x.balance for x in CommercialBank.instances[0].loans + 
                                                                                                            CommercialBank.instances[0].non_performing_loans]),
             'Commercial bank loan-to-deposit-ratio': CommercialBank.instances[0].loan_to_deposit_ratio,
-            'Final good GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodFirm)]),
-            'Material GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialFirm)]),
-            'Renewable Energy GDP': sum([x.output * x.price for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
-            'Fossil Fuel Energy GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
-            'Final good capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),
-            'Renewable Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),
-            'Fossil Fuel Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),
-            'Material capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Commercial bank deposit balance': sum([x.deposit.balance for x in CommercialBank.instances]),
+            'Ratio of total ore extraction cost to Total GDP (Value Added)': (total_ore_extraction_cost / total_gdp_va) if total_gdp_va != 0 else 0,
+            # 'Final good GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodFirm)]),
+            # 'Material GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Renewable Energy GDP': sum([x.output * x.price for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
+            # 'Fossil Fuel Energy GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
+            # 'Final good capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),
+            # 'Renewable Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),
+            # 'Fossil Fuel Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),
+            # 'Material capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Final good GDP (Value Added)': final_good_gdp_va,
+            'Material GDP (Value Added)': material_gdp_va,
+            'Renewable Energy GDP (Value Added)': renewable_energy_gdp_va,
+            'Fossil Fuel Energy GDP (Value Added)': fossil_fuel_energy_gdp_va,
+            'Final good capital GDP (Value Added)': final_good_capital_gdp_va,
+            'Renewable Energy capital GDP (Value Added)': renewable_energy_capital_gdp_va,
+            'Fossil Fuel Energy capital GDP (Value Added)': fossil_fuel_energy_capital_gdp_va,
+            'Material capital GDP (Value Added)': material_capital_gdp_va,
+            'Mining GDP (Value Added)': mining_gdp_va,
+            'Total GDP (Value Added)': total_gdp_va,
             'Average material buffer': sum([x.material_buffer for x in all_agents if isinstance(x, MaterialFirm)]) / len([x for x in all_agents if isinstance(x, MaterialFirm)])
       }
 

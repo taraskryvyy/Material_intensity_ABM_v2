@@ -651,10 +651,27 @@ plt.close()
 # plt.xlabel('Timestep Number')
 # plt.ylabel('Total Energy Deficit')
 # if save_figs:
-#     plt.savefig('scenario_total_energy_deficit.'+format)
+#     plt.savefig('scenario_gdp.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
+
+'Total GDP (Value Added)'
+total_gdp_va_df = df.loc[['Total GDP (Value Added)']]
+plt.figure(figsize=fig_size)
+sns.lineplot(x='Timestep Number',
+             y='Value',
+             data=total_gdp_va_df,
+             hue='Scenario',
+             errorbar=errorbar_format)
+plt.title('Total GDP (Value Added)')
+plt.xlabel('Timestep Number')
+plt.ylabel('Total GDP (Value Added)')
+if save_figs:
+    plt.savefig('scenario_total_gdp_va.'+format)
+if show_figs:
+    plt.show()
+plt.close()
 
 # total_supply_of_material_df = df.loc[["Total supply of material"]]
 # plt.figure(figsize=fig_size)

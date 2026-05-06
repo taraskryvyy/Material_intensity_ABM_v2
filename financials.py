@@ -125,6 +125,20 @@ class IncomeStatement(Parent):
         self.consumption_cost = 0
 
         self.past_output_inventory_value = 0
+        
+        self.past_sales_income = 0
+        self.past_interest_income = 0
+        self.past_wage_income = 0
+        self.past_dividend_income = 0
+        self.past_unemployment_benefit_income = 0
+        
+        self.past_interest_expense = 0
+        self.past_labor_cost = 0
+        self.past_ore_extraction_cost = 0
+        self.past_materials_cost = 0
+        self.past_energy_cost = 0
+        self.past_fuel_cost = 0
+        self.past_depreciation_cost = 0
 
     def compute_net_profit(self):
         self.compute_profit()
