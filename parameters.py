@@ -30,6 +30,9 @@ class Parameters:
         self.targetFinalCarbonTax={"val": 0, "symbol": r"\theta^{carbon}", "desc": "target carbon tax rate"}
         self.policyCommitment={"val": 1, "symbol": r"\theta^{policy}", "desc": "policy commitment parameter (0 for no commitment, 1 for full commitment)"}
         self.materialBufferReactionToCarbonTax={"val": 0.5, "symbol": r"\beta_{M}^{carbon}", "desc": "material buffer reaction to carbon tax"}
+        self.policyInventoryHaircutOn={"val": 0, "symbol": r"{policy}_{haircut}", "desc": "Toggle for output inventory haircut policy"}
+        self.haircutInventoryRatioThreshold={"val": 0.1, "symbol": r"{thr}_{haircut}", "desc": "Threshold of inventory/assets ratio to trigger haircut"}
+        self.haircutInventoryValue={"val": 0.7, "symbol": r"{val}_{haircut}", "desc": "Percentage haircut applied to output inventory"}
         # Final Good Sector Parameters
         self.fgLaborProductivity={"val": 15, "symbol": r"\alpha^{FG}", "desc": " labor productivity in final good sector"}
         self.fgCapitalLifeSpan={"val": 10, "symbol": r"\tau^{K_{FG}}", "desc": "useful lifespan of final good capital"}

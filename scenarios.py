@@ -1,36 +1,131 @@
 from parameters import Parameters
 
 scenario_groups = {
+    ############################################################################################################
+    ##                                            SENSITIVITY ANALYSIS                                        ##
+    ############################################################################################################
+    # "Sensitivity Analysis": {
+    #     "miningSiteExplorationProbability_0.1": {"miningSiteExplorationProbability": 0.1},
+    #     "miningSiteExplorationProbability_0.25": {"miningSiteExplorationProbability": 0.25},
+    #     "miningSiteExplorationProbability_0.5": {"miningSiteExplorationProbability": 0.5},
+    #     "miningSiteExplorationProbability_0.9": {"miningSiteExplorationProbability": 0.9},
+
+    #     "oreCostParamOne_0.1": {"oreCostParamOne": 0.1},
+    #     "oreCostParamOne_0.3": {"oreCostParamOne": 0.3},
+    #     "oreCostParamOne_0.5": {"oreCostParamOne": 0.5},
+
+    #     "sigmaOreCostParamOne_0.005": {"sigmaOreCostParamOne": 0.005},
+    #     "sigmaOreCostParamOne_0.05": {"sigmaOreCostParamOne": 0.05},
+    #     "sigmaOreCostParamOne_0.03": {"sigmaOreCostParamOne": 0.03},
+
+    #     "oreCostParamTwo_0.1": {"oreCostParamTwo": 0.1},
+    #     "oreCostParamTwo_0.5": {"oreCostParamTwo": 0.5},
+    #     "oreCostParamTwo_0.9": {"oreCostParamTwo": 0.9},
+
+    #     "recMaterialProductivity_0.9": {"recMaterialProductivity": 0.9},
+    #     "recMaterialProductivity_1.25": {"recMaterialProductivity": 1.25},
+    #     "recMaterialProductivity_2": {"recMaterialProductivity": 2},
+
+    #     "fgcMaterialProductivity_0.9": {"fgcMaterialProductivity": 0.9},
+    #     "fgcMaterialProductivity_1": {"fgcMaterialProductivity": 1},
+    #     "fgcMaterialProductivity_2": {"fgcMaterialProductivity": 2},
+
+    #     "reCapitalLifeSpan_15": {"reCapitalLifeSpan": 15},
+    #     "reCapitalLifeSpan_20": {"reCapitalLifeSpan": 20},
+    #     "reCapitalLifeSpan_25": {"reCapitalLifeSpan": 25},
+
+    #     "oreProductivity_0.75": {"oreProductivity": 0.75},
+    #     "oreProductivity_1": {"oreProductivity": 1},
+    #     "oreProductivity_1.25": {"oreProductivity": 1.25},
+
+    #     "muOreDeposit_100": {"muOreDeposit": 100},
+    #     "muOreDeposit_150": {"muOreDeposit": 150},
+    #     "muOreDeposit_200": {"muOreDeposit": 200},
+
+    #     "sigmaSqOreDeposit_400": {"sigmaSqOreDeposit": 400},
+    #     "sigmaSqOreDeposit_8000": {"sigmaSqOreDeposit": 8000},
+    #     "sigmaSqOreDeposit_16000": {"sigmaSqOreDeposit": 16000},
+
+    #     "adaptiveExpectationMaterialPrice_0.1": {"adaptiveExpectationMaterialPrice": 0.1},
+    #     "adaptiveExpectationMaterialPrice_0.5": {"adaptiveExpectationMaterialPrice": 0.5},
+    #     "adaptiveExpectationMaterialPrice_0.9": {"adaptiveExpectationMaterialPrice": 0.9},
+
+    #     "logitCompetitionParamMining_0.01": {"logitCompetitionParamMining": 0.01},
+    #     "logitCompetitionParamMining_10": {"logitCompetitionParamMining": 10},
+    #     "logitCompetitionParamMining_50": {"logitCompetitionParamMining": 50},
+
+    #     "fuelPriceDrift_0.0003": {"fuelPriceDrift": 0.0003},
+    #     "fuelPriceDrift_0.002": {"fuelPriceDrift": 0.002},
+    #     "fuelPriceDrift_0.006": {"fuelPriceDrift": 0.006},
+
+    #     "fuelPriceVolatility_0.00000001": {"fuelPriceVolatility": 0.00000001},
+    #     "fuelPriceVolatility_0.00003": {"fuelPriceVolatility": 0.00003},
+    #     "fuelPriceVolatility_0.0009": {"fuelPriceVolatility": 0.0009},
+
+    #     "loanInterestRate_0.00001": {"loanInterestRate": 0.00001},
+    #     "loanInterestRate_0.001": {"loanInterestRate": 0.001},
+    #     "loanInterestRate_0.05": {"loanInterestRate": 0.05},
+
+    #     "loanParamCritLeverage_0.3": {"loanParamCritLeverage": 0.3},
+    #     "loanParamCritLeverage_0.5": {"loanParamCritLeverage": 0.5},
+    #     "loanParamCritLeverage_0.7": {"loanParamCritLeverage": 0.7},
+
+    #     "loanParamSpeedLeverage_5": {"loanParamSpeedLeverage": 5},
+    #     "loanParamSpeedLeverage_10": {"loanParamSpeedLeverage": 10},
+    #     "loanParamSpeedLeverage_25": {"loanParamSpeedLeverage": 25},
+    # },
+    ##### END OF SENSITIVITY ANALYSIS ##########################################################################
+    ############################################################################################################
+
     "Material intensity of renewable energy capital": {
         "Low R material intensity": {"recMaterialProductivity": 2, "color": "green"},
         "Base R material intensity": {"recMaterialProductivity": 1.25, "color": "orange"},
         "High R material intensity": {"recMaterialProductivity": 0.75, "color": "blue"}
     },
 
-    # "The impact of the rising cost of fossil fuels": {
-    #     "Low fuel price growth": {"fuelPriceDrift": 0.0003, "color": "blue"},
-    #     "Base fuel price growth": {"fuelPriceDrift": 0.002, "color": "orange"},
-    #     "High fuel price growth": {"fuelPriceDrift": 0.006, "color": "green"}
-    # },
+    "The impact of the rising cost of fossil fuels": {
+        "Low fuel price growth": {"fuelPriceDrift": 0.0003, "color": "blue"},
+        "Base fuel price growth": {"fuelPriceDrift": 0.002, "color": "orange"},
+        "High fuel price growth": {"fuelPriceDrift": 0.006, "color": "green"}
+    },
 
-    # "A declining metal ore extraction costs": {
-    #     "Baseline": {"color": "blue"},
-    #     "Slow decline of ore cost": {"oreCostShocks": 400, "color": "orange"},
-    #     "Fast decline of ore cost": {"oreCostShocks": 200, "color": "green"}
-    # },
+    "A declining metal ore extraction costs": {
+        "Baseline": {"color": "blue"},
+        "Slow decline of ore cost": {"oreCostShocks": 400, "color": "orange"},
+        "Fast decline of ore cost": {"oreCostShocks": 200, "color": "green"}
+    },
 
-    # "The impact of carbon pricing on the energy transition pathways": {
-    #     # "baseline": {},
-    #     "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
-    #                                                  "targetFinalCarbonTax": 0.6},
-    #     "high tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
-    #                                                "targetFinalCarbonTax": 0.6},
-    #     "low tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
-    #                                                  "targetFinalCarbonTax": 0.15},
-    #     "low tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
-    #                                                "targetFinalCarbonTax": 0.15},
-    #     "baseline": {"constantMaterialBuffer": 1}
-    #     },
+    "The impact of carbon pricing on the energy transition pathways": {
+        "baseline": {},
+        "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+                                                     "targetFinalCarbonTax": 0.6},
+        "high tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+                                                   "targetFinalCarbonTax": 0.6},
+        # "high tax / high expectations / haircut policy": {"materialBufferReactionToCarbonTax": 2, 
+        #                                                   "targetFinalCarbonTax": 0.6,
+        #                                                   "policyInventoryHaircutOn": 1},
+        "low tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+                                                     "targetFinalCarbonTax": 0.15},
+        "low tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+                                                   "targetFinalCarbonTax": 0.15},
+        "baseline": {"constantMaterialBuffer": 1}
+        },
+
+    "The impact of carbon pricing on the energy transition pathways HAIRCUT POLICY": {
+        "baseline": {},
+        # "high tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+        #                                              "targetFinalCarbonTax": 0.6},
+        "high tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+                                                   "targetFinalCarbonTax": 0.6},
+        "high tax / high expectations / haircut policy": {"materialBufferReactionToCarbonTax": 2, 
+                                                          "targetFinalCarbonTax": 0.6,
+                                                          "policyInventoryHaircutOn": 1},
+        # "low tax / low expectations": {"materialBufferReactionToCarbonTax": 0.1, 
+        #                                              "targetFinalCarbonTax": 0.15},
+        # "low tax / high expectations": {"materialBufferReactionToCarbonTax": 2, 
+        #                                            "targetFinalCarbonTax": 0.15},
+        # "baseline": {"constantMaterialBuffer": 1}
+        },
 
         # "0.1x reaction and 60pct target carbon tax": {"materialBufferReactionToCarbonTax": 0.1, 
         #                                              "targetFinalCarbonTax": 0.6},

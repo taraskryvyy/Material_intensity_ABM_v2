@@ -9,7 +9,7 @@ import time
 import pandas as pd
 import numpy as np
 
-KEEP_INDIVIDUAL_RUNS = False
+KEEP_INDIVIDUAL_RUNS = True
 
 
 def backup_results_file(filename: str) -> None:
@@ -56,6 +56,10 @@ def aggregate_csv_files(source_files, target_file):
         return
         
     full_df = pd.concat(dfs, ignore_index=True)
+    
+    # Save the full version with all trajectories
+    print("Saving full unaggregated results to results_full.csv...")
+    full_df.to_csv("results_full.csv", index=False)
     
     # Check if this is the long format output from simulation.py
     # Expected columns: Metric, Scenario, Simulation Number, Timestep Number, Value

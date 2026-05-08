@@ -356,11 +356,24 @@ class BalanceSheet(Parent):
                 # pass
 
     def compute_leverage_ratio(self):
-        denominator = self.equity + self.total_liabilities
-        if abs(denominator) < 1e-12:
+        adjusted_total_assets = self.equity + self.total_liabilities
+        
+        # Apply output inventory haircut policy if active
+        if hasattr(self.params, "policyInventoryHaircutOn") and self.params.policyInventoryHaircutOn["val"] == 1:
+            if self.owner.__class__.__name__ == "MaterialFirm":
+                # Check if total assets are positive to avoid division by zero
+                if adjusted_total_assets > 0:
+                    inventory_ratio = getattr(self, "output_inventory_value", 0) / adjusted_total_assets
+                    if inventory_ratio > self.params.haircutInventoryRatioThreshold["val"]:
+                        haircut_pct = self.params.haircutInventoryValue["val"]
+                        # Apply the haircut strictly to the output inventory portion of total assets
+                        haircut_amount = getattr(self, "output_inventory_value", 0) * haircut_pct
+                        adjusted_total_assets -= haircut_amount
+
+        if abs(adjusted_total_assets) < 1e-12:
             self.leverage_ratio = 0
         else:
-            self.leverage_ratio = self.total_liabilities / denominator
+            self.leverage_ratio = self.total_liabilities / adjusted_total_assets
             if not np.isfinite(self.leverage_ratio):
                 self.leverage_ratio = 0
         return self.leverage_ratio

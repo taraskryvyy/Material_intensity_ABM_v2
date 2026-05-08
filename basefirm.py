@@ -82,8 +82,9 @@ class Firm(Agent):
         self.deposit.balance = 0
 
         self.deposit.bank.deposits.remove(self.deposit)
-        if self.__class__.__name__ == "MaterialFirm":
-            self.mining_site.miners.remove(self)
+        if self.__class__.__name__ == "MaterialFirm" and getattr(self, 'mining_site', None) is not None:
+            if self in self.mining_site.miners:
+                self.mining_site.miners.remove(self)
         self.is_bankrut = True
         type(self).instances.remove(self)
         Firm.bankruptcy_list.append(self)

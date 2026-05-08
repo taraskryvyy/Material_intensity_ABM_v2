@@ -254,6 +254,37 @@ for t in range(params.nrTimesteps['val']):
                     x.income_statement.past_fuel_cost +
                     x.income_statement.past_ore_extraction_cost)
 
+      def get_sector_npl(cls):
+            if not CommercialBank.instances: return 0
+            return sum([x.balance for x in CommercialBank.instances[0].non_performing_loans if isinstance(x.borrower, cls)])
+
+      def get_sector_ltd(cls):
+            if not CommercialBank.instances: return 0
+            sector_loans = sum([x.balance for x in CommercialBank.instances[0].loans + CommercialBank.instances[0].non_performing_loans if isinstance(x.borrower, cls)])
+            sector_deposits = sum([x.deposit.balance for x in all_agents if isinstance(x, cls)])
+            return sector_loans / sector_deposits if sector_deposits > 0 else 0
+
+      def get_sector_npl_ratio(cls):
+            if not CommercialBank.instances: return 0
+            sector_npl = sum([x.balance for x in CommercialBank.instances[0].non_performing_loans if isinstance(x.borrower, cls)])
+            sector_loans = sum([x.balance for x in CommercialBank.instances[0].loans + CommercialBank.instances[0].non_performing_loans if isinstance(x.borrower, cls)])
+            return sector_npl / sector_loans if sector_loans > 0 else 0
+
+      def get_sector_leverage(cls):
+            sector_firms = [x for x in all_agents if isinstance(x, cls) and hasattr(x, 'balance_sheet')]
+            # for x in sector_firms:
+            #       x.balance_sheet.compute_equity()
+            #       x.balance_sheet.compute_leverage_ratio()
+            return sum([x.balance_sheet.leverage_ratio for x in sector_firms]) / len(sector_firms) if len(sector_firms) > 0 else 0
+
+      def get_inventory_to_assets(cls):
+            sector_firms = [x for x in all_agents if isinstance(x, cls) and hasattr(x, 'balance_sheet')]
+            # for x in sector_firms:
+            #       x.balance_sheet.compute_total_assets()
+            total_inv = sum([getattr(x.balance_sheet, 'output_inventory_value', 0) for x in sector_firms])
+            total_assets = sum([getattr(x.balance_sheet, 'total_assets', 0) for x in sector_firms])
+            return total_inv / total_assets if total_assets > 0 else 0
+
       final_good_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, FinalGoodFirm)])
       material_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, MaterialFirm)])
       renewable_energy_gdp_va = sum([get_va(x) for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)])
@@ -338,14 +369,18 @@ for t in range(params.nrTimesteps['val']):
             # 'Average ore extraction cost': sum([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]) / 
             #                                                                   len([x for x in all_agents if isinstance(x, MaterialFirm)]),
             'Average ore extraction cost': (
-                  sum(x.mining_site.extraction_cost * x.output for x in material_firms) / total_material_output
+                  sum((x.mining_site.extraction_cost if x.mining_site is not None else 0) * x.output for x in material_firms) / total_material_output
                   if total_material_output > 0 else float('nan')
             ),
             # 'Minimum ore extraction cost': min([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Maximum ore extraction cost': max([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]),
             'Fuel price': max([x.fuel_price for x in all_agents if isinstance(x, ForeignEconomy)]),
             # 'Employment': sum([x.labor_capacity for x in all_agents if isinstance(x, Firm)]),
-            # 'Total material inventory': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total material inventory': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Material inventory-to-sales ratio': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]) / sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]) if sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]) > 0 else 0,
+            'Total material sales (real)': sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total material sales (nominal)': sum([x.sales_real * x.price for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Material inventory minus real sales': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]) - sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
             'Total ore reserves': sum([x.ore_inventory.compute_capacity() for x in all_agents if isinstance(x, MiningSite)]),
             'Number of active mining sites': len(active_mining_sites),
             'Average reserves per active mining site': sum(x.ore_inventory.compute_capacity() for x in active_mining_sites) / len(active_mining_sites) if len(active_mining_sites) > 0 else 0,
@@ -380,7 +415,7 @@ for t in range(params.nrTimesteps['val']):
             # 'Average age of bankrupt material firms': sum([x.age for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) /
             #                                                                         len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) if
             #                                                                         len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) > 0 else -1,
-            # 'Material inventory of bankrupt material firms': sum([x.output_inventory.compute_capacity() for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
+            'Material inventory of bankrupt material firms': sum([x.output_inventory.compute_capacity() for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
             'Cumulative number of bankruptcies': len(Firm.cumulative_bankruptcy_list),
             'Bankruptcy rate': len(Firm.bankruptcy_list)/len([x for x in all_agents if isinstance(x, Firm)]),
             'Cumulative number of bankrupt material firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, MaterialFirm)]),
@@ -390,20 +425,59 @@ for t in range(params.nrTimesteps['val']):
             # 'Total household interest income': sum([x.income_statement.past_interest_income for x in all_agents if isinstance(x, Household)]),
             'Total household dividend income': sum([x.income_statement.past_dividend_income for x in all_agents if isinstance(x, Household)]),
             # 'Total household unemployment benefit income': sum([x.income_statement.past_unemployment_benefit_income for x in all_agents if isinstance(x, Household)]),
-            # 'Total dividend payments from foreign economy': sum(x.income_statement.dividend_payment for x in all_agents if isinstance(x, ForeignEconomy)),
-            # 'Total dividend payments from mining sites': sum(x.income_statement.dividend_payment for x in all_agents if isinstance(x, MiningSite)),
-            # 'Total deposit balance in final good sector': sum([x.deposit.balance for x in all_agents if isinstance(x, FinalGoodFirm)]),
-            # 'Total deposit balance in material sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Total deposit balance in energy sector': sum([x.deposit.balance for x in all_agents if isinstance(x, PowerPlant)]),
-            # 'Total deposit balance in capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, CapitalFirm)]),
-            # 'Total deposit balance in material capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
-            # 'Total deposit balance in households': sum([x.deposit.balance for x in all_agents if isinstance(x, Household)]),
-            'Total loan balance': sum([x.balance for x in CommercialBank.instances[0].loans]),
-            'Total NPL balance': sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]),
-            'NPL ratio': sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]) / sum([x.balance for x in CommercialBank.instances[0].loans + 
-                                                                                                           CommercialBank.instances[0].non_performing_loans]),
-            'Commercial bank loan-to-deposit-ratio': CommercialBank.instances[0].loan_to_deposit_ratio,
+            'Total dividend payments from foreign economy': sum(x.income_statement.dividend_payment for x in all_agents if isinstance(x, ForeignEconomy)),
+            'Total dividend payments from mining sites': sum(x.income_statement.dividend_payment for x in all_agents if isinstance(x, MiningSite)),
+            'Total deposit balance in final good sector': sum([x.deposit.balance for x in all_agents if isinstance(x, FinalGoodFirm)]),
+            'Total deposit balance in material sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total deposit balance in energy sector': sum([x.deposit.balance for x in all_agents if isinstance(x, PowerPlant)]),
+            'Total deposit balance in capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, CapitalFirm)]),
+            'Total deposit balance in material capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Total deposit balance in households': sum([x.deposit.balance for x in all_agents if isinstance(x, Household)]),
+            'Total loan balance': sum([x.balance for x in CommercialBank.instances[0].loans]) if CommercialBank.instances else 0,
+            'Total NPL balance': sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]) if CommercialBank.instances else 0,
+            'NPL ratio': (sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]) / sum([x.balance for x in CommercialBank.instances[0].loans + CommercialBank.instances[0].non_performing_loans])) if CommercialBank.instances and sum([x.balance for x in CommercialBank.instances[0].loans + CommercialBank.instances[0].non_performing_loans]) > 0 else 0,
+            'Commercial bank loan-to-deposit-ratio': CommercialBank.instances[0].loan_to_deposit_ratio if CommercialBank.instances else 0,
             'Commercial bank deposit balance': sum([x.deposit.balance for x in CommercialBank.instances]),
+            
+            'Final good NPL balance': get_sector_npl(FinalGoodFirm),
+            'Material NPL balance': get_sector_npl(MaterialFirm),
+            'Renewable Energy NPL balance': get_sector_npl(RenewableEnergyPowerPlant),
+            'Fossil Fuel Energy NPL balance': get_sector_npl(FossilFuelEnergyPowerPlant),
+            'Final good capital NPL balance': get_sector_npl(FinalGoodCapitalFirm),
+            'Renewable Energy capital NPL balance': get_sector_npl(RenewableEnergyCapitalFirm),
+            'Fossil Fuel Energy capital NPL balance': get_sector_npl(FossilFuelEnergyCapitalFirm),
+            'Material capital NPL balance': get_sector_npl(MaterialCapitalFirm),
+
+            'Final good loan-to-deposit-ratio': get_sector_ltd(FinalGoodFirm),
+            'Material loan-to-deposit-ratio': get_sector_ltd(MaterialFirm),
+            'Renewable Energy loan-to-deposit-ratio': get_sector_ltd(RenewableEnergyPowerPlant),
+            'Fossil Fuel Energy loan-to-deposit-ratio': get_sector_ltd(FossilFuelEnergyPowerPlant),
+            'Final good capital loan-to-deposit-ratio': get_sector_ltd(FinalGoodCapitalFirm),
+            'Renewable Energy capital loan-to-deposit-ratio': get_sector_ltd(RenewableEnergyCapitalFirm),
+            'Fossil Fuel Energy capital loan-to-deposit-ratio': get_sector_ltd(FossilFuelEnergyCapitalFirm),
+            'Material capital loan-to-deposit-ratio': get_sector_ltd(MaterialCapitalFirm),
+
+            'Final good NPL ratio': get_sector_npl_ratio(FinalGoodFirm),
+            'Material NPL ratio': get_sector_npl_ratio(MaterialFirm),
+            'Renewable Energy NPL ratio': get_sector_npl_ratio(RenewableEnergyPowerPlant),
+            'Fossil Fuel Energy NPL ratio': get_sector_npl_ratio(FossilFuelEnergyPowerPlant),
+            'Final good capital NPL ratio': get_sector_npl_ratio(FinalGoodCapitalFirm),
+            'Renewable Energy capital NPL ratio': get_sector_npl_ratio(RenewableEnergyCapitalFirm),
+            'Fossil Fuel Energy capital NPL ratio': get_sector_npl_ratio(FossilFuelEnergyCapitalFirm),
+            'Material capital NPL ratio': get_sector_npl_ratio(MaterialCapitalFirm),
+
+            'Final good average leverage ratio': get_sector_leverage(FinalGoodFirm),
+            'Material average leverage ratio': get_sector_leverage(MaterialFirm),
+            'Renewable Energy average leverage ratio': get_sector_leverage(RenewableEnergyPowerPlant),
+            'Fossil Fuel Energy average leverage ratio': get_sector_leverage(FossilFuelEnergyPowerPlant),
+            'Final good capital average leverage ratio': get_sector_leverage(FinalGoodCapitalFirm),
+            'Renewable Energy capital average leverage ratio': get_sector_leverage(RenewableEnergyCapitalFirm),
+            'Fossil Fuel Energy capital average leverage ratio': get_sector_leverage(FossilFuelEnergyCapitalFirm),
+            'Material capital average leverage ratio': get_sector_leverage(MaterialCapitalFirm),
+
+            'Material inventory-to-assets ratio': get_inventory_to_assets(MaterialFirm),
+            'Final good inventory-to-assets ratio': get_inventory_to_assets(FinalGoodFirm),
+
             'Ratio of total ore extraction cost to Total GDP (Value Added)': (total_ore_extraction_cost / total_gdp_va) if total_gdp_va != 0 else 0,
             # 'Final good GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodFirm)]),
             # 'Material GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialFirm)]),

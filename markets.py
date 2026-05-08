@@ -334,12 +334,12 @@ class FinalGoodMarket(Market):
             self.sell_orders.append(sell_order)
         self.total_consumption_budget = sum([x.budget for x in self.buy_orders])
         self.total_supply = sum([x.quantity for x in self.sell_orders])
-        try:
+        if self.total_supply == 0:
+            self.weighted_average_price_start = 1
+        else:
             self.weighted_average_price_start = sum([x.price * x.quantity for x in self.sell_orders]) / self.total_supply
             if self.weighted_average_price_start < 1:
                 print("Low weighted average price :(")
-        except ZeroDivisionError:
-            self.weighted_average_price_start = 1
         self.total_demand = self.total_consumption_budget / self.weighted_average_price_start
         if self.total_supply / self.total_demand > 2 or self.total_supply / self.total_demand < 0.5:
             print("Low final good market efficiency")

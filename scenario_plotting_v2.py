@@ -14,9 +14,6 @@ def get_scenario_colors(df):
         elif hasattr(params_dict, "color"):
             colors[name] = params_dict.color
             
-    if not colors:
-        return None
-        
     default_palette = sns.color_palette()
     all_scenarios = df.index.get_level_values('Scenario').unique()
     
@@ -57,7 +54,11 @@ def plot_metrics_to_pdfs(df):
         'Fossil Fuel Energy capital GDP (Value Added)',
         'Material capital GDP (Value Added)',
         'Mining GDP (Value Added)',
-        # 'Ratio of total ore extraction cost to Total GDP (Value Added)'
+        # 'Ratio of total ore extraction cost to Total GDP (Value Added)',
+        'Material inventory-to-sales ratio',
+        'Total material sales (real)',
+        'Total material sales (nominal)',
+        'Renewable Energy market share'
     ]
     smooth_window = 10
     fig_size = (6, 4)
@@ -101,6 +102,12 @@ def plot_metrics_to_pdfs(df):
         ('Renewable Energy market share', 'Renewable Energy Market Share', 'Renewable Energy Market Share', None),
         ('Material price', 'Material Price', 'Material Price', None),
         ('Material price', 'Material Price (zoomed in)', 'Material Price', 'auto_zoom'),
+        ('Total material inventory', 'Total Material Inventory', 'Total Material Inventory', None),
+        ('Material inventory-to-sales ratio', 'Material Inventory-to-Sales Ratio', 'Inventory / Sales Ratio', None),
+        ('Material inventory-to-sales ratio', 'Material Inventory-to-Sales Ratio (zoomed in)', 'Inventory / Sales Ratio', 'auto_zoom_2'),
+        ('Total material sales (real)', 'Total Material Sales (Real)', 'Total Material Sales', 'auto_zoom'),
+        ('Total material sales (nominal)', 'Total Material Sales (Nominal)', 'Total Material Sales', 'auto_zoom'),
+        ('Material inventory minus real sales', 'Material Inventory minus Real Sales', 'Inventory minus Sales', None),
         ('Average ore extraction cost', 'Average Ore Extraction Cost', 'Average Ore Extraction Cost', None),
         ('Total ore reserves', 'Total Ore Reserves', 'Total Ore Reserves', None),
         ('Number of active mining sites', 'Number of Active Mining Sites', 'Number of Active Mining Sites', None),
@@ -109,6 +116,45 @@ def plot_metrics_to_pdfs(df):
         ('Final good capital productivity', 'Final Good Capital Productivity', 'Final Good Capital Productivity', None),
         ('Renewable Energy capital productivity', 'Renewable Energy Capital Productivity', 'Renewable Energy Capital Productivity', None),
         ('Fossil Fuel Energy capital productivity', 'Fossil Fuel Energy Capital Productivity', 'Fossil Fuel Energy Capital Productivity', None),
+
+        ('Final good NPL balance', 'Final good NPL balance', 'NPL balance', None),
+        ('Material NPL balance', 'Material NPL balance', 'NPL balance', None),
+        ('Renewable Energy NPL balance', 'Renewable Energy NPL balance', 'NPL balance', None),
+        ('Fossil Fuel Energy NPL balance', 'Fossil Fuel Energy NPL balance', 'NPL balance', None),
+        ('Final good capital NPL balance', 'Final good capital NPL balance', 'NPL balance', None),
+        ('Renewable Energy capital NPL balance', 'Renewable Energy capital NPL balance', 'NPL balance', None),
+        ('Fossil Fuel Energy capital NPL balance', 'Fossil Fuel Energy capital NPL balance', 'NPL balance', None),
+        ('Material capital NPL balance', 'Material capital NPL balance', 'NPL balance', None),
+
+        ('Final good loan-to-deposit-ratio', 'Final good loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        ('Material loan-to-deposit-ratio', 'Material loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        ('Renewable Energy loan-to-deposit-ratio', 'Renewable Energy loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        ('Fossil Fuel Energy loan-to-deposit-ratio', 'Fossil Fuel Energy loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        ('Final good capital loan-to-deposit-ratio', 'Final good capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        ('Renewable Energy capital loan-to-deposit-ratio', 'Renewable Energy capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        ('Fossil Fuel Energy capital loan-to-deposit-ratio', 'Fossil Fuel Energy capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        ('Material capital loan-to-deposit-ratio', 'Material capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+
+        ('Final good NPL ratio', 'Final good NPL ratio', 'NPL ratio', None),
+        ('Material NPL ratio', 'Material NPL ratio', 'NPL ratio', None),
+        ('Renewable Energy NPL ratio', 'Renewable Energy NPL ratio', 'NPL ratio', None),
+        ('Fossil Fuel Energy NPL ratio', 'Fossil Fuel Energy NPL ratio', 'NPL ratio', None),
+        ('Final good capital NPL ratio', 'Final good capital NPL ratio', 'NPL ratio', None),
+        ('Renewable Energy capital NPL ratio', 'Renewable Energy capital NPL ratio', 'NPL ratio', None),
+        ('Fossil Fuel Energy capital NPL ratio', 'Fossil Fuel Energy capital NPL ratio', 'NPL ratio', None),
+        ('Material capital NPL ratio', 'Material capital NPL ratio', 'NPL ratio', None),
+        
+        ('Final good average leverage ratio', 'Final good average leverage ratio', 'Average leverage ratio', None),
+        ('Material average leverage ratio', 'Material average leverage ratio', 'Average leverage ratio', None),
+        ('Renewable Energy average leverage ratio', 'Renewable Energy average leverage ratio', 'Average leverage ratio', None),
+        ('Fossil Fuel Energy average leverage ratio', 'Fossil Fuel Energy average leverage ratio', 'Average leverage ratio', None),
+        ('Final good capital average leverage ratio', 'Final good capital average leverage ratio', 'Average leverage ratio', None),
+        ('Renewable Energy capital average leverage ratio', 'Renewable Energy capital average leverage ratio', 'Average leverage ratio', None),
+        ('Fossil Fuel Energy capital average leverage ratio', 'Fossil Fuel Energy capital average leverage ratio', 'Average leverage ratio', None),
+        ('Material capital average leverage ratio', 'Material capital average leverage ratio', 'Average leverage ratio', None),
+
+        ('Material inventory-to-assets ratio', 'Material inventory-to-assets ratio', 'Inventory / Assets', None),
+        ('Final good inventory-to-assets ratio', 'Final good inventory-to-assets ratio', 'Inventory / Assets', None),
     ]
 
     import re
