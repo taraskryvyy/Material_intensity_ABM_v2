@@ -167,7 +167,7 @@ class SimulationStep(Parent):
 
         ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=Agent.government.carbon_tax)
 
-        if params.constantMaterialBuffer['val'] == 0:
+        if params.adaptiveMaterialBuffer['val'] == 1:
             for i in MaterialFirm.get_all_instances():
                 i.material_buffer = Agent.government.carbon_tax * params.materialBufferReactionToCarbonTax['val']
 
@@ -420,7 +420,7 @@ class SimulationStep(Parent):
 
 
             total_material_inventory = sum([x.output_inventory.compute_capacity() for x in MaterialFirm.get_all_instances()])
-            if params.constantMaterialBuffer['val'] == 1:
+            if params.adaptiveMaterialBuffer['val'] == 0:
                 entrant_material_buffer = params.materialBuffer['val']#params.entrantMaterialBuffer['val']
             else:
                 entrant_material_buffer = Agent.government.carbon_tax * params.materialBufferReactionToCarbonTax['val']

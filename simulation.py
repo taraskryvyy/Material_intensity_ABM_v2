@@ -54,8 +54,11 @@ economy = Economy(params)
 economy.initialise()
 Firm.cumulative_bankruptcy_list = []
 buffered_frames = []
+last_known_metrics = {}
+sector_shutdown_duration = {'Energy': 0, 'FinalGood': 0, 'Material': 0}
 for t in range(params.nrTimesteps['val']):
       print("############## TimeStep: " + str(t) + " of simulation " + str(sim) + " of scenario " + scenario_name + " ##############")
+      imputed_flags = {}
       
       step = SimulationStep(params, t, energy_market_price, material_market_price)
       all_agents = step.instances + Firm.bankruptcy_list
@@ -73,7 +76,7 @@ for t in range(params.nrTimesteps['val']):
             print("Fossil Fuel Energy capital productivity: " +
                   str(round(sum([x.capital_productivity for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),2)) + " and price: " +
                   str(round(sum([x.price for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),5)))
-            print("Material capital productivity: " +
+            print("Metal capital productivity: " +
                   str(round(sum([x.capital_productivity for x in all_agents if isinstance(x, MaterialCapitalFirm)]),2)) + " and price: " +
                   str(round(sum([x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),5)))
             print("Final good capital productivity: " +
@@ -109,7 +112,7 @@ for t in range(params.nrTimesteps['val']):
                   str(round(sum([x.labor_capacity for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]), 2)) + 
                   ", fuel: " +
                   str(round(sum([x.fuel_capacity for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]), 2)) + ")")
-            print("   Material (" + 
+            print("   Metal (" + 
                   str(len([x for x in all_agents if isinstance(x, MaterialFirm)])) + "): " + 
                   str(round(sum([x.output for x in all_agents if isinstance(x, MaterialFirm)]), 2)) + " / (" +
                   "cap: " +
@@ -139,7 +142,7 @@ for t in range(params.nrTimesteps['val']):
                   str(round(sum([x.labor_capacity for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]), 2)) + 
                   ", mat: " +
                   str(round(sum([x.material_capacity for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]), 2)) + ")")
-            print("   Material Capital (" + 
+            print("   Metal Capital (" + 
                   str(len([x for x in all_agents if isinstance(x, MaterialCapitalFirm)])) + "): " + 
                   str(round(sum([x.output for x in all_agents if isinstance(x, MaterialCapitalFirm)]), 2)) + " / (" +
                   "lab: "  +
@@ -165,19 +168,19 @@ for t in range(params.nrTimesteps['val']):
             print("   Fossil Fuel Energy: " + str(round(sum([x.desired_extra_output for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),2)))
             print("   Material: " + str(round(sum([x.desired_extra_output for x in all_agents if isinstance(x, MaterialFirm)]),2)))
 
-            #     print("Total material demand: " + str(round(sum([x.material_demand for x in all_agents if hasattr(x, 'material_demand')]),2)))
+            #     print("Total metal demand: " + str(round(sum([x.material_demand for x in all_agents if hasattr(x, 'material_demand')]),2)))
             #     print("   Final good capital: " + str(round(sum([x.material_demand for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),2)))
             #     print("   Renewable Energy capital: " + str(round(sum([x.material_demand for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),2)))
             #     print("   Fossil Fuel Energy capital: " + str(round(sum([x.material_demand for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),2)))
-            #     print("   Material capital: " + str(round(sum([x.material_demand for x in all_agents if isinstance(x, MaterialCapitalFirm)]),2)))
+            #     print("   Metal capital: " + str(round(sum([x.material_demand for x in all_agents if isinstance(x, MaterialCapitalFirm)]),2)))
 
             #     print("Total expected demand in capital sector: " + str(round(sum([x.expected_demand for x in all_agents if isinstance(x, CapitalFirm)]),2)))
             print("Employment: " + str(round(sum([x.labor_capacity for x in all_agents if isinstance(x, Firm)]),2)))
             print("Labor demand: " + str(round(sum([x.total_demand for x in all_markets if isinstance(x, LaborMarket)]),2)))
             print("Labor endowment: " + str(round(sum([x.employment_per_worker for x in all_markets if isinstance(x, LaborMarket)]),2)))
 
-            #     print("Labor force productive capacity of material firms: " + str(round(sum([x.labor_force.compute_productive_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),2)))
-            #     print("Ore inventory productive capacity of material firms: " + str(round(sum([x.ore_inventory.compute_productive_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),2)))
+            #     print("Labor force productive capacity of metal firms: " + str(round(sum([x.labor_force.compute_productive_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),2)))
+            #     print("Ore inventory productive capacity of metal firms: " + str(round(sum([x.ore_inventory.compute_productive_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),2)))
 
 
             # print("   Capital (" + str(len([x for x in all_agents if isinstance(x, CapitalFirm)])) + "): " + str(round(sum([x.output for x in all_agents if hasattr(x, 'output')]), 2)) + " and " + str([x.material_inventory.compute_productive_capacity for x in all_agents if isinstance(x, CapitalFirm)]))
@@ -185,14 +188,14 @@ for t in range(params.nrTimesteps['val']):
 
             # print("   Renewable Energy output (" + str(len([x for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)])) + " and " + str(sum([x.capital_inventory.compute_productive_capacity() for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)])))
             # print("   Fossil Fuel Energy output (" + str(len([x for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)])) + " and " + str(sum([x.capital_inventory.compute_productive_capacity() for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)])))
-            # print("   Material output (" + str(len([x for x in all_agents if isinstance(x, MaterialFirm)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, MaterialFirm)])) + " and " + str(sum([x.capital_inventory.compute_productive_capacity() for x in all_agents if isinstance(x, MaterialFirm)])))
+            # print("   Metal output (" + str(len([x for x in all_agents if isinstance(x, MaterialFirm)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, MaterialFirm)])) + " and " + str(sum([x.capital_inventory.compute_productive_capacity() for x in all_agents if isinstance(x, MaterialFirm)])))
             # print("   Capital output (" + str(len([x for x in all_agents if isinstance(x, CapitalFirm)])) + "): " + str(sum([x.output for x in all_agents if hasattr(x, 'output')])) + " / " + str([x.capital_inventory.compute_productive_capacity for x in all_agents if isinstance(x, CapitalFirm)]))
 
             # print("   Renewable Energy output (" + str(len([x for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)])))
             # print("   Fossil Fuel Energy output (" + str(len([x for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)])))
-            # print("   Material output (" + str(len([x for x in all_agents if isinstance(x, MaterialFirm)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, MaterialFirm)])))
+            # print("   Metal output (" + str(len([x for x in all_agents if isinstance(x, MaterialFirm)])) + "): " + str(sum([x.output for x in all_agents if isinstance(x, MaterialFirm)])))
             # print("   Capital output (" + str(len([x for x in all_agents if isinstance(x, CapitalFirm)])) + "): " + str(sum([x.output for x in all_agents if hasattr(x, 'output')])))
-            # print("Total material inventory: " + str(sum([x.material_inventory.compute_capacity() for x in all_agents if hasattr(x, 'material_inventory')])))
+            # print("Total metal inventory: " + str(sum([x.material_inventory.compute_capacity() for x in all_agents if hasattr(x, 'material_inventory')])))
             # print("Desired production in final good sector: " + 
             #       str(sum([x.desired_production for x in all_agents if isinstance(x, FinalGoodFirm)])))
             print("Demand for energy in final good sector: " +
@@ -201,26 +204,39 @@ for t in range(params.nrTimesteps['val']):
             #       str(sum([x.expected_demand for x in all_agents if isinstance(x, PowerPlant)])))
             # print("Desired production in energy sector: " + 
             #       str(sum([x.desired_production for x in all_agents if isinstance(x, PowerPlant)])))
-            #     print("Desired production in material sector: " +
+            #     print("Desired production in metal sector: " +
             #           str(sum([x.desired_production for x in all_agents if isinstance(x, MaterialFirm)])))
-            # print("Expected demand in material sector: " +
+            # print("Expected demand in metal sector: " +
             #       str(sum([x.expected_demand for x in all_agents if isinstance(x, MaterialFirm)])))
             # print("Desired production in capital sector: " +
             #       str(sum([x.desired_production for x in all_agents if isinstance(x, CapitalFirm)])))
             # print("Total desired production: " + str(sum([x.desired_production for x in all_agents if hasattr(x, 'desired_production')])))
             # print("Total household deposit balance: " + str(sum([x.deposit.balance for x in all_agents if isinstance(x, Household)])))
 
-      if t > 2 and sum([x.output for x in all_agents if isinstance(x, PowerPlant)]) == 0:
-            print("Energy sector has shut down")
-            # break
+      if t > 2:
+            if sum([x.output for x in all_agents if isinstance(x, PowerPlant)]) == 0:
+                  sector_shutdown_duration['Energy'] += 1
+                  if sector_shutdown_duration['Energy'] > 5:
+                        raise RuntimeError(f"Energy sector has shut down for {sector_shutdown_duration['Energy']} consecutive timesteps")
+                  print(f"Energy sector has shut down for {sector_shutdown_duration['Energy']} consecutive timesteps")
+            else:
+                  sector_shutdown_duration['Energy'] = 0
 
-      if t > 2 and sum([x.output for x in all_agents if isinstance(x, FinalGoodFirm)]) == 0:
-            print("Final good sector has shut down")
-            # break
+            if sum([x.output for x in all_agents if isinstance(x, FinalGoodFirm)]) == 0:
+                  sector_shutdown_duration['FinalGood'] += 1
+                  if sector_shutdown_duration['FinalGood'] > 5:
+                        raise RuntimeError(f"Final good sector has shut down for {sector_shutdown_duration['FinalGood']} consecutive timesteps")
+                  print(f"Final good sector has shut down for {sector_shutdown_duration['FinalGood']} consecutive timesteps")
+            else:
+                  sector_shutdown_duration['FinalGood'] = 0
 
-      if t > 2 and sum([x.output for x in all_agents if isinstance(x, MaterialFirm)]) == 0:
-            print("Material sector has shut down")
-            # break
+            if sum([x.output for x in all_agents if isinstance(x, MaterialFirm)]) == 0:
+                  sector_shutdown_duration['Material'] += 1
+                  if sector_shutdown_duration['Material'] > 5:
+                        raise RuntimeError(f"Metal sector has shut down for {sector_shutdown_duration['Material']} consecutive timesteps")
+                  print(f"Metal sector has shut down for {sector_shutdown_duration['Material']} consecutive timesteps")
+            else:
+                  sector_shutdown_duration['Material'] = 0
 
       renewable_npvs = [
             x.total_NPV
@@ -258,11 +274,17 @@ for t in range(params.nrTimesteps['val']):
             if not CommercialBank.instances: return 0
             return sum([x.balance for x in CommercialBank.instances[0].non_performing_loans if isinstance(x.borrower, cls)])
 
-      def get_sector_ltd(cls):
+      def get_sector_ltd(cls, metric_name):
             if not CommercialBank.instances: return 0
             sector_loans = sum([x.balance for x in CommercialBank.instances[0].loans + CommercialBank.instances[0].non_performing_loans if isinstance(x.borrower, cls)])
             sector_deposits = sum([x.deposit.balance for x in all_agents if isinstance(x, cls)])
-            return sector_loans / sector_deposits if sector_deposits > 0 else 0
+            if sector_deposits > 0:
+                  val = sector_loans / sector_deposits
+                  last_known_metrics[metric_name] = val
+                  imputed_flags[metric_name] = 0
+                  return val
+            imputed_flags[metric_name] = 1
+            return last_known_metrics.get(metric_name, 0)
 
       def get_sector_npl_ratio(cls):
             if not CommercialBank.instances: return 0
@@ -302,6 +324,41 @@ for t in range(params.nrTimesteps['val']):
 
       total_ore_extraction_cost = sum([x.income_statement.past_ore_extraction_cost for x in all_agents if isinstance(x, Firm)])
 
+      # Calculate metrics that need last known value fallback
+      if total_material_output > 0:
+            avg_ore_cost = sum((x.mining_site.extraction_cost if x.mining_site is not None else 0) * x.output for x in material_firms) / total_material_output
+            last_known_metrics['Average ore extraction cost'] = avg_ore_cost
+            imputed_flags['Average ore extraction cost'] = 0
+      else:
+            avg_ore_cost = last_known_metrics.get('Average ore extraction cost', 0.0)
+            imputed_flags['Average ore extraction cost'] = 1
+
+      total_power_output = sum([x.output for x in all_agents if isinstance(x, PowerPlant)])
+      if total_power_output > 0:
+            re_market_share = sum([x.output for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]) / total_power_output
+            last_known_metrics['Renewable Energy market share'] = re_market_share
+            imputed_flags['Renewable Energy market share'] = 0
+      else:
+            re_market_share = last_known_metrics.get('Renewable Energy market share', 0.5)
+            imputed_flags['Renewable Energy market share'] = 1
+
+      total_material_sales = sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)])
+      if total_material_sales > 0:
+            mat_inv_to_sales = sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]) / total_material_sales
+            last_known_metrics['Metal inventory-to-sales ratio'] = mat_inv_to_sales
+            imputed_flags['Metal inventory-to-sales ratio'] = 0
+      else:
+            mat_inv_to_sales = last_known_metrics.get('Metal inventory-to-sales ratio', 0.0)
+            imputed_flags['Metal inventory-to-sales ratio'] = 1
+
+      if total_gdp_va != 0:
+            ore_cost_to_gdp = total_ore_extraction_cost / total_gdp_va
+            last_known_metrics['Ratio of total ore extraction cost to Total GDP (Value Added)'] = ore_cost_to_gdp
+            imputed_flags['Ratio of total ore extraction cost to Total GDP (Value Added)'] = 0
+      else:
+            ore_cost_to_gdp = last_known_metrics.get('Ratio of total ore extraction cost to Total GDP (Value Added)', 0.0)
+            imputed_flags['Ratio of total ore extraction cost to Total GDP (Value Added)'] = 1
+
       # create a dictionary to store the results
       results = {
             # 'Scenario': scenario_name,
@@ -316,79 +373,75 @@ for t in range(params.nrTimesteps['val']):
             'Final good output': sum([x.output for x in all_agents if isinstance(x, FinalGoodFirm)]),
             'Renewable Energy output': sum([x.output for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
             'Fossil Fuel Energy output': sum([x.output for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
-            'Renewable Energy market share': sum([x.output for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]) /
-                                                                              sum([x.output for x in all_agents if isinstance(x, PowerPlant)]) if sum([x.output for x in all_agents if isinstance(x, PowerPlant)]) > 0 else 0.5,
-            'Material output': sum([x.output for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Renewable Energy market share': re_market_share,
+            'Metal output': sum([x.output for x in all_agents if isinstance(x, MaterialFirm)]),
             'Final Good Capital firm output': sum([x.output for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),
             'Renewable Energy Capital firm output': sum([x.output for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),
             'Fossil Fuel Energy Capital firm output': sum([x.output for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),
-            'Material Capital output': sum([x.output for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Metal Capital output': sum([x.output for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
             'Final good capital productivity': max([x.capital_productivity for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),
             'Renewable Energy capital productivity': max([x.capital_productivity for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),
             'Fossil Fuel Energy capital productivity': max([x.capital_productivity for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),
-            'Material capital productivity': max([x.capital_productivity for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
-            # 'Profit of material capital firms': sum([x.income_statement.net_profit for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
-            # "RnD budget of material capital firms": sum([x.RD_budget for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Metal capital productivity': max([x.capital_productivity for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            # 'Profit of metal capital firms': sum([x.income_statement.net_profit for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            # "RnD budget of metal capital firms": sum([x.RD_budget for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
             'Final Good capital price': max([x.price for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),
             'Renewable Energy capital price': max([x.price for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),
             'Fossil Fuel Energy capital price': max([x.price for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),
-            'Material capital price': max([x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Metal capital price': max([x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
             # 'Renewable Energy capital capacity': sum([x.capital_capacity for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
             # 'Fossil Fuel Energy capital capacity': sum([x.capital_capacity for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
             # 'Power Plant capital capacity': sum([x.capital_capacity for x in all_agents if isinstance(x, PowerPlant)]),
-            # 'Material firm capital capacity': sum([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Material firm labor capacity': sum([x.labor_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Material firm ore capacity': sum([x.ore_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Material firm desired production': sum([x.desired_production for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Material firm desired extra output': sum([x.desired_extra_output for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Metal firm capital capacity': sum([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Metal firm labor capacity': sum([x.labor_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Metal firm ore capacity': sum([x.ore_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Metal firm desired production': sum([x.desired_production for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Metal firm desired extra output': sum([x.desired_extra_output for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Final Good firm capital capacity': sum([x.capital_capacity for x in all_agents if isinstance(x, FinalGoodFirm)]),
             # 'Renewable Energy labor capacity': sum([x.labor_capacity for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
             # 'Fossil Fuel Energy labor capacity': sum([x.labor_capacity for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
             # 'Fossil Fuel Energy fuel capacity': sum([x.fuel_capacity for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
             # 'Power Plant labor capacity': sum([x.labor_capacity for x in all_agents if isinstance(x, PowerPlant)]),
             'Electricity price': max([x.price for x in all_markets if isinstance(x, EnergyMarket)]),
-            'Material price': max([x.price for x in all_markets if isinstance(x, MaterialMarket)]),
+            'Metal price': max([x.price for x in all_markets if isinstance(x, MaterialMarket)]),
             # 'Total demand for final good': max([x.total_demand for x in all_markets if isinstance(x, FinalGoodMarket)]),
             # 'Total supply of final good': max([x.total_supply for x in all_markets if isinstance(x, FinalGoodMarket)]),
             # 'Total consumption': sum([x.consumption for x in all_agents if isinstance(x, Household)]),
-            # 'Number of final good firms': len([x for x in all_agents if isinstance(x, FinalGoodFirm)]),
-            # 'Number of renewable energy power plants': len([x for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
-            # 'Number of fossil fuel energy power plants': len([x for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
+            'Number of final good firms': len([x for x in all_agents if isinstance(x, FinalGoodFirm)]),
+            'Number of renewable energy power plants': len([x for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
+            'Number of fossil fuel energy power plants': len([x for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
             # 'Total demand for energy': max([x.total_demand for x in all_markets if isinstance(x, EnergyMarket)]),
             # 'Total supply of energy': max([x.total_supply for x in all_markets if isinstance(x, EnergyMarket)]),
             # 'Total energy deficit': max([x.total_demand - x.total_supply for x in all_markets if isinstance(x, EnergyMarket)]),
             # 'Total desired energy production': sum([x.desired_production for x in all_agents if isinstance(x, PowerPlant)]),
             # 'Total demand for material': max([x.total_demand for x in all_markets if isinstance(x, MaterialMarket)]),
-            # 'Total demand for material individual': sum([x.demand for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Total demand for metal individual': sum([x.demand for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Total expected demand for material': sum([x.expected_demand for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Total materials sales': sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Total expected demand for energy': sum([x.expected_demand for x in all_agents if isinstance(x, PowerPlant)]),
             # 'Total demand for energy individual': sum([x.demand for x in all_agents if isinstance(x, PowerPlant)]),
             # 'Total supply of material': max([x.total_supply for x in all_markets if isinstance(x, MaterialMarket)]),
-            # 'Total material deficit': max([x.total_demand - x.total_supply for x in all_markets if isinstance(x, MaterialMarket)]),
+            # 'Total metal deficit': max([x.total_demand - x.total_supply for x in all_markets if isinstance(x, MaterialMarket)]),
             # 'Average ore extraction cost': sum([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]) / 
             #                                                                   len([x for x in all_agents if isinstance(x, MaterialFirm)]),
-            'Average ore extraction cost': (
-                  sum((x.mining_site.extraction_cost if x.mining_site is not None else 0) * x.output for x in material_firms) / total_material_output
-                  if total_material_output > 0 else float('nan')
-            ),
+            'Average ore extraction cost': avg_ore_cost,
             # 'Minimum ore extraction cost': min([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Maximum ore extraction cost': max([x.mining_site.extraction_cost for x in all_agents if isinstance(x, MaterialFirm)]),
             'Fuel price': max([x.fuel_price for x in all_agents if isinstance(x, ForeignEconomy)]),
             # 'Employment': sum([x.labor_capacity for x in all_agents if isinstance(x, Firm)]),
-            'Total material inventory': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),
-            'Material inventory-to-sales ratio': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]) / sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]) if sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]) > 0 else 0,
-            'Total material sales (real)': sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
-            'Total material sales (nominal)': sum([x.sales_real * x.price for x in all_agents if isinstance(x, MaterialFirm)]),
-            'Material inventory minus real sales': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]) - sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total metal inventory': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Metal inventory-to-sales ratio': mat_inv_to_sales,
+            'Total metal sales (real)': sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total metal sales (nominal)': sum([x.sales_real * x.price for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Metal inventory minus real sales': sum([x.output_inventory.compute_capacity() for x in all_agents if isinstance(x, MaterialFirm)]) - sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
             'Total ore reserves': sum([x.ore_inventory.compute_capacity() for x in all_agents if isinstance(x, MiningSite)]),
             'Number of active mining sites': len(active_mining_sites),
             'Average reserves per active mining site': sum(x.ore_inventory.compute_capacity() for x in active_mining_sites) / len(active_mining_sites) if len(active_mining_sites) > 0 else 0,
-            # 'Number of material firms': len([x for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Average capital capacity of material firms': sum([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]) /
+            'Number of metal firms': len([x for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Average capital capacity of metal firms': sum([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]) /
             #                                                                         len([x for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Minimum capital capacity of material firms': min([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
-            # 'Maximum capital capacity of material firms': max([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Minimum capital capacity of metal firms': min([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Maximum capital capacity of metal firms': max([x.capital_capacity for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Average capital capacity of power plants': sum([x.capital_capacity for x in all_agents if isinstance(x, PowerPlant)]) /
             #                                                                         len([x for x in all_agents if isinstance(x, PowerPlant)]),
             # 'Minimum capital capacity of power plants': min([x.capital_capacity for x in all_agents if isinstance(x, PowerPlant)]),
@@ -403,22 +456,22 @@ for t in range(params.nrTimesteps['val']):
             # 'Total desired production of final good firms': sum([x.desired_production for x in all_agents if isinstance(x, FinalGoodFirm)]),
             # 'Average leverage ratio of power plants': sum([x.balance_sheet.leverage_ratio for x in all_agents if isinstance(x, PowerPlant)]) /
             #                                                                         len([x for x in all_agents if isinstance(x, PowerPlant)]),
-            # 'Average leverage ratio of material firms': sum([x.balance_sheet.leverage_ratio for x in all_agents if isinstance(x, MaterialFirm)]) /
+            # 'Average leverage ratio of metal firms': sum([x.balance_sheet.leverage_ratio for x in all_agents if isinstance(x, MaterialFirm)]) /
             #                                                                         len([x for x in all_agents if isinstance(x, MaterialFirm)]),
             'Renewable Energy NPV': RenewableNPV,
             'Fossil Fuel Energy NPV': FossilFuelNPV,
             'Net Renewable Energy NPV': RenewableNPV - FossilFuelNPV,
             # 'Number of bankruptsies': len(Firm.bankruptcy_list),
-            # 'Number of bankrupt material firms': len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
+            # 'Number of bankrupt metal firms': len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
             # 'Number of bankrupt power plants': len([x for x in Firm.bankruptcy_list if isinstance(x, PowerPlant)]),
             # 'Number of bankrupt final good firms': len([x for x in Firm.bankruptcy_list if isinstance(x, FinalGoodFirm)]),
-            # 'Average age of bankrupt material firms': sum([x.age for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) /
+            # 'Average age of bankrupt metal firms': sum([x.age for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) /
             #                                                                         len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) if
             #                                                                         len([x for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]) > 0 else -1,
-            'Material inventory of bankrupt material firms': sum([x.output_inventory.compute_capacity() for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
+            'Metal inventory of bankrupt metal firms': sum([x.output_inventory.compute_capacity() for x in Firm.bankruptcy_list if isinstance(x, MaterialFirm)]),
             'Cumulative number of bankruptcies': len(Firm.cumulative_bankruptcy_list),
             'Bankruptcy rate': len(Firm.bankruptcy_list)/len([x for x in all_agents if isinstance(x, Firm)]),
-            'Cumulative number of bankrupt material firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, MaterialFirm)]),
+            'Cumulative number of bankrupt metal firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, MaterialFirm)]),
             # 'Cumulative number of bankrupt power plants': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, PowerPlant)]),
             'Cumulative number of bankrupt final good firms': len([x for x in Firm.cumulative_bankruptcy_list if isinstance(x, FinalGoodFirm)]),
             # 'Total household wage income': sum([x.income_statement.past_wage_income for x in all_agents if isinstance(x, Household)]),
@@ -428,10 +481,10 @@ for t in range(params.nrTimesteps['val']):
             'Total dividend payments from foreign economy': sum(x.income_statement.dividend_payment for x in all_agents if isinstance(x, ForeignEconomy)),
             'Total dividend payments from mining sites': sum(x.income_statement.dividend_payment for x in all_agents if isinstance(x, MiningSite)),
             'Total deposit balance in final good sector': sum([x.deposit.balance for x in all_agents if isinstance(x, FinalGoodFirm)]),
-            'Total deposit balance in material sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total deposit balance in metal sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialFirm)]),
             'Total deposit balance in energy sector': sum([x.deposit.balance for x in all_agents if isinstance(x, PowerPlant)]),
             'Total deposit balance in capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, CapitalFirm)]),
-            'Total deposit balance in material capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            'Total deposit balance in metal capital sector': sum([x.deposit.balance for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
             'Total deposit balance in households': sum([x.deposit.balance for x in all_agents if isinstance(x, Household)]),
             'Total loan balance': sum([x.balance for x in CommercialBank.instances[0].loans]) if CommercialBank.instances else 0,
             'Total NPL balance': sum([x.balance for x in CommercialBank.instances[0].non_performing_loans]) if CommercialBank.instances else 0,
@@ -440,76 +493,84 @@ for t in range(params.nrTimesteps['val']):
             'Commercial bank deposit balance': sum([x.deposit.balance for x in CommercialBank.instances]),
             
             'Final good NPL balance': get_sector_npl(FinalGoodFirm),
-            'Material NPL balance': get_sector_npl(MaterialFirm),
+            'Metal NPL balance': get_sector_npl(MaterialFirm),
             'Renewable Energy NPL balance': get_sector_npl(RenewableEnergyPowerPlant),
             'Fossil Fuel Energy NPL balance': get_sector_npl(FossilFuelEnergyPowerPlant),
             'Final good capital NPL balance': get_sector_npl(FinalGoodCapitalFirm),
             'Renewable Energy capital NPL balance': get_sector_npl(RenewableEnergyCapitalFirm),
             'Fossil Fuel Energy capital NPL balance': get_sector_npl(FossilFuelEnergyCapitalFirm),
-            'Material capital NPL balance': get_sector_npl(MaterialCapitalFirm),
+            'Metal capital NPL balance': get_sector_npl(MaterialCapitalFirm),
 
-            'Final good loan-to-deposit-ratio': get_sector_ltd(FinalGoodFirm),
-            'Material loan-to-deposit-ratio': get_sector_ltd(MaterialFirm),
-            'Renewable Energy loan-to-deposit-ratio': get_sector_ltd(RenewableEnergyPowerPlant),
-            'Fossil Fuel Energy loan-to-deposit-ratio': get_sector_ltd(FossilFuelEnergyPowerPlant),
-            'Final good capital loan-to-deposit-ratio': get_sector_ltd(FinalGoodCapitalFirm),
-            'Renewable Energy capital loan-to-deposit-ratio': get_sector_ltd(RenewableEnergyCapitalFirm),
-            'Fossil Fuel Energy capital loan-to-deposit-ratio': get_sector_ltd(FossilFuelEnergyCapitalFirm),
-            'Material capital loan-to-deposit-ratio': get_sector_ltd(MaterialCapitalFirm),
+            'Final good loan-to-deposit-ratio': get_sector_ltd(FinalGoodFirm, 'Final good loan-to-deposit-ratio'),
+            'Metal loan-to-deposit-ratio': get_sector_ltd(MaterialFirm, 'Metal loan-to-deposit-ratio'),
+            'Renewable Energy loan-to-deposit-ratio': get_sector_ltd(RenewableEnergyPowerPlant, 'Renewable Energy loan-to-deposit-ratio'),
+            'Fossil Fuel Energy loan-to-deposit-ratio': get_sector_ltd(FossilFuelEnergyPowerPlant, 'Fossil Fuel Energy loan-to-deposit-ratio'),
+            'Final good capital loan-to-deposit-ratio': get_sector_ltd(FinalGoodCapitalFirm, 'Final good capital loan-to-deposit-ratio'),
+            'Renewable Energy capital loan-to-deposit-ratio': get_sector_ltd(RenewableEnergyCapitalFirm, 'Renewable Energy capital loan-to-deposit-ratio'),
+            'Fossil Fuel Energy capital loan-to-deposit-ratio': get_sector_ltd(FossilFuelEnergyCapitalFirm, 'Fossil Fuel Energy capital loan-to-deposit-ratio'),
+            'Metal capital loan-to-deposit-ratio': get_sector_ltd(MaterialCapitalFirm, 'Metal capital loan-to-deposit-ratio'),
 
             'Final good NPL ratio': get_sector_npl_ratio(FinalGoodFirm),
-            'Material NPL ratio': get_sector_npl_ratio(MaterialFirm),
+            'Metal NPL ratio': get_sector_npl_ratio(MaterialFirm),
             'Renewable Energy NPL ratio': get_sector_npl_ratio(RenewableEnergyPowerPlant),
             'Fossil Fuel Energy NPL ratio': get_sector_npl_ratio(FossilFuelEnergyPowerPlant),
             'Final good capital NPL ratio': get_sector_npl_ratio(FinalGoodCapitalFirm),
             'Renewable Energy capital NPL ratio': get_sector_npl_ratio(RenewableEnergyCapitalFirm),
             'Fossil Fuel Energy capital NPL ratio': get_sector_npl_ratio(FossilFuelEnergyCapitalFirm),
-            'Material capital NPL ratio': get_sector_npl_ratio(MaterialCapitalFirm),
+            'Metal capital NPL ratio': get_sector_npl_ratio(MaterialCapitalFirm),
 
             'Final good average leverage ratio': get_sector_leverage(FinalGoodFirm),
-            'Material average leverage ratio': get_sector_leverage(MaterialFirm),
+            'Metal average leverage ratio': get_sector_leverage(MaterialFirm),
             'Renewable Energy average leverage ratio': get_sector_leverage(RenewableEnergyPowerPlant),
             'Fossil Fuel Energy average leverage ratio': get_sector_leverage(FossilFuelEnergyPowerPlant),
             'Final good capital average leverage ratio': get_sector_leverage(FinalGoodCapitalFirm),
             'Renewable Energy capital average leverage ratio': get_sector_leverage(RenewableEnergyCapitalFirm),
             'Fossil Fuel Energy capital average leverage ratio': get_sector_leverage(FossilFuelEnergyCapitalFirm),
-            'Material capital average leverage ratio': get_sector_leverage(MaterialCapitalFirm),
+            'Metal capital average leverage ratio': get_sector_leverage(MaterialCapitalFirm),
 
-            'Material inventory-to-assets ratio': get_inventory_to_assets(MaterialFirm),
+            'Metal inventory-to-assets ratio': get_inventory_to_assets(MaterialFirm),
             'Final good inventory-to-assets ratio': get_inventory_to_assets(FinalGoodFirm),
 
-            'Ratio of total ore extraction cost to Total GDP (Value Added)': (total_ore_extraction_cost / total_gdp_va) if total_gdp_va != 0 else 0,
+            'Ratio of total ore extraction cost to Total GDP (Value Added)': ore_cost_to_gdp,
             # 'Final good GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodFirm)]),
-            # 'Material GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialFirm)]),
+            # 'Metal GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialFirm)]),
             # 'Renewable Energy GDP': sum([x.output * x.price for x in all_agents if isinstance(x, RenewableEnergyPowerPlant)]),
             # 'Fossil Fuel Energy GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FossilFuelEnergyPowerPlant)]),
             # 'Final good capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FinalGoodCapitalFirm)]),
             # 'Renewable Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, RenewableEnergyCapitalFirm)]),
             # 'Fossil Fuel Energy capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, FossilFuelEnergyCapitalFirm)]),
-            # 'Material capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
+            # 'Metal capital GDP': sum([x.output * x.price for x in all_agents if isinstance(x, MaterialCapitalFirm)]),
             'Final good GDP (Value Added)': final_good_gdp_va,
-            'Material GDP (Value Added)': material_gdp_va,
+            'Metal GDP (Value Added)': material_gdp_va,
             'Renewable Energy GDP (Value Added)': renewable_energy_gdp_va,
             'Fossil Fuel Energy GDP (Value Added)': fossil_fuel_energy_gdp_va,
             'Final good capital GDP (Value Added)': final_good_capital_gdp_va,
             'Renewable Energy capital GDP (Value Added)': renewable_energy_capital_gdp_va,
             'Fossil Fuel Energy capital GDP (Value Added)': fossil_fuel_energy_capital_gdp_va,
-            'Material capital GDP (Value Added)': material_capital_gdp_va,
+            'Metal capital GDP (Value Added)': material_capital_gdp_va,
             'Mining GDP (Value Added)': mining_gdp_va,
             'Total GDP (Value Added)': total_gdp_va,
-            'Average material buffer': sum([x.material_buffer for x in all_agents if isinstance(x, MaterialFirm)]) / len([x for x in all_agents if isinstance(x, MaterialFirm)])
+            'Average metal buffer': sum([x.material_buffer for x in all_agents if isinstance(x, MaterialFirm)]) / len([x for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total metal sales (real)': sum([x.sales_real for x in all_agents if isinstance(x, MaterialFirm)]),
+            'Total metal sales (nominal)': sum([x.sales_real * x.price for x in all_agents if isinstance(x, MaterialFirm)])
       }
 
       sim_nr = sim#esults["Simulation Number"]
       timestep = t#results["Timestep Number"]
       scenario = scenario_name#results["Scenario"]
       cols = list(results.keys())
+      values = []
+      imputed_list = []
       for i in cols:
             new_key = (i, scenario, sim_nr, timestep)
-            results[new_key] = results.pop(i)
+            val = results.pop(i)
+            results[new_key] = val
+            values.append(val)
+            imputed_list.append(imputed_flags.get(i, 0))
+            
       index_tuples = [(k[0], k[1], k[2], k[3]) for k in results.keys()]
       multi_index = pd.MultiIndex.from_tuples(index_tuples, names=['Metric', "Scenario", 'Simulation Number', 'Timestep Number'])
-      df = pd.DataFrame(list(results.values()), index=multi_index, columns=['Value'])
+      df = pd.DataFrame({'Value': values, 'Imputed': imputed_list}, index=multi_index)
       # df['Value'] = pd.to_numeric(df['Value'])
 
 

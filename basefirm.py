@@ -93,18 +93,24 @@ class Firm(Agent):
         counter = 0
         interest_pmt_counter = 0
         principal_pmt_counter = 0
-        nr_of_active_loans = len(self.loans)
         
-        while nr_of_active_loans > 0: #len(self.loans) > 0:
+        active_loans = [x for x in self.loans if x not in x.lender.non_performing_loans]
+        nr_of_active_loans = len(active_loans)
+        
+        while nr_of_active_loans > 0:
             counter += 1
-            for loan in self.loans[:]:
+            for loan in active_loans[:]:
                 principal_pmt_counter += 1
                 loan.execute_principal_pmt()
                 if len(loan.principal_pmts) == 0: #self.eq(loan.balance, 0):
                     loan.get_paid_off()
-            for loan in self.loans[:]:
+            
+            active_loans = [x for x in self.loans if x not in x.lender.non_performing_loans]
+            for loan in active_loans[:]:
                 interest_pmt_counter += 1
                 if len(loan.interest_pmts) > 0:
                     loan.execute_interest_pmt()
-            nr_of_active_loans = len(self.loans)
+                    
+            active_loans = [x for x in self.loans if x not in x.lender.non_performing_loans]
+            nr_of_active_loans = len(active_loans)
         

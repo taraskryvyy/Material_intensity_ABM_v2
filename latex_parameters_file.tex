@@ -35,9 +35,9 @@
 \newcommand{\maximumMaterialBuffer}{\beta_{M}^{max}}
 \newcommand{\maximumMaterialBufferValue}{0.5}
 \newcommand{\maximumMaterialBufferDesc}{maximum material inventory buffer parameter}
-\newcommand{\constantMaterialBuffer}{\beta_{M}^{const}}
-\newcommand{\constantMaterialBufferValue}{0}
-\newcommand{\constantMaterialBufferDesc}{constant material buffer parameter (0 for no constant buffer, 1 for constant buffer)}
+\newcommand{\adaptiveMaterialBuffer}{\beta_{M}^{adapt}}
+\newcommand{\adaptiveMaterialBufferValue}{0}
+\newcommand{\adaptiveMaterialBufferDesc}{adaptive material buffer parameter (0 for constant buffer, 1 for adaptive buffer)}
 \newcommand{\energyBuffer}{\beta_{E}}
 \newcommand{\energyBufferValue}{0.5}
 \newcommand{\energyBufferDesc}{desired excess capacity of the energy grid}
@@ -62,6 +62,15 @@
 \newcommand{\materialBufferReactionToCarbonTax}{\beta_{M}^{carbon}}
 \newcommand{\materialBufferReactionToCarbonTaxValue}{0.5}
 \newcommand{\materialBufferReactionToCarbonTaxDesc}{material buffer reaction to carbon tax}
+\newcommand{\policyInventoryHaircutOn}{{policy}_{haircut}}
+\newcommand{\policyInventoryHaircutOnValue}{0}
+\newcommand{\policyInventoryHaircutOnDesc}{Toggle for output inventory haircut policy}
+\newcommand{\haircutInventoryRatioThreshold}{{thr}_{haircut}}
+\newcommand{\haircutInventoryRatioThresholdValue}{0.1}
+\newcommand{\haircutInventoryRatioThresholdDesc}{Threshold of inventory/assets ratio to trigger haircut}
+\newcommand{\haircutInventoryValue}{{val}_{haircut}}
+\newcommand{\haircutInventoryValueValue}{0.7}
+\newcommand{\haircutInventoryValueDesc}{Percentage haircut applied to output inventory}
 \newcommand{\fgLaborProductivity}{\alpha^{FG}}
 \newcommand{\fgLaborProductivityValue}{15}
 \newcommand{\fgLaborProductivityDesc}{ labor productivity in final good sector}
@@ -285,7 +294,7 @@
 \newcommand{\nrMaterialFirmsValue}{5}
 \newcommand{\nrMaterialFirmsDesc}{number of material firms}
 \newcommand{\nrMiningSites}{\#_{R^{D}}}
-\newcommand{\nrMiningSitesValue}{100}
+\newcommand{\nrMiningSitesValue}{20}
 \newcommand{\nrMiningSitesDesc}{number of mining sites}
 \newcommand{\nrFossilFuelEnergyCapitalFirms}{\#_{FEC}}
 \newcommand{\nrFossilFuelEnergyCapitalFirmsValue}{1}

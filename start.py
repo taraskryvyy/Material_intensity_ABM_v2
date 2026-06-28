@@ -61,11 +61,19 @@ def aggregate_csv_files(source_files, target_file):
     print("Saving full unaggregated results to results_full.csv...")
     full_df.to_csv("results_full.csv", index=False)
     
-    # Check if this is the long format output from simulation.py
-    # Expected columns: Metric, Scenario, Simulation Number, Timestep Number, Value
     if 'Metric' in full_df.columns and 'Value' in full_df.columns:
-        # Aggregate by Metric, Scenario, Timestep Number
-        agg_df = full_df.groupby(['Metric', 'Scenario', 'Timestep Number'])['Value'].agg(['mean', 'std', 'count']).reset_index()
+        if 'Imputed' in full_df.columns:
+            # Aggregate by Metric, Scenario, Timestep Number, adding imputed_count
+            agg_df = full_df.groupby(['Metric', 'Scenario', 'Timestep Number']).agg(
+                mean=('Value', 'mean'),
+                std=('Value', 'std'),
+                count=('Value', 'count'),
+                imputed_count=('Imputed', 'sum')
+            ).reset_index()
+        else:
+            # Aggregate by Metric, Scenario, Timestep Number (backwards compatible)
+            agg_df = full_df.groupby(['Metric', 'Scenario', 'Timestep Number'])['Value'].agg(['mean', 'std', 'count']).reset_index()
+            
         # Calculate standard error (std / sqrt(n))
         agg_df['se'] = agg_df['std'] / np.sqrt(agg_df['count'])
         # Fill NaN standard errors with 0 (e.g. if count is 1)
@@ -107,17 +115,78 @@ if __name__ == "__main__":
 
     print(f"Starting {len(tasks)} simulations with {max_workers} workers")
     failed = []
+    
+    error_log_path = "error_log.csv"
+    with open(error_log_path, "w", newline="", encoding="utf-8") as f:
+        import csv
+        writer = csv.writer(f)
+        writer.writerow(["Scenario Name", "Simulation Number", "Timestep", "Error Message"])
+        
+    import concurrent.futures
+    MAX_ATTEMPTS_PER_SCENARIO = 300
+    total_attempts = {name: 0 for name in scenarios.keys()}
+    future_to_task = {}
+    active_futures = set()
+    
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(run_single_simulation, task) for task in tasks]
-        for future in as_completed(futures):
-            scenario_name, sim, output_file, rc, stdout, stderr = future.result()
-            if rc != 0:
-                failed.append((scenario_name, sim, rc, stderr))
-                print(f"FAILED scenario={scenario_name}, sim={sim}, returncode={rc}")
-                if stderr:
-                    print(stderr)
-            else:
-                print(f"Completed scenario={scenario_name}, sim={sim} -> {output_file.name}")
+        for task in tasks:
+            scenario_name = task[0]
+            future = executor.submit(run_single_simulation, task)
+            future_to_task[future] = task
+            active_futures.add(future)
+            total_attempts[scenario_name] += 1
+            
+        while active_futures:
+            done, _ = concurrent.futures.wait(active_futures, return_when=concurrent.futures.FIRST_COMPLETED)
+            for future in done:
+                active_futures.remove(future)
+                task = future_to_task.pop(future)
+                scenario_name, params_json, sim, output_file, flush_every = task
+                
+                try:
+                    _, _, _, rc, stdout, stderr = future.result()
+                except Exception as e:
+                    rc = -1
+                    stdout = ""
+                    stderr = str(e)
+                    
+                if rc != 0:
+                    if output_file.exists():
+                        try:
+                            output_file.unlink()
+                        except Exception as e:
+                            print(f"Warning: Could not delete incomplete file {output_file}: {e}")
+                            
+                    failed.append((scenario_name, sim, rc, stderr))
+                    
+                    # Extract the last timestep from stdout if available
+                    import re
+                    last_timestep = "Unknown"
+                    matches = re.findall(r"TimeStep: (\d+)", stdout)
+                    if matches:
+                        last_timestep = matches[-1]
+                    
+                    print(f"FAILED scenario={scenario_name}, sim={sim}, timestep={last_timestep}, returncode={rc}")
+                    if stderr:
+                        print(stderr)
+                        
+                    # Append to error log
+                    with open(error_log_path, "a", newline="", encoding="utf-8") as f:
+                        import csv
+                        writer = csv.writer(f)
+                        writer.writerow([scenario_name, sim, last_timestep, stderr.strip()])
+                        
+                    # Retry logic
+                    if total_attempts[scenario_name] < MAX_ATTEMPTS_PER_SCENARIO:
+                        print(f"Retrying scenario={scenario_name}, sim={sim} (Total attempts for scenario so far: {total_attempts[scenario_name]})")
+                        new_future = executor.submit(run_single_simulation, task)
+                        future_to_task[new_future] = task
+                        active_futures.add(new_future)
+                        total_attempts[scenario_name] += 1
+                    else:
+                        print(f"ABORTING retries for scenario={scenario_name}, max attempts ({MAX_ATTEMPTS_PER_SCENARIO}) reached.")
+                else:
+                    print(f"Completed scenario={scenario_name}, sim={sim} -> {output_file.name}")
 
     print("Aggregating output files...")
     aggregate_csv_files(output_files, "results.csv")

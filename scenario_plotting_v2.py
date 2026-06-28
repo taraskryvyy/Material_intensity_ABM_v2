@@ -25,6 +25,7 @@ def get_scenario_colors(df):
             
     return colors
 
+# def load_data(filepath='results_agg_scenario_sims.csv'):
 def load_data(filepath='results.csv'):
     """Load results from CSV, handling multilevel indexing appropriately."""
     print(f"Reading from {filepath}...")
@@ -40,121 +41,124 @@ def plot_metrics_to_pdfs(df):
     smooth_figs = [
         'Renewable Energy capital price', 
         "Average ore extraction cost", 
-        "Material price", 
+        "Metal price", 
         "Bankruptcy rate", 
         "Total household dividend income", 
         "Electricity price",
         'Total GDP (Value Added)',
         'Final good GDP (Value Added)',
-        'Material GDP (Value Added)',
+        'Metal GDP (Value Added)',
         'Renewable Energy GDP (Value Added)',
         'Fossil Fuel Energy GDP (Value Added)',
         'Final good capital GDP (Value Added)',
         'Renewable Energy capital GDP (Value Added)',
         'Fossil Fuel Energy capital GDP (Value Added)',
-        'Material capital GDP (Value Added)',
+        'Metal capital GDP (Value Added)',
         'Mining GDP (Value Added)',
         # 'Ratio of total ore extraction cost to Total GDP (Value Added)',
-        'Material inventory-to-sales ratio',
-        'Total material sales (real)',
-        'Total material sales (nominal)',
-        'Renewable Energy market share'
+        'Metal inventory-to-sales ratio',
+        'Total metal sales (real)',
+        'Total metal sales (nominal)',
+        # 'Renewable Energy market share'
     ]
     smooth_window = 10
+    cut_timesteps = 25
     fig_size = (6, 4)
     errorbar_format = ("se", 1)
     
     # List of tuples defining all plots: (Metric_Name, Title, Y_Label, Y_Axis_Limits)
     plots_to_make = [
-        ('Total GDP (Value Added)', 'Total GDP (Value Added)', 'Total GDP (Value Added)', None),
-        ('Final good GDP (Value Added)', 'Final Good GDP (Value Added)', 'Final Good GDP (Value Added)', None),
-        ('Material GDP (Value Added)', 'Material GDP (Value Added)', 'Material GDP (Value Added)', None),
-        ('Renewable Energy GDP (Value Added)', 'Renewable Energy GDP (Value Added)', 'Renewable Energy GDP (Value Added)', None),
-        ('Fossil Fuel Energy GDP (Value Added)', 'Fossil Fuel Energy GDP (Value Added)', 'Fossil Fuel Energy GDP (Value Added)', None),
-        ('Final good capital GDP (Value Added)', 'Final Good Capital GDP (Value Added)', 'Final Good Capital GDP (Value Added)', None),
-        ('Renewable Energy capital GDP (Value Added)', 'Renewable Energy Capital GDP (Value Added)', 'Renewable Energy Capital GDP (Value Added)', None),
-        ('Fossil Fuel Energy capital GDP (Value Added)', 'Fossil Fuel Energy Capital GDP (Value Added)', 'Fossil Fuel Energy Capital GDP (Value Added)', None),
-        ('Material capital GDP (Value Added)', 'Material Capital GDP (Value Added)', 'Material Capital GDP (Value Added)', None),
-        ('Mining GDP (Value Added)', 'Mining GDP (Value Added)', 'Mining GDP (Value Added)', None),
-        ('Average material buffer', 'Average Material Buffer', 'Average Material Buffer', None),
-        ('Carbon tax', 'Carbon Tax', 'Carbon Tax', None),
-        ('Carbon tax growthrate', 'Carbon Tax Growthrate', 'Carbon Tax Growthrate', (0, 0.02)),
-        ('Transition risk index', 'Transition Risk Index', 'Transition Risk Index', None),
         ('Renewable Energy capital price', 'Renewable Energy Capital Price', 'Renewable Energy Capital Price', None),
-        ('Net Renewable Energy NPV', 'Net Renewable Energy NPV', 'Net Renewable Energy NPV', None),
-        ('Net Renewable Energy NPV', 'Net Renewable Energy NPV (zoomed in)', 'Net Renewable Energy NPV', 'auto_zoom'),
-        ('Bankruptcy rate', 'Bankruptcy Rate', 'Bankruptcy Rate', None),
-        ('NPL ratio', 'NPL Ratio', 'NPL Ratio', None),
-        ('Total NPL balance', 'Total NPL balance', 'Total NPL balance', None),
-        ('Commercial bank loan-to-deposit-ratio', 'Commercial bank loan-to-deposit-ratio', 'Commercial bank loan-to-deposit-ratio', None),
-        ('Cumulative number of bankruptcies', 'Cumulative Number of Bankruptcies', 'Cumulative Number of Bankruptcies', None),
-        ('Cumulative number of bankrupt material firms', 'Cumulative Number of Bankrupt Material Firms', 'Cumulative Number of Bankrupt Material Firms', None),
-        ('Cumulative number of bankrupt final good firms', 'Cumulative Number of Bankrupt Final Good Firms', 'Cumulative Number of Bankrupt Final Good Firms', None),
-        ('Final good output', 'Total Output', 'Total Output', None),
-        ('Total consumption budget', 'Total Consumption Budget', 'Total Consumption Budget', None),
-        ('Total household dividend income', 'Total Household Dividend Income', 'Total Household Dividend Income', None),
-        ('Electricity price', 'Electricity Price', 'Electricity Price', None),
-        ('Electricity price', 'Electricity Price (zoomed in)', 'Electricity Price', 'auto_zoom'),
-        ('Weighted average sell price of final good', 'Weighted Average Sell Price of Final Good', 'Weighted Average Sell Price of Final Good', None),
-        ('Weighted average sell price of final good', 'Weighted Average Sell Price of Final Good (zoomed in)', 'Weighted Average Sell Price of Final Good', 'auto_zoom2'),
-        ('Total GDP (Value Added)', 'Total GDP (Value Added)', 'Total GDP (Value Added)', None),
-        ('Fuel price', 'Fuel Price', 'Fuel Price', None),
         ('Renewable Energy market share', 'Renewable Energy Market Share', 'Renewable Energy Market Share', None),
-        ('Material price', 'Material Price', 'Material Price', None),
-        ('Material price', 'Material Price (zoomed in)', 'Material Price', 'auto_zoom'),
-        ('Total material inventory', 'Total Material Inventory', 'Total Material Inventory', None),
-        ('Material inventory-to-sales ratio', 'Material Inventory-to-Sales Ratio', 'Inventory / Sales Ratio', None),
-        ('Material inventory-to-sales ratio', 'Material Inventory-to-Sales Ratio (zoomed in)', 'Inventory / Sales Ratio', 'auto_zoom_2'),
-        ('Total material sales (real)', 'Total Material Sales (Real)', 'Total Material Sales', 'auto_zoom'),
-        ('Total material sales (nominal)', 'Total Material Sales (Nominal)', 'Total Material Sales', 'auto_zoom'),
-        ('Material inventory minus real sales', 'Material Inventory minus Real Sales', 'Inventory minus Sales', None),
+        ('Metal price', 'Metal Price', 'Metal Price', None),
+        ('Fuel price', 'Fuel Price', 'Fuel Price', None),
+        ('Total metal inventory', 'Total Metal Inventory', 'Total Metal Inventory', None),
         ('Average ore extraction cost', 'Average Ore Extraction Cost', 'Average Ore Extraction Cost', None),
         ('Total ore reserves', 'Total Ore Reserves', 'Total Ore Reserves', None),
         ('Number of active mining sites', 'Number of Active Mining Sites', 'Number of Active Mining Sites', None),
         ('Average reserves per active mining site', 'Average Reserves per Active Mining Site', 'Average Reserves per Active Mining Site', None),
-        ('Material capital productivity', 'Material Capital Productivity', 'Material Capital Productivity', None),
-        ('Final good capital productivity', 'Final Good Capital Productivity', 'Final Good Capital Productivity', None),
-        ('Renewable Energy capital productivity', 'Renewable Energy Capital Productivity', 'Renewable Energy Capital Productivity', None),
-        ('Fossil Fuel Energy capital productivity', 'Fossil Fuel Energy Capital Productivity', 'Fossil Fuel Energy Capital Productivity', None),
-
+        ('Metal average leverage ratio', 'Metal average leverage ratio', 'Average leverage ratio', None),
+        ('Metal inventory-to-assets ratio', 'Metal inventory-to-assets ratio', 'Inventory / Assets', None),
+        ('Total NPL balance', 'Total NPL balance', 'Total NPL balance', None),
         ('Final good NPL balance', 'Final good NPL balance', 'NPL balance', None),
-        ('Material NPL balance', 'Material NPL balance', 'NPL balance', None),
+        ('Metal NPL balance', 'Metal NPL balance', 'NPL balance', None),
         ('Renewable Energy NPL balance', 'Renewable Energy NPL balance', 'NPL balance', None),
         ('Fossil Fuel Energy NPL balance', 'Fossil Fuel Energy NPL balance', 'NPL balance', None),
-        ('Final good capital NPL balance', 'Final good capital NPL balance', 'NPL balance', None),
-        ('Renewable Energy capital NPL balance', 'Renewable Energy capital NPL balance', 'NPL balance', None),
-        ('Fossil Fuel Energy capital NPL balance', 'Fossil Fuel Energy capital NPL balance', 'NPL balance', None),
-        ('Material capital NPL balance', 'Material capital NPL balance', 'NPL balance', None),
+        ('Commercial bank loan-to-deposit-ratio', 'Commercial bank loan-to-deposit-ratio', 'Commercial bank loan-to-deposit-ratio', None),
+        ('Cumulative number of bankruptcies', 'Cumulative Number of Bankruptcies', 'Cumulative Number of Bankruptcies', None),
+        ('Cumulative number of bankrupt metal firms', 'Cumulative Number of Bankrupt Metal Firms', 'Cumulative Number of Bankrupt Metal Firms', None),
+        ('Cumulative number of bankrupt final good firms', 'Cumulative Number of Bankrupt Final Good Firms', 'Cumulative Number of Bankrupt Final Good Firms', None),
+        ('Final good output', 'Total Output', 'Total Output', None),       
+        ('Total household dividend income', 'Total Household Dividend Income', 'Total Household Dividend Income', None), 
 
-        ('Final good loan-to-deposit-ratio', 'Final good loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
-        ('Material loan-to-deposit-ratio', 'Material loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
-        ('Renewable Energy loan-to-deposit-ratio', 'Renewable Energy loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
-        ('Fossil Fuel Energy loan-to-deposit-ratio', 'Fossil Fuel Energy loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
-        ('Final good capital loan-to-deposit-ratio', 'Final good capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
-        ('Renewable Energy capital loan-to-deposit-ratio', 'Renewable Energy capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
-        ('Fossil Fuel Energy capital loan-to-deposit-ratio', 'Fossil Fuel Energy capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
-        ('Material capital loan-to-deposit-ratio', 'Material capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+###################################################################################################################################
 
-        ('Final good NPL ratio', 'Final good NPL ratio', 'NPL ratio', None),
-        ('Material NPL ratio', 'Material NPL ratio', 'NPL ratio', None),
-        ('Renewable Energy NPL ratio', 'Renewable Energy NPL ratio', 'NPL ratio', None),
-        ('Fossil Fuel Energy NPL ratio', 'Fossil Fuel Energy NPL ratio', 'NPL ratio', None),
-        ('Final good capital NPL ratio', 'Final good capital NPL ratio', 'NPL ratio', None),
-        ('Renewable Energy capital NPL ratio', 'Renewable Energy capital NPL ratio', 'NPL ratio', None),
-        ('Fossil Fuel Energy capital NPL ratio', 'Fossil Fuel Energy capital NPL ratio', 'NPL ratio', None),
-        ('Material capital NPL ratio', 'Material capital NPL ratio', 'NPL ratio', None),
+        # ('Total GDP (Value Added)', 'Total GDP (Value Added)', 'Total GDP (Value Added)', None),
+        # ('Final good GDP (Value Added)', 'Final Good GDP (Value Added)', 'Final Good GDP (Value Added)', None),
+        # ('Metal GDP (Value Added)', 'Metal GDP (Value Added)', 'Metal GDP (Value Added)', None),
+        # ('Renewable Energy GDP (Value Added)', 'Renewable Energy GDP (Value Added)', 'Renewable Energy GDP (Value Added)', None),
+        # ('Fossil Fuel Energy GDP (Value Added)', 'Fossil Fuel Energy GDP (Value Added)', 'Fossil Fuel Energy GDP (Value Added)', None),
+        # ('Final good capital GDP (Value Added)', 'Final Good Capital GDP (Value Added)', 'Final Good Capital GDP (Value Added)', None),
+        # ('Renewable Energy capital GDP (Value Added)', 'Renewable Energy Capital GDP (Value Added)', 'Renewable Energy Capital GDP (Value Added)', None),
+        # ('Fossil Fuel Energy capital GDP (Value Added)', 'Fossil Fuel Energy Capital GDP (Value Added)', 'Fossil Fuel Energy Capital GDP (Value Added)', None),
+        # ('Metal capital GDP (Value Added)', 'Metal Capital GDP (Value Added)', 'Metal Capital GDP (Value Added)', None),
+        # ('Mining GDP (Value Added)', 'Mining GDP (Value Added)', 'Mining GDP (Value Added)', None),
+        # ('Average metal buffer', 'Average Metal Buffer', 'Average Metal Buffer', None),
+        # ('Carbon tax', 'Carbon Tax', 'Carbon Tax', None),
+        # ('Carbon tax growthrate', 'Carbon Tax Growthrate', 'Carbon Tax Growthrate', (0, 0.02)),
+        # ('Transition risk index', 'Transition Risk Index', 'Transition Risk Index', None),
+        # ('Net Renewable Energy NPV', 'Net Renewable Energy NPV', 'Net Renewable Energy NPV', None),
+        # ('Net Renewable Energy NPV', 'Net Renewable Energy NPV (zoomed in)', 'Net Renewable Energy NPV', 'auto_zoom'),
+        # ('Bankruptcy rate', 'Bankruptcy Rate', 'Bankruptcy Rate', None),
+        # ('NPL ratio', 'NPL Ratio', 'NPL Ratio', None),
+        # ('Total consumption budget', 'Total Consumption Budget', 'Total Consumption Budget', None),
+        # ('Electricity price', 'Electricity Price', 'Electricity Price', None),
+        # ('Electricity price', 'Electricity Price (zoomed in)', 'Electricity Price', 'auto_zoom'),
+        # ('Weighted average sell price of final good', 'Weighted Average Sell Price of Final Good', 'Weighted Average Sell Price of Final Good', None),
+        # ('Weighted average sell price of final good', 'Weighted Average Sell Price of Final Good (zoomed in)', 'Weighted Average Sell Price of Final Good', 'auto_zoom2'),
+        # ('Total GDP (Value Added)', 'Total GDP (Value Added)', 'Total GDP (Value Added)', None),
+        # ('Metal price', 'Metal Price (zoomed in)', 'Metal Price', 'auto_zoom'),
+        # ('Metal inventory-to-sales ratio', 'Metal Inventory-to-Sales Ratio', 'Inventory / Sales Ratio', None),
+        # ('Metal inventory-to-sales ratio', 'Metal Inventory-to-Sales Ratio (zoomed in)', 'Inventory / Sales Ratio', 'auto_zoom_2'),
+        # ('Total metal sales (real)', 'Total Metal Sales (Real)', 'Total Metal Sales', 'auto_zoom'),
+        # ('Total metal sales (nominal)', 'Total Metal Sales (Nominal)', 'Total Metal Sales', 'auto_zoom'),
+        # ('Metal inventory minus real sales', 'Metal Inventory minus Real Sales', 'Inventory minus Sales', None),
+        # ('Metal capital productivity', 'Metal Capital Productivity', 'Metal Capital Productivity', None),
+        # ('Final good capital productivity', 'Final Good Capital Productivity', 'Final Good Capital Productivity', None),
+        # ('Renewable Energy capital productivity', 'Renewable Energy Capital Productivity', 'Renewable Energy Capital Productivity', None),
+        # ('Fossil Fuel Energy capital productivity', 'Fossil Fuel Energy Capital Productivity', 'Fossil Fuel Energy Capital Productivity', None),
+        # ('Final good capital NPL balance', 'Final good capital NPL balance', 'NPL balance', None),
+        # ('Renewable Energy capital NPL balance', 'Renewable Energy capital NPL balance', 'NPL balance', None),
+        # ('Fossil Fuel Energy capital NPL balance', 'Fossil Fuel Energy capital NPL balance', 'NPL balance', None),
+        # ('Metal capital NPL balance', 'Metal capital NPL balance', 'NPL balance', None),
+
+        # ('Final good loan-to-deposit-ratio', 'Final good loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        # ('Metal loan-to-deposit-ratio', 'Metal loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        # ('Renewable Energy loan-to-deposit-ratio', 'Renewable Energy loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        # ('Fossil Fuel Energy loan-to-deposit-ratio', 'Fossil Fuel Energy loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        # ('Final good capital loan-to-deposit-ratio', 'Final good capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        # ('Renewable Energy capital loan-to-deposit-ratio', 'Renewable Energy capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        # ('Fossil Fuel Energy capital loan-to-deposit-ratio', 'Fossil Fuel Energy capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+        # ('Metal capital loan-to-deposit-ratio', 'Metal capital loan-to-deposit-ratio', 'loan-to-deposit-ratio', None),
+
+        # ('Final good NPL ratio', 'Final good NPL ratio', 'NPL ratio', None),
+        # ('Metal NPL ratio', 'Metal NPL ratio', 'NPL ratio', None),
+        # ('Renewable Energy NPL ratio', 'Renewable Energy NPL ratio', 'NPL ratio', None),
+        # ('Fossil Fuel Energy NPL ratio', 'Fossil Fuel Energy NPL ratio', 'NPL ratio', None),
+        # ('Final good capital NPL ratio', 'Final good capital NPL ratio', 'NPL ratio', None),
+        # ('Renewable Energy capital NPL ratio', 'Renewable Energy capital NPL ratio', 'NPL ratio', None),
+        # ('Fossil Fuel Energy capital NPL ratio', 'Fossil Fuel Energy capital NPL ratio', 'NPL ratio', None),
+        # ('Metal capital NPL ratio', 'Metal capital NPL ratio', 'NPL ratio', None),
         
-        ('Final good average leverage ratio', 'Final good average leverage ratio', 'Average leverage ratio', None),
-        ('Material average leverage ratio', 'Material average leverage ratio', 'Average leverage ratio', None),
-        ('Renewable Energy average leverage ratio', 'Renewable Energy average leverage ratio', 'Average leverage ratio', None),
-        ('Fossil Fuel Energy average leverage ratio', 'Fossil Fuel Energy average leverage ratio', 'Average leverage ratio', None),
-        ('Final good capital average leverage ratio', 'Final good capital average leverage ratio', 'Average leverage ratio', None),
-        ('Renewable Energy capital average leverage ratio', 'Renewable Energy capital average leverage ratio', 'Average leverage ratio', None),
-        ('Fossil Fuel Energy capital average leverage ratio', 'Fossil Fuel Energy capital average leverage ratio', 'Average leverage ratio', None),
-        ('Material capital average leverage ratio', 'Material capital average leverage ratio', 'Average leverage ratio', None),
+        # ('Final good average leverage ratio', 'Final good average leverage ratio', 'Average leverage ratio', None),
+        # ('Renewable Energy average leverage ratio', 'Renewable Energy average leverage ratio', 'Average leverage ratio', None),
+        # ('Fossil Fuel Energy average leverage ratio', 'Fossil Fuel Energy average leverage ratio', 'Average leverage ratio', None),
+        # ('Final good capital average leverage ratio', 'Final good capital average leverage ratio', 'Average leverage ratio', None),
+        # ('Renewable Energy capital average leverage ratio', 'Renewable Energy capital average leverage ratio', 'Average leverage ratio', None),
+        # ('Fossil Fuel Energy capital average leverage ratio', 'Fossil Fuel Energy capital average leverage ratio', 'Average leverage ratio', None),
+        # ('Metal capital average leverage ratio', 'Metal capital average leverage ratio', 'Average leverage ratio', None),
 
-        ('Material inventory-to-assets ratio', 'Material inventory-to-assets ratio', 'Inventory / Assets', None),
-        ('Final good inventory-to-assets ratio', 'Final good inventory-to-assets ratio', 'Inventory / Assets', None),
+        # ('Final good inventory-to-assets ratio', 'Final good inventory-to-assets ratio', 'Inventory / Assets', None),
     ]
 
     import re
@@ -212,6 +216,9 @@ def plot_metrics_to_pdfs(df):
                 # Reset index so we can access columns easily
                 plot_df = metric_df.reset_index()
                 
+                if cut_timesteps > 0:
+                    plot_df = plot_df[plot_df['Timestep Number'] >= cut_timesteps]
+                
                 scenarios_in_data = plot_df['Scenario'].unique()
                 for scenario in scenarios_in_data:
                     scen_df = plot_df[plot_df['Scenario'] == scenario]
@@ -251,7 +258,9 @@ def plot_metrics_to_pdfs(df):
 if __name__ == '__main__':
     print("Initializing scenario plotting workflow...")
     try:
+        # df = load_data('results_agg_scenario_sims.csv')
         df = load_data('results.csv')
+        # df = load_data('latest_results_agg_scenario_sims.csv')
         print("Generating plots and saving to PDFs...")
         plot_metrics_to_pdfs(df)
         print("Done! Saved PDFs successfully.")

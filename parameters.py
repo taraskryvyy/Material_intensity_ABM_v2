@@ -21,7 +21,7 @@ class Parameters:
         self.materialBuffer={"val": 0.3, "symbol": r"\beta_{M}", "desc": "material inventory buffer parameter"}
         self.entrantMaterialBuffer={"val": 0.3, "symbol": r"\beta_{M}^{entrant}", "desc": "material inventory buffer parameter for new entrants"}
         self.maximumMaterialBuffer={"val": 0.5, "symbol": r"\beta_{M}^{max}", "desc": "maximum material inventory buffer parameter"}
-        self.constantMaterialBuffer={"val": 0, "symbol": r"\beta_{M}^{const}", "desc": "constant material buffer parameter (0 for no constant buffer, 1 for constant buffer)"}
+        self.adaptiveMaterialBuffer={"val": 0, "symbol": r"\beta_{M}^{adapt}", "desc": "adaptive material buffer parameter (0 for constant buffer, 1 for adaptive buffer)"}
         self.energyBuffer={"val": 0.5, "symbol": r"\beta_{E}", "desc": "desired excess capacity of the energy grid"}
         self.cashBuffer={"val": 0.5, "symbol": r"\beta_{cash}", "desc": "how much cash a firm would want to keep"}
         self.muMarkup={"val": 0.02, "symbol": r"\mu_{FN_{markup}}", "desc": "Folded Normal Distribution expected value for markup adjustment"}
@@ -116,6 +116,7 @@ class Parameters:
         self.shortTermLoanDuration={"val": 5, "symbol": r"\tau^{short}", "desc": "duration of a short-term loan"}
         self.loanInterestRate={"val": 0.001, "symbol": r"r^{L}", "desc": "loan interest rate"}
         self.depositInterestRate={"val": 0.0001, "symbol": r"r^{D}", "desc": "deposit interest rate"}
+        self.removeNplFromBorrower={"val": 0, "symbol": r"{remove}_{NPL}", "desc": "Toggle to remove non-performing loans from borrower's balance sheet (1 for removal, 0 for keeping them)"}
 
 
         ### Initial state of economy

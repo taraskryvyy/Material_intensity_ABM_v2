@@ -82,8 +82,10 @@ class Loan(Parent):
             self.become_NPL()
         
     def get_paid_off(self):
-        self.lender.loans.remove(self)
-        self.borrower.loans.remove(self)
+        if self in self.lender.loans:
+            self.lender.loans.remove(self)
+        if self in self.borrower.loans:
+            self.borrower.loans.remove(self)
         # print("loan paid off "+str(self))
         
     def become_NPL(self):
@@ -92,7 +94,9 @@ class Loan(Parent):
             # print("loan becoming NPL "+str(self)+" to "+str(self.borrower.id))
             self.lender.loans.remove(self)
             self.lender.non_performing_loans.append(self)
-            self.borrower.loans.remove(self)
+            if self.params.removeNplFromBorrower['val'] == 1:
+                if self in self.borrower.loans:
+                    self.borrower.loans.remove(self)
         # else:
             # print("loan already NPL "+str(self)+" to "+str(self.borrower.id))
 
