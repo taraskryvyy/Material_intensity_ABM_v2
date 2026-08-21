@@ -122,7 +122,7 @@ class IncomeStatement(Parent):
         self.interest_expense = 0
         self.labor_cost = 0
         self.ore_extraction_cost = 0
-        self.materials_cost = 0
+        self.metals_cost = 0
         self.energy_cost = 0
         self.fuel_cost = 0
         self.depreciation_cost = 0
@@ -139,7 +139,7 @@ class IncomeStatement(Parent):
         self.past_interest_expense = 0
         self.past_labor_cost = 0
         self.past_ore_extraction_cost = 0
-        self.past_materials_cost = 0
+        self.past_metals_cost = 0
         self.past_energy_cost = 0
         self.past_fuel_cost = 0
         self.past_depreciation_cost = 0
@@ -174,12 +174,12 @@ class IncomeStatement(Parent):
         if  taxable_cash < 0:
             pass
             # self.profit = 0
-        if self.owner.__class__.__name__ == "MaterialCapitalFirm":
+        if self.owner.__class__.__name__ == "MetalCapitalFirm":
             pass
 
 
     def compute_output_inventory_variation(self):
-        if (self.owner.__class__.__name__ == "MaterialFirm" or
+        if (self.owner.__class__.__name__ == "MetalFirm" or
             self.owner.__class__.__name__ == "FinalGoodFirm" ):
             self.output_inventory_variation = (
                 self.owner.output_inventory.compute_inventory_value(unit_price=self.owner.price) -
@@ -199,7 +199,7 @@ class IncomeStatement(Parent):
         if self.owner.__class__.__name__ == "RenewableEnergyPowerPlant":
             pass
         self.total_cost = (self.interest_expense + self.labor_cost +
-                           self.ore_extraction_cost + self.materials_cost +
+                           self.ore_extraction_cost + self.metals_cost +
                            self.energy_cost + self.fuel_cost +
                            self.depreciation_cost)
         return self.total_cost
@@ -221,7 +221,7 @@ class IncomeStatement(Parent):
         self.past_interest_expense = self.interest_expense
         self.past_labor_cost = self.labor_cost
         self.past_ore_extraction_cost = self.ore_extraction_cost
-        self.past_materials_cost = self.materials_cost
+        self.past_metals_cost = self.metals_cost
         self.past_energy_cost = self.energy_cost
         self.past_fuel_cost = self.fuel_cost
         self.past_depreciation_cost = self.depreciation_cost
@@ -229,7 +229,7 @@ class IncomeStatement(Parent):
         self.interest_expense = 0
         self.labor_cost = 0
         self.ore_extraction_cost = 0
-        self.materials_cost = 0
+        self.metals_cost = 0
         self.energy_cost = 0
         self.fuel_cost = 0
         self.depreciation_cost = 0
@@ -257,10 +257,10 @@ class BalanceSheet(Parent):
 
         # # if isinstance(self.owner, CapitalFirm):
         # if self.owner.__class__.__name__ == "CapitalFirm":
-        #     self.material_inventory = self.owner.material_inventory
+        #     self.metal_inventory = self.owner.metal_inventory
         # else:
-        #     self.material_inventory = None
-        # self.material_inventory_value = 0
+        #     self.metal_inventory = None
+        # self.metal_inventory_value = 0
 
         # # if isinstance(self.owner, Firm):
         # if self.owner.__class__.__name__ == "Firm":
@@ -293,7 +293,7 @@ class BalanceSheet(Parent):
             if (self.owner.__class__.__name__ == "RenewableEnergyPowerPlant" or
              self.owner.__class__.__name__ == "FossilFuelEnergyPowerPlant"):
                 self.output_inventory_value = 0
-            elif self.owner.__class__.__name__ == "MaterialFirm":
+            elif self.owner.__class__.__name__ == "MetalFirm":
                 self.output_inventory_value = (
                     self.owner.output_inventory.compute_inventory_value(
                         unit_price=self.owner.price#self.owner.market_price
@@ -305,15 +305,15 @@ class BalanceSheet(Parent):
             else:
                 self.output_inventory_value = (
                     self.owner.output_inventory.compute_inventory_value())
-        if hasattr(self.owner, "material_inventory"):
-            self.material_inventory_value = (
-                self.owner.material_inventory.compute_inventory_value())
+        if hasattr(self.owner, "metal_inventory"):
+            self.metal_inventory_value = (
+                self.owner.metal_inventory.compute_inventory_value())
         else:
-            self.material_inventory_value = 0
+            self.metal_inventory_value = 0
         self.total_assets = (self.owner.deposit.balance + 
                              self.capital_stock_value +
                              self.output_inventory_value +
-                             self.material_inventory_value)
+                             self.metal_inventory_value)
         
     def compute_total_liabilities(self):
         if hasattr(self.owner, "loans") and len(self.owner.loans) > 0:
@@ -340,7 +340,7 @@ class BalanceSheet(Parent):
             elif (class_name == "RenewableEnergyPowerPlant" or
                 class_name == "FossilFuelEnergyPowerPlant"):
                 pass
-            elif (class_name == "MaterialFirm"):
+            elif (class_name == "MetalFirm"):
                 pass
             elif (class_name == "FinalGoodFirm"):
                 pass
@@ -353,7 +353,7 @@ class BalanceSheet(Parent):
             elif (class_name == "FinalGoodCapitalFirm" or
                   class_name == "RenewableEnergyCapitalFirm" or
                   class_name == "FossilFuelEnergyCapitalFirm" or
-                  class_name == "MaterialCapitalFirm"):
+                  class_name == "MetalCapitalFirm"):
                 pass
             else:
                 self.owner.go_bankrupt()
@@ -364,7 +364,7 @@ class BalanceSheet(Parent):
         
         # Apply output inventory haircut policy if active
         if hasattr(self.params, "policyInventoryHaircutOn") and self.params.policyInventoryHaircutOn["val"] == 1:
-            if self.owner.__class__.__name__ == "MaterialFirm":
+            if self.owner.__class__.__name__ == "MetalFirm":
                 # Check if total assets are positive to avoid division by zero
                 if adjusted_total_assets > 0:
                     inventory_ratio = getattr(self, "output_inventory_value", 0) / adjusted_total_assets

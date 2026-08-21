@@ -72,7 +72,7 @@ class Firm(Agent):
               "/cap_cap:" + str(round(self.capital_capacity,3)) + 
               "/cash:" + str(round(self.deposit.balance,3)) + 
               "/liab:" + str(round(self.balance_sheet.total_liabilities,3)) + ")")
-        if self.__class__.__name__ == "MaterialFirm":
+        if self.__class__.__name__ == "MetalFirm":
             pass
         self.pay_off_all_loans()
         # for loan in self.loans[:]:
@@ -82,7 +82,7 @@ class Firm(Agent):
         self.deposit.balance = 0
 
         self.deposit.bank.deposits.remove(self.deposit)
-        if self.__class__.__name__ == "MaterialFirm" and getattr(self, 'mining_site', None) is not None:
+        if self.__class__.__name__ == "MetalFirm" and getattr(self, 'mining_site', None) is not None:
             if self in self.mining_site.miners:
                 self.mining_site.miners.remove(self)
         self.is_bankrut = True

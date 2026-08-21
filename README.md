@@ -3,14 +3,14 @@
 Copyright (c) 2024 Taras Kryvyy
 
 ## Overview
-This repository contains the source code and documentation for my PhD project, which focuses on developing a macro-evolutionary agent-based model to explore the material intensity of low-carbon energy transition and its interactions with macro-financial stability. The model integrates elements from commodity markets, financial stability, and climate-related macro-financial risks to provide insights into the dynamics of energy and material sectors within an evolving economy.
+This repository contains the source code and documentation for my PhD project, which focuses on developing a macro-evolutionary agent-based model to explore the metal intensity of low-carbon energy transition and its interactions with macro-financial stability. The model integrates elements from commodity markets, financial stability, and climate-related macro-financial risks to provide insights into the dynamics of energy and metal sectors within an evolving economy.
 
 ## Model Components
 The model consists of the following sectors:
 - Final Good Sector: Represents goods consumed by households.
 - Energy Sector: Includes renewable energy and fossil-fuel-based energy consumed by final good firms.
-- Materials Sector: Extracts ores from metal ore deposits and processes them into materials that are consumed by capital firms.
-- Capital Sectors: Provide capital required for producing final goods, renewable energy, fossil-fuel-based energy, and materials.
+- Metals Sector: Extracts ores from metal ore deposits and processes them into metals that are consumed by capital firms.
+- Capital Sectors: Provide capital required for producing final goods, renewable energy, fossil-fuel-based energy, and metals.
 - Banking Sector: Finances capital investments and short-term liquidity needs.
 
 ### Flow of goods and services 

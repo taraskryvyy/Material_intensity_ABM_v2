@@ -8,7 +8,7 @@ import numpy as np
 save_figs = True
 show_figs = False
 merge_figs = False
-smooth_figs = []#['Renewable Energy capital price', "Average ore extraction cost", "Material price", "Bankruptcy rate", "Total household dividend income", "Electricity price"]
+smooth_figs = []#['Renewable Energy capital price', "Average ore extraction cost", "Metal price", "Bankruptcy rate", "Total household dividend income", "Electricity price"]
 smooth_window = 10
 format = 'pdf'#'tiff'
 fig_size = (6, 4)
@@ -38,8 +38,8 @@ df_tabular = df.pivot_table(index=['Scenario', 'Simulation Number', 'Timestep Nu
 # df = df.loc[df.index.get_level_values('Simulation Number') == 80]
 # df = df.loc[df.index.get_level_values('Scenario') == 'Sharply declining ore cost']
 
-# df = df.loc[df.index.get_level_values('Metric') == "Total NPL balance"][df.index.get_level_values('Scenario') == "High R material intensity"][df['Value']>1000]
-# weird_index = df[df['Value']>1000].loc[("Total NPL balance", "High R material intensity")].index.get_level_values('Simulation Number').drop_duplicates()
+# df = df.loc[df.index.get_level_values('Metric') == "Total NPL balance"][df.index.get_level_values('Scenario') == "High R metal intensity"][df['Value']>1000]
+# weird_index = df[df['Value']>1000].loc[("Total NPL balance", "High R metal intensity")].index.get_level_values('Simulation Number').drop_duplicates()
 # df = df.iloc[df.index.get_level_values('Simulation Number').isin(weird_index)]
 
 # print(df.groupby('Scenario').count())
@@ -49,7 +49,7 @@ df_tabular = df.pivot_table(index=['Scenario', 'Simulation Number', 'Timestep Nu
 # print(df_tabular.groupby('Scenario').count().pivot_table(index='Scenario').mean(axis=1))
 
 try:
-    df = df.drop(index=pd.IndexSlice["High R material intensity", 28])
+    df = df.drop(index=pd.IndexSlice["High R metal intensity", 28])
 except KeyError:
     pass
 
@@ -68,7 +68,7 @@ try:
 except KeyError:
     pass
 
-# df.loc['High R material intensity', 28]
+# df.loc['High R metal intensity', 28]
 
 new_order = ['Metric', 'Scenario', 'Simulation Number', 'Timestep Number']
 df = df.reorder_levels(new_order)
@@ -98,13 +98,13 @@ def smooth(df, window=10):
 all_scenarios = df.index.get_level_values('Scenario')
 scenario_set = [
 
-    # "High R material intensity",
-    # "Base R material intensity",
-    # "Low R material intensity",
+    # "High R metal intensity",
+    # "Base R metal intensity",
+    # "Low R metal intensity",
 
-    # "recMaterialProductivity_0.9",
+    # "recMetalProductivity_0.9",
     "baseline",
-    # "recMaterialProductivity_2"
+    # "recMetalProductivity_2"
 
     # "miningSiteExplorationProbability_0",
     # "miningSiteExplorationProbability_0.1",
@@ -123,13 +123,13 @@ scenario_set = [
 #     # "logitCompetitionParamMining_1",
 #     # "logitCompetitionParamMining_10",
 
-#     # "adaptiveExpectationMaterialPrice_0.2",
-#     # "adaptiveExpectationMaterialPrice_0.5",
-#     # "adaptiveExpectationMaterialPrice_0.8",
+#     # "adaptiveExpectationMetalPrice_0.2",
+#     # "adaptiveExpectationMetalPrice_0.5",
+#     # "adaptiveExpectationMetalPrice_0.8",
 
-#     # "recMaterialProductivity_5",
-#     # "recMaterialProductivity_2",
-#     # "recMaterialProductivity_1",
+#     # "recMetalProductivity_5",
+#     # "recMetalProductivity_2",
+#     # "recMetalProductivity_1",
 
 #     # "fuelPriceVolatility_0.00000001",
 #     # "fuelPriceVolatility_0.00003",
@@ -340,55 +340,55 @@ if show_figs:
     plt.show()
 plt.close()
 
-cumulative_number_of_bankrupt_material_firms_df = df.loc[["Cumulative number of bankrupt material firms"]]
+cumulative_number_of_bankrupt_metal_firms_df = df.loc[["Cumulative number of bankrupt metal firms"]]
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number', 
              y='Value', 
-             data=cumulative_number_of_bankrupt_material_firms_df,#df.loc[["Cumulative number of bankrupt material firms"]],
+             data=cumulative_number_of_bankrupt_metal_firms_df,#df.loc[["Cumulative number of bankrupt metal firms"]],
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Cumulative Number of Bankrupt Material Firms')
+plt.title('Cumulative Number of Bankrupt Metal Firms')
 plt.xlabel('Timestep Number')
-plt.ylabel('Cumulative Number of Bankrupt Material Firms')
+plt.ylabel('Cumulative Number of Bankrupt Metal Firms')
 if save_figs:
-    plt.savefig('scenario_cumulative_number_of_bankrupt_material_firms.'+format)
+    plt.savefig('scenario_cumulative_number_of_bankrupt_metal_firms.'+format)
 if show_figs:
     plt.show()
 plt.close()
 
-# 'Average age of bankrupt material firms'
-# average_age_of_bankrupt_material_firms_df = df.loc[["Average age of bankrupt material firms"]]
+# 'Average age of bankrupt metal firms'
+# average_age_of_bankrupt_metal_firms_df = df.loc[["Average age of bankrupt metal firms"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number',
 #                 y='Value',
-#                 data=average_age_of_bankrupt_material_firms_df,#df.loc[["Average age of bankrupt material firms"]],
+#                 data=average_age_of_bankrupt_metal_firms_df,#df.loc[["Average age of bankrupt metal firms"]],
 #                 hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('Average Age of Bankrupt Material Firms')
+# plt.title('Average Age of Bankrupt Metal Firms')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('Average Age of Bankrupt Material Firms')
+# plt.ylabel('Average Age of Bankrupt Metal Firms')
 # if save_figs:
-#     plt.savefig('scenario_average_age_of_bankrupt_material_firms.'+format)
+#     plt.savefig('scenario_average_age_of_bankrupt_metal_firms.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
 
-# 'Material inventory of bankrupt material firms'
-# material_inventory_of_bankrupt_material_firms_df = df.loc[["Material inventory of bankrupt material firms"]]
+# 'Metal inventory of bankrupt metal firms'
+# metal_inventory_of_bankrupt_metal_firms_df = df.loc[["Metal inventory of bankrupt metal firms"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number',
 #                 y='Value',
-#                 data=material_inventory_of_bankrupt_material_firms_df,#df.loc[["Material inventory of bankrupt material firms"]],
+#                 data=metal_inventory_of_bankrupt_metal_firms_df,#df.loc[["Metal inventory of bankrupt metal firms"]],
 #                 hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('Material Inventory of Bankrupt Material Firms')
+# plt.title('Metal Inventory of Bankrupt Metal Firms')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('Material Inventory of Bankrupt Material Firms')
+# plt.ylabel('Metal Inventory of Bankrupt Metal Firms')
 # if save_figs:
-#     plt.savefig('scenario_material_inventory_of_bankrupt_material_firms.'+format)
+#     plt.savefig('scenario_metal_inventory_of_bankrupt_metal_firms.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
@@ -673,82 +673,82 @@ if show_figs:
     plt.show()
 plt.close()
 
-# total_supply_of_material_df = df.loc[["Total supply of material"]]
+# total_supply_of_metal_df = df.loc[["Total supply of metal"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number', 
 #              y='Value', 
-#              data=total_supply_of_material_df,#df.loc[["Total supply of material"]],
+#              data=total_supply_of_metal_df,#df.loc[["Total supply of metal"]],
 #              hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('Total Supply of Material')
+# plt.title('Total Supply of Metal')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('Total Supply of Material')
+# plt.ylabel('Total Supply of Metal')
 # if save_figs:
-#     plt.savefig('scenario_total_supply_of_material.'+format)
+#     plt.savefig('scenario_total_supply_of_metal.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
 
-# 'Total demand for material'
-# total_demand_for_material_df = df.loc[["Total demand for material"]]
+# 'Total demand for metal'
+# total_demand_for_metal_df = df.loc[["Total demand for metal"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number', 
 #              y='Value', 
-#              data=total_demand_for_material_df,#df.loc[["Total demand for material"]],
+#              data=total_demand_for_metal_df,#df.loc[["Total demand for metal"]],
 #              hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('Total Demand for Material')
+# plt.title('Total Demand for Metal')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('Total Demand for Material')
+# plt.ylabel('Total Demand for Metal')
 # if save_figs:
-#     plt.savefig('scenario_total_demand_for_material.'+format)
+#     plt.savefig('scenario_total_demand_for_metal.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
 
-# 'Total material deficit'
-# total_material_deficit_df = df.loc[["Total material deficit"]]
+# 'Total metal deficit'
+# total_metal_deficit_df = df.loc[["Total metal deficit"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number',
 #                 y='Value',
-#                 data=total_material_deficit_df,#df.loc[["Total material deficit"]],
+#                 data=total_metal_deficit_df,#df.loc[["Total metal deficit"]],
 #                 hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('Total Material Deficit')
+# plt.title('Total Metal Deficit')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('Total Material Deficit')
+# plt.ylabel('Total Metal Deficit')
 # if save_figs:
-#     plt.savefig('scenario_total_material_deficit.'+format)
+#     plt.savefig('scenario_total_metal_deficit.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
 
-material_price_df = df.loc[["Material price"]]
-if "Material price" in smooth_figs:
-    smooth(material_price_df, smooth_window)
+metal_price_df = df.loc[["Metal price"]]
+if "Metal price" in smooth_figs:
+    smooth(metal_price_df, smooth_window)
 max_ylim = np.percentile(electricity_price_df['Value'], 99)
 min_ylim = min(electricity_price_df['Value'])
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number', 
              y='Value', 
-             data=material_price_df,#df.loc[["Material price"]],
+             data=metal_price_df,#df.loc[["Metal price"]],
              hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Material Price')
+plt.title('Metal Price')
 plt.xlabel('Timestep Number')
-plt.ylabel('Material Price')
+plt.ylabel('Metal Price')
 if save_figs:
-    plt.savefig('scenario_material_price.'+format)
+    plt.savefig('scenario_metal_price.'+format)
 if show_figs:
     plt.show()
 plt.ylim(min_ylim, max_ylim)  # Set the vertical axis limits
-plt.title('Material Price (zoomed in)')
+plt.title('Metal Price (zoomed in)')
 if save_figs:
-    plt.savefig('scenario_material_price_zoomed.'+format)
+    plt.savefig('scenario_metal_price_zoomed.'+format)
 if show_figs:
     plt.show()
 plt.close()
@@ -808,56 +808,56 @@ plt.close()
 #     plt.show()
 # plt.close()
 
-# 'Profit of material capital firms'
-# profit_of_material_capital_firms_df = df.loc[["Profit of material capital firms"]]
+# 'Profit of metal capital firms'
+# profit_of_metal_capital_firms_df = df.loc[["Profit of metal capital firms"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number',
 #                 y='Value',
-#                 data=profit_of_material_capital_firms_df,#df.loc[["Profit of material capital firms"]],
+#                 data=profit_of_metal_capital_firms_df,#df.loc[["Profit of metal capital firms"]],
 #                 hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('Profit of Material Capital Firms')
+# plt.title('Profit of Metal Capital Firms')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('Profit of Material Capital Firms')
+# plt.ylabel('Profit of Metal Capital Firms')
 # if save_figs:
-#     plt.savefig('scenario_profit_of_material_capital_firms.'+format)
+#     plt.savefig('scenario_profit_of_metal_capital_firms.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
 
-# "RnD budget of material capital firms"
-# rnd_budget_of_material_capital_firms_df = df.loc[["RnD budget of material capital firms"]]
+# "RnD budget of metal capital firms"
+# rnd_budget_of_metal_capital_firms_df = df.loc[["RnD budget of metal capital firms"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number',
 #                 y='Value',
-#                 data=rnd_budget_of_material_capital_firms_df,#df.loc[["RnD budget of material capital firms"]],
+#                 data=rnd_budget_of_metal_capital_firms_df,#df.loc[["RnD budget of metal capital firms"]],
 #                 hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('RnD Budget of Material Capital Firms')
+# plt.title('RnD Budget of Metal Capital Firms')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('RnD Budget of Material Capital Firms')
+# plt.ylabel('RnD Budget of Metal Capital Firms')
 # if save_figs:
-#     plt.savefig('scenario_rnd_budget_of_material_capital_firms.'+format)
+#     plt.savefig('scenario_rnd_budget_of_metal_capital_firms.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
 
-'Material capital productivity'
-material_capital_productivity_df = df.loc[["Material capital productivity"]]
+'Metal capital productivity'
+metal_capital_productivity_df = df.loc[["Metal capital productivity"]]
 plt.figure(figsize=fig_size)
 sns.lineplot(x='Timestep Number',
                 y='Value',
-                data=material_capital_productivity_df,#df.loc[["Material capital productivity"]],
+                data=metal_capital_productivity_df,#df.loc[["Metal capital productivity"]],
                 hue='Scenario',
              errorbar=errorbar_format
              )
-plt.title('Material Capital Productivity')
+plt.title('Metal Capital Productivity')
 plt.xlabel('Timestep Number')
-plt.ylabel('Material Capital Productivity')
+plt.ylabel('Metal Capital Productivity')
 if save_figs:
-    plt.savefig('scenario_material_capital_productivity.'+format)
+    plt.savefig('scenario_metal_capital_productivity.'+format)
 if show_figs:
     plt.show()
 plt.close()
@@ -934,20 +934,20 @@ plt.close()
 #     plt.show()
 # plt.close()
 
-# "Total deposit balance in material capital sector"
-# total_deposit_balance_in_material_capital_sector_df = df.loc[["Total deposit balance in material capital sector"]]
+# "Total deposit balance in metal capital sector"
+# total_deposit_balance_in_metal_capital_sector_df = df.loc[["Total deposit balance in metal capital sector"]]
 # plt.figure(figsize=fig_size)
 # sns.lineplot(x='Timestep Number',
 #                 y='Value',
-#                 data=total_deposit_balance_in_material_capital_sector_df,#df.loc[["Total deposit balance in material capital sector"]],
+#                 data=total_deposit_balance_in_metal_capital_sector_df,#df.loc[["Total deposit balance in metal capital sector"]],
 #                 hue='Scenario',
 #              errorbar=errorbar_format
 #              )
-# plt.title('Total Deposit Balance in Material Capital Sector')
+# plt.title('Total Deposit Balance in Metal Capital Sector')
 # plt.xlabel('Timestep Number')
-# plt.ylabel('Total Deposit Balance in Material Capital Sector')
+# plt.ylabel('Total Deposit Balance in Metal Capital Sector')
 # if save_figs:
-#     plt.savefig('scenario_total_deposit_balance_in_material_capital_sector.'+format)
+#     plt.savefig('scenario_total_deposit_balance_in_metal_capital_sector.'+format)
 # if show_figs:
 #     plt.show()
 # plt.close()
@@ -956,7 +956,7 @@ plt.close()
 
 if merge_figs:
     # List of PDF files to merge
-    directory_path = '/Users/tagger/Documents/GitHub/Material_intensity_ABM/Material_intensity_ABM'#'/path/to/your/directory'
+    directory_path = '/Users/tagger/Documents/GitHub/Metal_intensity_ABM/Metal_intensity_ABM'#'/path/to/your/directory'
 
     # Get a list of all files in the directory
     all_files = os.listdir(directory_path)
@@ -968,9 +968,9 @@ if merge_figs:
         "scenario_total_NPL_balance.pdf",
         "scenario_commercial_bank_loan_to_deposit_ratio.pdf",
         "scenario_cumulative_number_of_bankruptcies.pdf",
-        "scenario_cumulative_number_of_bankrupt_material_firms.pdf",
-        "scenario_average_age_of_bankrupt_material_firms.pdf",
-        "scenario_material_inventory_of_bankrupt_material_firms.pdf",
+        "scenario_cumulative_number_of_bankrupt_metal_firms.pdf",
+        "scenario_average_age_of_bankrupt_metal_firms.pdf",
+        "scenario_metal_inventory_of_bankrupt_metal_firms.pdf",
         "scenario_cumulative_number_of_bankrupt_final_good_firms.pdf",
         "scenario_total_output.pdf",
         "scenario_total_consumption_budget.pdf",
@@ -982,21 +982,21 @@ if merge_figs:
         "scenario_renewable_energy_market_share.pdf",
         "scenario_electricity_price.pdf",
         "scenario_total_energy_deficit.pdf",
-        "scenario_total_supply_of_material.pdf",
-        "scenario_total_demand_for_material.pdf",
-        "scenario_total_material_deficit.pdf",
-        "scenario_material_price.pdf",
+        "scenario_total_supply_of_metal.pdf",
+        "scenario_total_demand_for_metal.pdf",
+        "scenario_total_metal_deficit.pdf",
+        "scenario_metal_price.pdf",
         "scenario_average_ore_extraction_cost.pdf",
         "scenario_total_ore_reserves.pdf",
         "scenario_number_of_mining_sites.pdf",
-        "scenario_profit_of_material_capital_firms.pdf",
-        "scenario_rnd_budget_of_material_capital_firms.pdf",
-        "scenario_material_capital_productivity.pdf",
+        "scenario_profit_of_metal_capital_firms.pdf",
+        "scenario_rnd_budget_of_metal_capital_firms.pdf",
+        "scenario_metal_capital_productivity.pdf",
         "scenario_final_good_capital_productivity.pdf",
         "scenario_renewable_energy_capital_productivity.pdf",
         "scenario_fossil_fuel_energy_capital_productivity.pdf",
         "scenario_total_deposit_balance_in_capital_sector.pdf",
-        "scenario_total_deposit_balance_in_material_capital_sector.pdf"
+        "scenario_total_deposit_balance_in_metal_capital_sector.pdf"
     ]
 
     merger = PyPDF2.PdfWriter()

@@ -1,9 +1,9 @@
-from capitalfirms import FinalGoodCapitalFirm, MaterialCapitalFirm, RenewableEnergyCapitalFirm, FossilFuelEnergyCapitalFirm, CapitalFirm
+from capitalfirms import FinalGoodCapitalFirm, MetalCapitalFirm, RenewableEnergyCapitalFirm, FossilFuelEnergyCapitalFirm, CapitalFirm
 from household import Household
 from government import Government
 from bank import CommercialBank, CentralBank
-from firmswithcapitalinputs import FinalGoodFirm, MaterialFirm, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, ForeignEconomy
-from goods import RenewableEnergyCapital, FossilFuelEnergyCapital, FinalGood, Material, FinalGoodCapital, FinalGoodCapital, MaterialCapital, Fuel
+from firmswithcapitalinputs import FinalGoodFirm, MetalFirm, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, ForeignEconomy
+from goods import RenewableEnergyCapital, FossilFuelEnergyCapital, FinalGood, Metal, FinalGoodCapital, FinalGoodCapital, MetalCapital, Fuel
 from parameters import Parameters
 from financials import Loan
 import random
@@ -84,9 +84,9 @@ class Economy(Parent):
             fgc.open_deposit_account(
                 bank = random.choice(CommercialBank.get_all_instances()),
                 initial_deposit = params.fgcDepositInitial['val'])
-            fgc.material_inventory.add_good(
-                Material(params,
-                        quantity = params.fgcMaterialInventoryInitial['val']))
+            fgc.metal_inventory.add_good(
+                Metal(params,
+                        quantity = params.fgcMetalInventoryInitial['val']))
             fgc.inventory_unit_cost = 1
             fgc.compute_price()
 
@@ -95,9 +95,9 @@ class Economy(Parent):
             rec.open_deposit_account(
                 bank = random.choice(CommercialBank.get_all_instances()),
                 initial_deposit = params.recDepositInitial['val'])
-            rec.material_inventory.add_good(
-                Material(params,
-                        quantity = params.recMaterialInventoryInitial['val']))
+            rec.metal_inventory.add_good(
+                Metal(params,
+                        quantity = params.recMetalInventoryInitial['val']))
             rec.inventory_unit_cost = 1
             rec.compute_price()
 
@@ -106,9 +106,9 @@ class Economy(Parent):
             fec.open_deposit_account(
                 bank = random.choice(CommercialBank.get_all_instances()),
                 initial_deposit = params.fecDepositInitial['val'])
-            fec.material_inventory.add_good(
-                Material(params,
-                        quantity = params.fecMaterialInventoryInitial['val']))
+            fec.metal_inventory.add_good(
+                Metal(params,
+                        quantity = params.fecMetalInventoryInitial['val']))
             fec.inventory_unit_cost = 1
             fec.compute_price()
 
@@ -176,17 +176,17 @@ class Economy(Parent):
             ms.compute_extraction_cost()
 
 
-        for i in range(params.nrMaterialFirms['val']):
-            m = MaterialFirm(params)
+        for i in range(params.nrMetalFirms['val']):
+            m = MetalFirm(params)
             m.open_deposit_account(
                 bank = random.choice(CommercialBank.get_all_instances()),
                 initial_deposit = params.mDepositInitial['val'])
             m.pick_mining_site(MiningSite.get_all_instances())
             # m.output_inventory.add_good(
-            #     Material(params,
+            #     Metal(params,
             #             quantity = params.mOutputInventoryInitial['val']))
             m.capital_inventory.add_good(
-                MaterialCapital(
+                MetalCapital(
                     params,
                     quantity = params.mCapitalStockInitial['val'],
                     productivity = params.mcCapitalProductivityInitial['val']))
@@ -198,17 +198,17 @@ class Economy(Parent):
             m.demand = m.capital_inventory.compute_productive_capacity()
             m.expected_demand = m.demand
 
-        for i in range(params.nrMaterialCapitalFirms['val']):
-            mc = MaterialCapitalFirm(params)
+        for i in range(params.nrMetalCapitalFirms['val']):
+            mc = MetalCapitalFirm(params)
             mc.open_deposit_account(
                 bank = random.choice(CommercialBank.get_all_instances()),
                 initial_deposit = params.mcDepositInitial['val'])
-            mc.material_inventory.add_good(
-                Material(params,
-                        quantity = params.mcMaterialInventoryInitial['val']))
+            mc.metal_inventory.add_good(
+                Metal(params,
+                        quantity = params.mcMetalInventoryInitial['val']))
             mc.inventory_unit_cost = 1
             mc.compute_price()
             
         CommercialBank.get_all_instances()[0].compute_loan_to_deposit_ratio()
         # for i in CapitalFirm.get_all_instances():
-        #     i.income_statement.materials_cost += i.material_inventory.compute_capacity() * i.material_inventory.goods[0].unit_price
+        #     i.income_statement.metals_cost += i.metal_inventory.compute_capacity() * i.metal_inventory.goods[0].unit_price

@@ -1,9 +1,9 @@
 from parent import Parent
 from agent import Agent
 from basefirm import Firm
-from capitalfirms import CapitalFirm, FinalGoodCapitalFirm, MaterialCapitalFirm, RenewableEnergyCapitalFirm, FossilFuelEnergyCapitalFirm
-from firmswithcapitalinputs import FirmWithCapitalInputs, FinalGoodFirm, MaterialFirm, PowerPlant, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, ForeignEconomy
-from markets import LaborMarket, CapitalGoodMarket, MaterialMarket, EnergyMarket, FinalGoodMarket
+from capitalfirms import CapitalFirm, FinalGoodCapitalFirm, MetalCapitalFirm, RenewableEnergyCapitalFirm, FossilFuelEnergyCapitalFirm
+from firmswithcapitalinputs import FirmWithCapitalInputs, FinalGoodFirm, MetalFirm, PowerPlant, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, ForeignEconomy
+from markets import LaborMarket, CapitalGoodMarket, MetalMarket, EnergyMarket, FinalGoodMarket
 from bank import CommercialBank, CentralBank
 from household import Household
 import random
@@ -12,12 +12,12 @@ import math
 class SimulationStep(Parent):
     def __init__(self, params, t, 
                  energy_market_price, 
-                 material_market_price):
+                 metal_market_price):
         super().__init__(params)
         self.instances = None
         self.params = params
         self.t = t
-        self.past_material_market_price = material_market_price
+        self.past_metal_market_price = metal_market_price
         self.past_energy_market_price = energy_market_price
         Firm.bankruptcy_list = []
 
@@ -81,25 +81,25 @@ class SimulationStep(Parent):
                     pass
 
 
-        ############################ MATERIAL MARKET ############################
-        material_market = MaterialMarket(
+        ############################ METAL MARKET ############################
+        metal_market = MetalMarket(
             params=self.params,
             buyers=CapitalFirm.get_all_instances(),
-            sellers=(MaterialFirm.get_all_instances()))
-        material_market.sign_contracts()
-        material_market.settle_the_contracts()
-        if params.materialPricing['val'] == 0:
-            material_market.apply_weighted_average_market_price(past_price=self.past_material_market_price)
-        elif params.materialPricing['val'] == 1:
-            material_market.apply_marginal_market_price(past_price=self.past_material_market_price)
+            sellers=(MetalFirm.get_all_instances()))
+        metal_market.sign_contracts()
+        metal_market.settle_the_contracts()
+        if params.metalPricing['val'] == 0:
+            metal_market.apply_weighted_average_market_price(past_price=self.past_metal_market_price)
+        elif params.metalPricing['val'] == 1:
+            metal_market.apply_marginal_market_price(past_price=self.past_metal_market_price)
         else:
-            raise ValueError("Wrong material pricing method.")
-        print("Material price: " + str(material_market.price))
-        MaterialFirm.market_price = material_market.price
+            raise ValueError("Wrong metal pricing method.")
+        print("Metal price: " + str(metal_market.price))
+        MetalFirm.market_price = metal_market.price
 
 
-        ############################ MATERIAL PRODUCTION PLANNING ############################
-        for i in MaterialFirm.get_all_instances():
+        ############################ METAL PRODUCTION PLANNING ############################
+        for i in MetalFirm.get_all_instances():
             i.compute_expected_demand()
             i.compute_desired_production()
             i.compute_labor_demand()
@@ -137,8 +137,8 @@ class SimulationStep(Parent):
             i.compute_markup()
             i.compute_price()
         
-        MaterialFirm.compute_market_shares()
-        for i in MaterialFirm.get_all_instances():
+        MetalFirm.compute_market_shares()
+        for i in MetalFirm.get_all_instances():
             i.extract_ore()
             i.produce_output()
             i.compute_markup()
@@ -167,9 +167,9 @@ class SimulationStep(Parent):
 
         ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=Agent.government.carbon_tax)
 
-        if params.adaptiveMaterialBuffer['val'] == 1:
-            for i in MaterialFirm.get_all_instances():
-                i.material_buffer = Agent.government.carbon_tax * params.materialBufferReactionToCarbonTax['val']
+        if params.adaptiveMetalBuffer['val'] == 1:
+            for i in MetalFirm.get_all_instances():
+                i.metal_buffer = Agent.government.carbon_tax * params.metalBufferReactionToCarbonTax['val']
 
         # # if t != 100:
         # #     ForeignEconomy.instances[0].compute_fuel_price(carbon_tax=0)
@@ -189,11 +189,11 @@ class SimulationStep(Parent):
         ########################### R&D activities #############################
         # RD activities by capital firms
         FinalGoodCapitalFirm.get_technological_distribution()
-        MaterialCapitalFirm.get_technological_distribution()
+        MetalCapitalFirm.get_technological_distribution()
         RenewableEnergyCapitalFirm.get_technological_distribution()
         FossilFuelEnergyCapitalFirm.get_technological_distribution()
         for i in CapitalFirm.get_all_instances():
-            if isinstance(i, MaterialCapitalFirm):
+            if isinstance(i, MetalCapitalFirm):
                 mat_cap_prod_old = i.capital_productivity
                 i.perform_RD()
                 mat_cap_prod_new = i.capital_productivity
@@ -289,14 +289,14 @@ class SimulationStep(Parent):
             i.balance_sheet.compute_leverage_ratio()
 
         ############################ CAPITAL FIRMS PRICE SETTING #######################
-        material_market.expected_price += (params.adaptiveExpectationMaterialPrice['val'] *
-                                    (material_market.price - 
-                                    material_market.expected_price))
+        metal_market.expected_price += (params.adaptiveExpectationMetalPrice['val'] *
+                                    (metal_market.price - 
+                                    metal_market.expected_price))
 
         for i in CapitalFirm.get_all_instances():
             i.inventory_unit_cost = (
                 i.wage / i.labor_productivity +
-                material_market.price / i.material_productivity)
+                metal_market.price / i.metal_productivity)
             i.compute_price()
 
         ########################### POWER PLANT ENTRY/EXIT DYNAMICS ###################
@@ -361,7 +361,7 @@ class SimulationStep(Parent):
             i.sales_real = 0
 
 
-        ############################ MATERIAL ENTRY DYNAMICS ############################
+        ############################ METAL ENTRY DYNAMICS ############################
         wage_unit_cost = params.wage['val'] / params.mLaborProductivity['val']
 
         mining_sites = MiningSite.get_all_instances()
@@ -409,9 +409,9 @@ class SimulationStep(Parent):
             #     params.oreProductivity['val'])
             depr_rate = params.mCapitalDepreciationRate['val']
             loan_int = params.loanInterestRate['val']
-            cap_price = min([x.price for x in MaterialCapitalFirm.get_all_instances()])
-            cap_prod = MaterialCapitalFirm.average_capital_productivity
-            # min_markup = min([x.markup for x in MaterialFirm.get_all_instances()])
+            cap_price = min([x.price for x in MetalCapitalFirm.get_all_instances()])
+            cap_prod = MetalCapitalFirm.average_capital_productivity
+            # min_markup = min([x.markup for x in MetalFirm.get_all_instances()])
             markup = params.mMarkupInitial['val']
             potential_unit_cost = (
                 wage_unit_cost + extration_unit_cost + 
@@ -419,39 +419,39 @@ class SimulationStep(Parent):
             potential_price = potential_unit_cost * (1 + markup)#min_markup)
 
 
-            total_material_inventory = sum([x.output_inventory.compute_capacity() for x in MaterialFirm.get_all_instances()])
-            if params.adaptiveMaterialBuffer['val'] == 0:
-                entrant_material_buffer = params.materialBuffer['val']#params.entrantMaterialBuffer['val']
+            total_metal_inventory = sum([x.output_inventory.compute_capacity() for x in MetalFirm.get_all_instances()])
+            if params.adaptiveMetalBuffer['val'] == 0:
+                entrant_metal_buffer = params.metalBuffer['val']#params.entrantMetalBuffer['val']
             else:
-                entrant_material_buffer = Agent.government.carbon_tax * params.materialBufferReactionToCarbonTax['val']
-            total_material_gap = max(0, material_market.total_demand - material_market.total_supply)
+                entrant_metal_buffer = Agent.government.carbon_tax * params.metalBufferReactionToCarbonTax['val']
+            total_metal_gap = max(0, metal_market.total_demand - metal_market.total_supply)
 
-            # material_market.expected_price += (params.adaptiveExpectationMaterialPrice['val'] *
-            #                                    (material_market.price - 
-            #                                     material_market.expected_price))
+            # metal_market.expected_price += (params.adaptiveExpectationMetalPrice['val'] *
+            #                                    (metal_market.price - 
+            #                                     metal_market.expected_price))
 
             if ((
-                potential_price < material_market.expected_price 
-                or material_market.total_supply == 0
-                # or total_material_inventory < material_buffer * material_market.total_demand
+                potential_price < metal_market.expected_price 
+                or metal_market.total_supply == 0
+                # or total_metal_inventory < metal_buffer * metal_market.total_demand
                  ) 
-                 or len(MaterialFirm.get_all_instances()) < 2):#params.nrMaterialFirms['val']):
+                 or len(MetalFirm.get_all_instances()) < 2):#params.nrMetalFirms['val']):
                 # random.random() < 0.5)):
-                MaterialFirm.compute_market_shares()
-                m = MaterialFirm(params)
+                MetalFirm.compute_market_shares()
+                m = MetalFirm(params)
                 m.open_deposit_account(
                     bank = random.choice(CommercialBank.get_all_instances()),
-                    initial_deposit = MaterialFirm.retained_earnings)
-                MaterialFirm.retained_earnings = 0
-                m.material_buffer = entrant_material_buffer
-                m.desired_production = max(total_material_gap * (1 + m.material_buffer),
-                                            # MaterialFirm.market_size * 
-                                            # MaterialFirm.average_market_share,
+                    initial_deposit = MetalFirm.retained_earnings)
+                MetalFirm.retained_earnings = 0
+                m.metal_buffer = entrant_metal_buffer
+                m.desired_production = max(total_metal_gap * (1 + m.metal_buffer),
+                                            # MetalFirm.market_size * 
+                                            # MetalFirm.average_market_share,
                                             0
                                             )
                 # m.desired_production = (
-                #     MaterialFirm.market_size * 
-                #     MaterialFirm.average_market_share)
+                #     MetalFirm.market_size * 
+                #     MetalFirm.average_market_share)
                 # m.pick_mining_site(MiningSite.get_all_instances())
                 m.pick_mining_site([best_site])
                 if m.mining_site is not None:
@@ -462,12 +462,12 @@ class SimulationStep(Parent):
                 else:
                     m.inventory_unit_cost = potential_unit_cost
                 m.compute_price()
-        for i in MaterialFirm.get_all_instances():
+        for i in MetalFirm.get_all_instances():
             i.sales_real = 0
 
 
         ############################ CAPITAL ORDERS ############################
-        for i in (MaterialFirm.get_all_instances() + 
+        for i in (MetalFirm.get_all_instances() + 
                   FinalGoodFirm.get_all_instances()):
             i.capital_inventory.track_shipment()
             i.compute_desired_extra_output()
@@ -481,12 +481,12 @@ class SimulationStep(Parent):
         final_good_capital_market.sign_contracts()
         final_good_capital_market.settle_the_contracts()
 
-        material_capital_market = CapitalGoodMarket(
+        metal_capital_market = CapitalGoodMarket(
             params=self.params,
-            buyers=MaterialFirm.get_all_instances(),
-            sellers=MaterialCapitalFirm.get_all_instances())
-        material_capital_market.sign_contracts()
-        material_capital_market.settle_the_contracts()
+            buyers=MetalFirm.get_all_instances(),
+            sellers=MetalCapitalFirm.get_all_instances())
+        metal_capital_market.sign_contracts()
+        metal_capital_market.settle_the_contracts()
 
         # energy capital market interaction
         renewable_energy_capital_market = CapitalGoodMarket(
@@ -540,7 +540,7 @@ class SimulationStep(Parent):
             if i.desired_production > 0:
                 pass
             i.compute_labor_demand()
-            i.compute_material_demand()
+            i.compute_metal_demand()
 
 
 
@@ -548,16 +548,16 @@ class SimulationStep(Parent):
 
         self.instances = Agent.get_all_instances()
 
-        self.markets = [labor_market, material_market, energy_market, final_good_market,
-                        final_good_capital_market, material_capital_market, 
+        self.markets = [labor_market, metal_market, energy_market, final_good_market,
+                        final_good_capital_market, metal_capital_market, 
                         renewable_energy_capital_market, fossil_fuel_energy_capital_market]
         # {
         #     "labor_market": labor_market,
-        #     "material_market": material_market,
+        #     "metal_market": metal_market,
         #     "energy_market": energy_market,
         #     "final_good_market": final_good_market,
         #         "final_good_capital_market": final_good_capital_market,
-        #         "material_capital_market": material_capital_market,
+        #         "metal_capital_market": metal_capital_market,
         #         "renewable_energy_capital_market": renewable_energy_capital_market,
         #         "fossil_fuel_energy_capital_market": fossil_fuel_energy_capital_market
         #     }

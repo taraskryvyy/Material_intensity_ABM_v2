@@ -26,18 +26,18 @@
 \newcommand{\finalGoodBuffer}{\beta_{FG}}
 \newcommand{\finalGoodBufferValue}{0.1}
 \newcommand{\finalGoodBufferDesc}{final good inventory buffer parameter}
-\newcommand{\materialBuffer}{\beta_{M}}
-\newcommand{\materialBufferValue}{0.3}
-\newcommand{\materialBufferDesc}{material inventory buffer parameter}
-\newcommand{\entrantMaterialBuffer}{\beta_{M}^{entrant}}
-\newcommand{\entrantMaterialBufferValue}{0.3}
-\newcommand{\entrantMaterialBufferDesc}{material inventory buffer parameter for new entrants}
-\newcommand{\maximumMaterialBuffer}{\beta_{M}^{max}}
-\newcommand{\maximumMaterialBufferValue}{0.5}
-\newcommand{\maximumMaterialBufferDesc}{maximum material inventory buffer parameter}
-\newcommand{\adaptiveMaterialBuffer}{\beta_{M}^{adapt}}
-\newcommand{\adaptiveMaterialBufferValue}{0}
-\newcommand{\adaptiveMaterialBufferDesc}{adaptive material buffer parameter (0 for constant buffer, 1 for adaptive buffer)}
+\newcommand{\metalBuffer}{\beta_{M}}
+\newcommand{\metalBufferValue}{0.3}
+\newcommand{\metalBufferDesc}{metal inventory buffer parameter}
+\newcommand{\entrantMetalBuffer}{\beta_{M}^{entrant}}
+\newcommand{\entrantMetalBufferValue}{0.3}
+\newcommand{\entrantMetalBufferDesc}{metal inventory buffer parameter for new entrants}
+\newcommand{\maximumMetalBuffer}{\beta_{M}^{max}}
+\newcommand{\maximumMetalBufferValue}{0.5}
+\newcommand{\maximumMetalBufferDesc}{maximum metal inventory buffer parameter}
+\newcommand{\adaptiveMetalBuffer}{\beta_{M}^{adapt}}
+\newcommand{\adaptiveMetalBufferValue}{0}
+\newcommand{\adaptiveMetalBufferDesc}{adaptive metal buffer parameter (0 for constant buffer, 1 for adaptive buffer)}
 \newcommand{\energyBuffer}{\beta_{E}}
 \newcommand{\energyBufferValue}{0.5}
 \newcommand{\energyBufferDesc}{desired excess capacity of the energy grid}
@@ -59,9 +59,9 @@
 \newcommand{\policyCommitment}{\theta^{policy}}
 \newcommand{\policyCommitmentValue}{1}
 \newcommand{\policyCommitmentDesc}{policy commitment parameter (0 for no commitment, 1 for full commitment)}
-\newcommand{\materialBufferReactionToCarbonTax}{\beta_{M}^{carbon}}
-\newcommand{\materialBufferReactionToCarbonTaxValue}{0.5}
-\newcommand{\materialBufferReactionToCarbonTaxDesc}{material buffer reaction to carbon tax}
+\newcommand{\metalBufferReactionToCarbonTax}{\beta_{M}^{carbon}}
+\newcommand{\metalBufferReactionToCarbonTaxValue}{0.5}
+\newcommand{\metalBufferReactionToCarbonTaxDesc}{metal buffer reaction to carbon tax}
 \newcommand{\policyInventoryHaircutOn}{{policy}_{haircut}}
 \newcommand{\policyInventoryHaircutOnValue}{0}
 \newcommand{\policyInventoryHaircutOnDesc}{Toggle for output inventory haircut policy}
@@ -142,10 +142,10 @@
 \newcommand{\feCapitalDeliveryTimeDesc}{time to deliver fossil-fuel energy capital}
 \newcommand{\mLaborProductivity}{\alpha^{M}}
 \newcommand{\mLaborProductivityValue}{10}
-\newcommand{\mLaborProductivityDesc}{ labor productivity in material sector}
+\newcommand{\mLaborProductivityDesc}{ labor productivity in metal sector}
 \newcommand{\oreProductivity}{\rho}
 \newcommand{\oreProductivityValue}{1}
-\newcommand{\oreProductivityDesc}{ore productivity in material sector}
+\newcommand{\oreProductivityDesc}{ore productivity in metal sector}
 \newcommand{\oreCostParamOne}{\gamma^{ore}_1}
 \newcommand{\oreCostParamOneValue}{0.3}
 \newcommand{\oreCostParamOneDesc}{ore extraction cost parameter 1 (ore cost of newly explored ore deposit)}
@@ -164,9 +164,9 @@
 \newcommand{\sigmaOreCostParamOne}{\sigma^2_{\gamma^{ore}_1}}
 \newcommand{\sigmaOreCostParamOneValue}{0.05}
 \newcommand{\sigmaOreCostParamOneDesc}{variance of ore cost parameter 1}
-\newcommand{\materialPricing}{{pricing}_{M}}
-\newcommand{\materialPricingValue}{0}
-\newcommand{\materialPricingDesc}{material market pricing: 0 for weighted average, 1 for marginal}
+\newcommand{\metalPricing}{{pricing}_{M}}
+\newcommand{\metalPricingValue}{0}
+\newcommand{\metalPricingDesc}{metal market pricing: 0 for weighted average, 1 for marginal}
 \newcommand{\randomPickOreDeposit}{\chi^{R^{D}}}
 \newcommand{\randomPickOreDepositValue}{0}
 \newcommand{\randomPickOreDepositDesc}{randomly pick ore deposit}
@@ -176,36 +176,36 @@
 \newcommand{\logitCompetitionParamMining}{\gamma^{logit}_{mining}}
 \newcommand{\logitCompetitionParamMiningValue}{10}
 \newcommand{\logitCompetitionParamMiningDesc}{logit competition parameter for mining site selection}
-\newcommand{\adaptiveExpectationMaterialPrice}{\alpha_{exp}^{p_{M,t}}}
-\newcommand{\adaptiveExpectationMaterialPriceValue}{0.5}
-\newcommand{\adaptiveExpectationMaterialPriceDesc}{adaptive expectation parameter for material price}
+\newcommand{\adaptiveExpectationMetalPrice}{\alpha_{exp}^{p_{M,t}}}
+\newcommand{\adaptiveExpectationMetalPriceValue}{0.5}
+\newcommand{\adaptiveExpectationMetalPriceDesc}{adaptive expectation parameter for metal price}
 \newcommand{\mCapitalLifeSpan}{\tau^{K_{M}}}
 \newcommand{\mCapitalLifeSpanValue}{30}
-\newcommand{\mCapitalLifeSpanDesc}{useful lifespan of material capital}
+\newcommand{\mCapitalLifeSpanDesc}{useful lifespan of metal capital}
 \newcommand{\mCapitalDepreciationRate}{\delta^{K_{M}}}
 \newcommand{\mCapitalDepreciationRateValue}{0.0333}
-\newcommand{\mCapitalDepreciationRateDesc}{depreciation rate of material capital}
+\newcommand{\mCapitalDepreciationRateDesc}{depreciation rate of metal capital}
 \newcommand{\mCapitalLoanDuration}{\eta^{K_{M}}}
 \newcommand{\mCapitalLoanDurationValue}{30}
-\newcommand{\mCapitalLoanDurationDesc}{duration of a loan to cover material capital investment}
+\newcommand{\mCapitalLoanDurationDesc}{duration of a loan to cover metal capital investment}
 \newcommand{\mCapitalDeliveryTime}{{dt}^{{K}_{M}}}
 \newcommand{\mCapitalDeliveryTimeValue}{1}
-\newcommand{\mCapitalDeliveryTimeDesc}{time to deliver material capital}
-\newcommand{\materialDeliveryTime}{{dt}^{M}}
-\newcommand{\materialDeliveryTimeValue}{0}
-\newcommand{\materialDeliveryTimeDesc}{time to deliver material}
-\newcommand{\fgcMaterialProductivity}{m^{K_{FG}}}
-\newcommand{\fgcMaterialProductivityValue}{1}
-\newcommand{\fgcMaterialProductivityDesc}{material productivity in final good capital sector}
-\newcommand{\recMaterialProductivity}{m^{K_{RE}}}
-\newcommand{\recMaterialProductivityValue}{1.25}
-\newcommand{\recMaterialProductivityDesc}{material productivity in renewable energy capital sector}
-\newcommand{\fecMaterialProductivity}{m^{K_{FE}}}
-\newcommand{\fecMaterialProductivityValue}{15}
-\newcommand{\fecMaterialProductivityDesc}{material productivity in fossil-fuel energy capital sector}
-\newcommand{\mcMaterialProductivity}{m^{K_{M}}}
-\newcommand{\mcMaterialProductivityValue}{7}
-\newcommand{\mcMaterialProductivityDesc}{material productivity in material capital sector}
+\newcommand{\mCapitalDeliveryTimeDesc}{time to deliver metal capital}
+\newcommand{\metalDeliveryTime}{{dt}^{M}}
+\newcommand{\metalDeliveryTimeValue}{0}
+\newcommand{\metalDeliveryTimeDesc}{time to deliver metal}
+\newcommand{\fgcMetalProductivity}{m^{K_{FG}}}
+\newcommand{\fgcMetalProductivityValue}{1}
+\newcommand{\fgcMetalProductivityDesc}{metal productivity in final good capital sector}
+\newcommand{\recMetalProductivity}{m^{K_{RE}}}
+\newcommand{\recMetalProductivityValue}{1.25}
+\newcommand{\recMetalProductivityDesc}{metal productivity in renewable energy capital sector}
+\newcommand{\fecMetalProductivity}{m^{K_{FE}}}
+\newcommand{\fecMetalProductivityValue}{15}
+\newcommand{\fecMetalProductivityDesc}{metal productivity in fossil-fuel energy capital sector}
+\newcommand{\mcMetalProductivity}{m^{K_{M}}}
+\newcommand{\mcMetalProductivityValue}{7}
+\newcommand{\mcMetalProductivityDesc}{metal productivity in metal capital sector}
 \newcommand{\wage}{w}
 \newcommand{\wageValue}{0.1}
 \newcommand{\wageDesc}{wage rate}
@@ -290,9 +290,9 @@
 \newcommand{\nrRenewableEnergyPowerPlants}{\#_{RE}}
 \newcommand{\nrRenewableEnergyPowerPlantsValue}{2}
 \newcommand{\nrRenewableEnergyPowerPlantsDesc}{number of renewable energy power plants}
-\newcommand{\nrMaterialFirms}{\#_{M}}
-\newcommand{\nrMaterialFirmsValue}{5}
-\newcommand{\nrMaterialFirmsDesc}{number of material firms}
+\newcommand{\nrMetalFirms}{\#_{M}}
+\newcommand{\nrMetalFirmsValue}{5}
+\newcommand{\nrMetalFirmsDesc}{number of metal firms}
 \newcommand{\nrMiningSites}{\#_{R^{D}}}
 \newcommand{\nrMiningSitesValue}{20}
 \newcommand{\nrMiningSitesDesc}{number of mining sites}
@@ -302,15 +302,15 @@
 \newcommand{\nrRenewableEnergyCapitalFirms}{\#_{REC}}
 \newcommand{\nrRenewableEnergyCapitalFirmsValue}{1}
 \newcommand{\nrRenewableEnergyCapitalFirmsDesc}{number of renewable energy capital firms}
-\newcommand{\nrMaterialCapitalFirms}{\#_{MC}}
-\newcommand{\nrMaterialCapitalFirmsValue}{1}
-\newcommand{\nrMaterialCapitalFirmsDesc}{number of material capital firms}
+\newcommand{\nrMetalCapitalFirms}{\#_{MC}}
+\newcommand{\nrMetalCapitalFirmsValue}{1}
+\newcommand{\nrMetalCapitalFirmsDesc}{number of metal capital firms}
 \newcommand{\fgMarkupInitial}{\mu_{FG,0}}
 \newcommand{\fgMarkupInitialValue}{0.1}
 \newcommand{\fgMarkupInitialDesc}{initial markup of a final good firm}
 \newcommand{\mMarkupInitial}{\mu_{M,0}}
 \newcommand{\mMarkupInitialValue}{0.3}
-\newcommand{\mMarkupInitialDesc}{initial markup of a material firm}
+\newcommand{\mMarkupInitialDesc}{initial markup of a metal firm}
 \newcommand{\eMarkup}{\mu_{E}}
 \newcommand{\eMarkupValue}{0.3}
 \newcommand{\eMarkupDesc}{markup for the energy sector}
@@ -319,7 +319,7 @@
 \newcommand{\fgcMarkupDesc}{markup for the final good capital sector}
 \newcommand{\mcMarkup}{\mu_{MC}}
 \newcommand{\mcMarkupValue}{0.5}
-\newcommand{\mcMarkupDesc}{markup for the material capital sector}
+\newcommand{\mcMarkupDesc}{markup for the metal capital sector}
 \newcommand{\recMarkup}{\mu_{K_{RE}}}
 \newcommand{\recMarkupValue}{0.5}
 \newcommand{\recMarkupDesc}{markup for the renewable energy capital sector}
@@ -337,7 +337,7 @@
 \newcommand{\fecLaborProductivityInitialDesc}{initial labor productivity in fossil-fuel energy capital sector}
 \newcommand{\mcLaborProductivityInitial}{\alpha^{K_M}_{i, 0}}
 \newcommand{\mcLaborProductivityInitialValue}{10}
-\newcommand{\mcLaborProductivityInitialDesc}{initial labor productivity in material capital sector}
+\newcommand{\mcLaborProductivityInitialDesc}{initial labor productivity in metal capital sector}
 \newcommand{\fgcCapitalProductivityInitial}{\kappa^{K_{FG}}_{i, 0}}
 \newcommand{\fgcCapitalProductivityInitialValue}{2}
 \newcommand{\fgcCapitalProductivityInitialDesc}{initial productivity of capital for final good sector}
@@ -349,7 +349,7 @@
 \newcommand{\recCapitalProductivityInitialDesc}{initial productivity of capital for renewable energy sector}
 \newcommand{\mcCapitalProductivityInitial}{\kappa^{K_{M}}_{i, 0}}
 \newcommand{\mcCapitalProductivityInitialValue}{2}
-\newcommand{\mcCapitalProductivityInitialDesc}{initial productivity of capital for material sector}
+\newcommand{\mcCapitalProductivityInitialDesc}{initial productivity of capital for metal sector}
 \newcommand{\fgDepositInitial}{D^{FG}_{i,0}}
 \newcommand{\fgDepositInitialValue}{0}
 \newcommand{\fgDepositInitialDesc}{initial deposit of a final good firm}
@@ -358,10 +358,10 @@
 \newcommand{\fgcDepositInitialDesc}{initial deposit of a final good capital firm}
 \newcommand{\mDepositInitial}{D^{M}_{i,0}}
 \newcommand{\mDepositInitialValue}{0}
-\newcommand{\mDepositInitialDesc}{initial deposit of a material firm}
+\newcommand{\mDepositInitialDesc}{initial deposit of a metal firm}
 \newcommand{\mcDepositInitial}{D^{K_{M}}_{i,0}}
 \newcommand{\mcDepositInitialValue}{300}
-\newcommand{\mcDepositInitialDesc}{initial deposit of a material capital firm}
+\newcommand{\mcDepositInitialDesc}{initial deposit of a metal capital firm}
 \newcommand{\feDepositInitial}{D^{FE}_{i,0}}
 \newcommand{\feDepositInitialValue}{0}
 \newcommand{\feDepositInitialDesc}{initial deposit of a fossil-fuel energy power plant}
@@ -382,31 +382,31 @@
 \newcommand{\fgOutputInventoryInitialDesc}{initial output inventory of a final good firm}
 \newcommand{\mOutputInventoryInitial}{inv^{M}_{i,0}}
 \newcommand{\mOutputInventoryInitialValue}{0}
-\newcommand{\mOutputInventoryInitialDesc}{initial output inventory of a material firm}
+\newcommand{\mOutputInventoryInitialDesc}{initial output inventory of a metal firm}
 \newcommand{\fgCapitalStockInitial}{K^{FG}_{i,0}}
 \newcommand{\fgCapitalStockInitialValue}{1}
 \newcommand{\fgCapitalStockInitialDesc}{initial capital stock of a final good firm}
 \newcommand{\mCapitalStockInitial}{K^{M}_{i,0}}
 \newcommand{\mCapitalStockInitialValue}{1}
-\newcommand{\mCapitalStockInitialDesc}{initial capital stock of a material firm}
+\newcommand{\mCapitalStockInitialDesc}{initial capital stock of a metal firm}
 \newcommand{\feCapitalStockInitial}{K^{FE}_{i,0}}
 \newcommand{\feCapitalStockInitialValue}{1}
 \newcommand{\feCapitalStockInitialDesc}{initial capital stock of a fossil-fuel energy power plant}
 \newcommand{\reCapitalStockInitial}{K^{RE}_{i,0}}
 \newcommand{\reCapitalStockInitialValue}{1}
 \newcommand{\reCapitalStockInitialDesc}{initial capital stock of a renewable energy power plant}
-\newcommand{\fgcMaterialInventoryInitial}{M^{K_{FG}}_{i,0}}
-\newcommand{\fgcMaterialInventoryInitialValue}{0}
-\newcommand{\fgcMaterialInventoryInitialDesc}{initial material inventory of a final good capital firm}
-\newcommand{\recMaterialInventoryInitial}{M^{K_{RE}}_{i,0}}
-\newcommand{\recMaterialInventoryInitialValue}{0}
-\newcommand{\recMaterialInventoryInitialDesc}{initial material inventory of a renewable energy capital firm}
-\newcommand{\fecMaterialInventoryInitial}{M^{K_{FE}}_{i,0}}
-\newcommand{\fecMaterialInventoryInitialValue}{0}
-\newcommand{\fecMaterialInventoryInitialDesc}{initial material inventory of a fossil-fuel energy capital firm}
-\newcommand{\mcMaterialInventoryInitial}{M^{K_{M}}_{i,0}}
-\newcommand{\mcMaterialInventoryInitialValue}{0}
-\newcommand{\mcMaterialInventoryInitialDesc}{initial material inventory of a material capital firm}
+\newcommand{\fgcMetalInventoryInitial}{M^{K_{FG}}_{i,0}}
+\newcommand{\fgcMetalInventoryInitialValue}{0}
+\newcommand{\fgcMetalInventoryInitialDesc}{initial metal inventory of a final good capital firm}
+\newcommand{\recMetalInventoryInitial}{M^{K_{RE}}_{i,0}}
+\newcommand{\recMetalInventoryInitialValue}{0}
+\newcommand{\recMetalInventoryInitialDesc}{initial metal inventory of a renewable energy capital firm}
+\newcommand{\fecMetalInventoryInitial}{M^{K_{FE}}_{i,0}}
+\newcommand{\fecMetalInventoryInitialValue}{0}
+\newcommand{\fecMetalInventoryInitialDesc}{initial metal inventory of a fossil-fuel energy capital firm}
+\newcommand{\mcMetalInventoryInitial}{M^{K_{M}}_{i,0}}
+\newcommand{\mcMetalInventoryInitialValue}{0}
+\newcommand{\mcMetalInventoryInitialDesc}{initial metal inventory of a metal capital firm}
 \newcommand{\foreignEconomyFuelInventoryInitial}{\hat{F}^{FE}_{i,0}}
 \newcommand{\foreignEconomyFuelInventoryInitialValue}{1000000000}
 \newcommand{\foreignEconomyFuelInventoryInitialDesc}{initial fuel inventory of the foreign economy}

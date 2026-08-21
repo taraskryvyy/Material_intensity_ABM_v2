@@ -18,10 +18,10 @@ class Parameters:
         self.adaptiveExpectation={"val": 0.5, "symbol": r"\alpha_{exp}", "desc": "adaptive expectation parameter"}
         self.logitCompetitionParam={"val": 5, "symbol": r"\gamma^{logit}", "desc": "logit competition parameter"}
         self.finalGoodBuffer={"val": 0.1, "symbol": r"\beta_{FG}", "desc": "final good inventory buffer parameter"}
-        self.materialBuffer={"val": 0.3, "symbol": r"\beta_{M}", "desc": "material inventory buffer parameter"}
-        self.entrantMaterialBuffer={"val": 0.3, "symbol": r"\beta_{M}^{entrant}", "desc": "material inventory buffer parameter for new entrants"}
-        self.maximumMaterialBuffer={"val": 0.5, "symbol": r"\beta_{M}^{max}", "desc": "maximum material inventory buffer parameter"}
-        self.adaptiveMaterialBuffer={"val": 0, "symbol": r"\beta_{M}^{adapt}", "desc": "adaptive material buffer parameter (0 for constant buffer, 1 for adaptive buffer)"}
+        self.metalBuffer={"val": 0.3, "symbol": r"\beta_{M}", "desc": "metal inventory buffer parameter"}
+        self.entrantMetalBuffer={"val": 0.3, "symbol": r"\beta_{M}^{entrant}", "desc": "metal inventory buffer parameter for new entrants"}
+        self.maximumMetalBuffer={"val": 0.5, "symbol": r"\beta_{M}^{max}", "desc": "maximum metal inventory buffer parameter"}
+        self.adaptiveMetalBuffer={"val": 0, "symbol": r"\beta_{M}^{adapt}", "desc": "adaptive metal buffer parameter (0 for constant buffer, 1 for adaptive buffer)"}
         self.energyBuffer={"val": 0.5, "symbol": r"\beta_{E}", "desc": "desired excess capacity of the energy grid"}
         self.cashBuffer={"val": 0.5, "symbol": r"\beta_{cash}", "desc": "how much cash a firm would want to keep"}
         self.muMarkup={"val": 0.02, "symbol": r"\mu_{FN_{markup}}", "desc": "Folded Normal Distribution expected value for markup adjustment"}
@@ -29,7 +29,7 @@ class Parameters:
         self.startCarbonTax={"val": 0, "symbol": r"\theta^{carbon}_{start}", "desc": "initial carbon tax rate at the beginning of a simulation"}
         self.targetFinalCarbonTax={"val": 0, "symbol": r"\theta^{carbon}", "desc": "target carbon tax rate"}
         self.policyCommitment={"val": 1, "symbol": r"\theta^{policy}", "desc": "policy commitment parameter (0 for no commitment, 1 for full commitment)"}
-        self.materialBufferReactionToCarbonTax={"val": 0.5, "symbol": r"\beta_{M}^{carbon}", "desc": "material buffer reaction to carbon tax"}
+        self.metalBufferReactionToCarbonTax={"val": 0.5, "symbol": r"\beta_{M}^{carbon}", "desc": "metal buffer reaction to carbon tax"}
         self.policyInventoryHaircutOn={"val": 0, "symbol": r"{policy}_{haircut}", "desc": "Toggle for output inventory haircut policy"}
         self.haircutInventoryRatioThreshold={"val": 0.1, "symbol": r"{thr}_{haircut}", "desc": "Threshold of inventory/assets ratio to trigger haircut"}
         self.haircutInventoryValue={"val": 0.7, "symbol": r"{val}_{haircut}", "desc": "Percentage haircut applied to output inventory"}
@@ -58,38 +58,38 @@ class Parameters:
         self.feCapitalLoanDuration={"val": self.feCapitalLifeSpan["val"], "symbol": r"\eta^{K_{FE}}", "desc": "duration of a loan to cover fossil-fuel energy capital investment"}
         self.reCapitalDeliveryTime={"val": 1, "symbol": r"{dt}^{{K}_{RE}}", "desc": "time to deliver renewable energy capital"}
         self.feCapitalDeliveryTime={"val": 1, "symbol": r"{dt}^{{K}_{FE}}", "desc": "time to deliver fossil-fuel energy capital"}
-        # Material Sector Parameters
-        self.mLaborProductivity={"val": 10, "symbol": r"\alpha^{M}", "desc": " labor productivity in material sector"}
-        self.oreProductivity={"val": 1, "symbol": r"\rho", "desc": "ore productivity in material sector"}
+        # Metal Sector Parameters
+        self.mLaborProductivity={"val": 10, "symbol": r"\alpha^{M}", "desc": " labor productivity in metal sector"}
+        self.oreProductivity={"val": 1, "symbol": r"\rho", "desc": "ore productivity in metal sector"}
         self.oreCostParamOne={"val": 0.3, "symbol": r"\gamma^{ore}_1", "desc": "ore extraction cost parameter 1 (ore cost of newly explored ore deposit)"}
         self.oreCostParamTwo={"val": 0.5, "symbol": r"\gamma^{ore}_2", "desc": "ore extraction cost parameter 2 (controls speed of ore cost increase)"}
         self.muOreDeposit={"val": 150, "symbol": r"\mu_{R^{D}}", "desc": "average ore deposit of the newly explored mining site"}
         self.minimumViableOreDeposit={"val": round(self.muOreDeposit["val"] / 20, 4), "symbol": r"R^{D}_{min}", "desc": "minimum ore deposit that is viable for mining"}
         self.sigmaSqOreDeposit={"val": 400, "symbol": r"\sigma^2_{R^{D}}", "desc": "variance of ore deposit of the newly explored mining site"}
         self.sigmaOreCostParamOne={"val": 0.05, "symbol": r"\sigma^2_{\gamma^{ore}_1}", "desc": "variance of ore cost parameter 1"}
-        self.materialPricing={"val": 0, "symbol": r"{pricing}_{M}", "desc": "material market pricing: 0 for weighted average, 1 for marginal"}
+        self.metalPricing={"val": 0, "symbol": r"{pricing}_{M}", "desc": "metal market pricing: 0 for weighted average, 1 for marginal"}
         self.randomPickOreDeposit={"val": 0, "symbol": r"\chi^{R^{D}}", "desc": "randomly pick ore deposit"}
         self.miningSiteExplorationProbability={"val": 0.5, "symbol": r"{prob}^{R^{D}}", "desc": "exploration probability of a mining site"}
         self.logitCompetitionParamMining={"val": 10, "symbol": r"\gamma^{logit}_{mining}", "desc": "logit competition parameter for mining site selection"}
-        self.adaptiveExpectationMaterialPrice={"val": 0.5, "symbol": r"\alpha_{exp}^{p_{M,t}}", "desc": "adaptive expectation parameter for material price"}
+        self.adaptiveExpectationMetalPrice={"val": 0.5, "symbol": r"\alpha_{exp}^{p_{M,t}}", "desc": "adaptive expectation parameter for metal price"}
         # self.miningSiteExplorationParam={"val": -100, "symbol": r"\gamma_{R^{stor}}", "desc": "mining site exploration parameter"}
         # self.storageCostParamOne={"val": 1, "symbol": r"\gamma^{stor}_1", "desc": "storage cost parameter 1 (storage cost when inventory is empty)"}
         # self.storageCostParamTwo={"val": 1, "symbol": r"\gamma^{stor}_2", "desc": "storage cost parameter 2 (controls speed of storage cost increase)"}
-        # self.materialRiskAversion={"val": 1, "symbol": r"\varsigma_{M}", "desc": "risk aversion of firms in material sector"}
-        self.mCapitalLifeSpan={"val": 30, "symbol": r"\tau^{K_{M}}", "desc": "useful lifespan of material capital"}
-        self.mCapitalDepreciationRate={"val": round(1/self.mCapitalLifeSpan["val"],4), "symbol": r"\delta^{K_{M}}", "desc": "depreciation rate of material capital"}
-        self.mCapitalLoanDuration={"val": self.mCapitalLifeSpan["val"], "symbol": r"\eta^{K_{M}}", "desc": "duration of a loan to cover material capital investment"}
-        self.mCapitalDeliveryTime={"val": 1, "symbol": r"{dt}^{{K}_{M}}", "desc": "time to deliver material capital"}
-        self.materialDeliveryTime={"val": 0, "symbol": r"{dt}^{M}", "desc": "time to deliver material"}
+        # self.metalRiskAversion={"val": 1, "symbol": r"\varsigma_{M}", "desc": "risk aversion of firms in metal sector"}
+        self.mCapitalLifeSpan={"val": 30, "symbol": r"\tau^{K_{M}}", "desc": "useful lifespan of metal capital"}
+        self.mCapitalDepreciationRate={"val": round(1/self.mCapitalLifeSpan["val"],4), "symbol": r"\delta^{K_{M}}", "desc": "depreciation rate of metal capital"}
+        self.mCapitalLoanDuration={"val": self.mCapitalLifeSpan["val"], "symbol": r"\eta^{K_{M}}", "desc": "duration of a loan to cover metal capital investment"}
+        self.mCapitalDeliveryTime={"val": 1, "symbol": r"{dt}^{{K}_{M}}", "desc": "time to deliver metal capital"}
+        self.metalDeliveryTime={"val": 0, "symbol": r"{dt}^{M}", "desc": "time to deliver metal"}
         # Capital Sector Parameters
         # self.fgcRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{FG}}", "desc": "risk aversion of firms in final good capital sector"}
         # self.recRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{RE}}", "desc": "risk aversion of firms in renewable energy capital sector"}
         # self.fecRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{FE}}", "desc": "risk aversion of firms in fossil-fuel energy capital sector"}
-        # self.mcRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{M}}", "desc": "risk aversion of firms in material capital sector"}
-        self.fgcMaterialProductivity={"val": 1, "symbol": r"m^{K_{FG}}", "desc": "material productivity in final good capital sector"}
-        self.recMaterialProductivity={"val": 1.25, "symbol": r"m^{K_{RE}}", "desc": "material productivity in renewable energy capital sector"}
-        self.fecMaterialProductivity={"val": 15, "symbol": r"m^{K_{FE}}", "desc": "material productivity in fossil-fuel energy capital sector"}
-        self.mcMaterialProductivity={"val": 7, "symbol": r"m^{K_{M}}", "desc": "material productivity in material capital sector"}
+        # self.mcRiskAversion={"val": 1, "symbol": r"\varsigma_{K_{M}}", "desc": "risk aversion of firms in metal capital sector"}
+        self.fgcMetalProductivity={"val": 1, "symbol": r"m^{K_{FG}}", "desc": "metal productivity in final good capital sector"}
+        self.recMetalProductivity={"val": 1.25, "symbol": r"m^{K_{RE}}", "desc": "metal productivity in renewable energy capital sector"}
+        self.fecMetalProductivity={"val": 15, "symbol": r"m^{K_{FE}}", "desc": "metal productivity in fossil-fuel energy capital sector"}
+        self.mcMetalProductivity={"val": 7, "symbol": r"m^{K_{M}}", "desc": "metal productivity in metal capital sector"}
         # self.loanDurationInCapitalSector={"val": 10, "symbol": r"\eta^{K}", "desc": "duration of a loan in capital sectors"}
         # Household Parameters
         self.wage={"val": 0.1, "symbol": r"w", "desc": "wage rate"}
@@ -128,21 +128,21 @@ class Parameters:
         self.nrCommercialBanks={"val": 1, "symbol": r"\#_{BNK}", "desc": "number of commercial banks"}
         self.nrFossilFuelEnergyPowerPlants={"val": 10, "symbol": r"\#_{FE}", "desc": "number of fossil-fuel energy power plants"}
         self.nrRenewableEnergyPowerPlants={"val": 2, "symbol": r"\#_{RE}", "desc": "number of renewable energy power plants"}
-        self.nrMaterialFirms={"val": 5, "symbol": r"\#_{M}", "desc": "number of material firms"}
+        self.nrMetalFirms={"val": 5, "symbol": r"\#_{M}", "desc": "number of metal firms"}
         self.nrMiningSites={"val": 20, "symbol": r"\#_{R^{D}}", "desc": "number of mining sites"}
         self.nrFossilFuelEnergyCapitalFirms={"val": 1, "symbol": r"\#_{FEC}", "desc": "number of fossil-fuel energy capital firms"}
         self.nrRenewableEnergyCapitalFirms={"val": 1, "symbol": r"\#_{REC}", "desc": "number of renewable energy capital firms"}
-        self.nrMaterialCapitalFirms={"val": 1, "symbol": r"\#_{MC}", "desc": "number of material capital firms"}
+        self.nrMetalCapitalFirms={"val": 1, "symbol": r"\#_{MC}", "desc": "number of metal capital firms"}
         
         ## Initial state of Agents at the beginning of a simulation
         # Initial Markups
         self.fgMarkupInitial={"val": 0.1, "symbol": r"\mu_{FG,0}", "desc": "initial markup of a final good firm"}
         # self.fgcMarkupInitial={"val": 0.1, "symbol": r"\mu_{FGC,0}", "desc": "initial markup of a final good capital firm"}
-        self.mMarkupInitial={"val": 0.3, "symbol": r"\mu_{M,0}", "desc": "initial markup of a material firm"}
-        # self.mcMarkupInitial={"val": 0.5, "symbol": r"\mu_{MC,0}", "desc": "initial markup of a material capital firm"}
+        self.mMarkupInitial={"val": 0.3, "symbol": r"\mu_{M,0}", "desc": "initial markup of a metal firm"}
+        # self.mcMarkupInitial={"val": 0.5, "symbol": r"\mu_{MC,0}", "desc": "initial markup of a metal capital firm"}
         self.eMarkup={"val": 0.3, "symbol": r"\mu_{E}", "desc": "markup for the energy sector"}
         self.fgcMarkup={"val": 0.5, "symbol": r"\mu_{FGC}", "desc": "markup for the final good capital sector"}
-        self.mcMarkup={"val": 0.5, "symbol": r"\mu_{MC}", "desc": "markup for the material capital sector"}
+        self.mcMarkup={"val": 0.5, "symbol": r"\mu_{MC}", "desc": "markup for the metal capital sector"}
         self.recMarkup={"val": 0.5, "symbol": r"\mu_{K_{RE}}", "desc": "markup for the renewable energy capital sector"}
         self.fecMarkup={"val": 0.5, "symbol": r"\mu_{K_{FE}}", "desc": "markup for the fossil-fuel energy capital sector"}
         # self.reMarkupInitial={"val": 0.1, "symbol": r"\mu_{RE,0}", "desc": "initial markup of a renewable energy power plant"}
@@ -151,17 +151,17 @@ class Parameters:
         self.fgcLaborProductivityInitial={"val": 10, "symbol": r"\alpha^{K_{FG}}_{i, 0}", "desc": "initial labor productivity in final good capital sector"}
         self.recLaborProductivityInitial={"val": 10, "symbol": r"\alpha^{K_{RE}}_{i, 0}", "desc": "initial labor productivity in renewable energy capital sector"}
         self.fecLaborProductivityInitial={"val": 10, "symbol": r"\alpha^{K_{FE}}_{i, 0}", "desc": "initial labor productivity in fossil-fuel energy capital sector"}
-        self.mcLaborProductivityInitial={"val": 10, "symbol": r"\alpha^{K_M}_{i, 0}", "desc": "initial labor productivity in material capital sector"}
+        self.mcLaborProductivityInitial={"val": 10, "symbol": r"\alpha^{K_M}_{i, 0}", "desc": "initial labor productivity in metal capital sector"}
         # Initial Capital Productivities
         self.fgcCapitalProductivityInitial={"val": 2, "symbol": r"\kappa^{K_{FG}}_{i, 0}", "desc": "initial productivity of capital for final good sector"}
         self.fecCapitalProductivityInitial={"val": 2, "symbol": r"\kappa^{K_{FE}}_{i, 0}", "desc": "initial productivity of capital for fossil-fuel energy sector"}
         self.recCapitalProductivityInitial={"val": 2, "symbol": r"\kappa^{K_{RE}}_{i, 0}", "desc": "initial productivity of capital for renewable energy sector"}
-        self.mcCapitalProductivityInitial={"val": 2, "symbol": r"\kappa^{K_{M}}_{i, 0}", "desc": "initial productivity of capital for material sector"}
+        self.mcCapitalProductivityInitial={"val": 2, "symbol": r"\kappa^{K_{M}}_{i, 0}", "desc": "initial productivity of capital for metal sector"}
         # Initial Deposit Balances
         self.fgDepositInitial={"val": 0, "symbol": r"D^{FG}_{i,0}", "desc": "initial deposit of a final good firm"}
         self.fgcDepositInitial={"val": 3, "symbol": r"D^{K_{FG}}_{i,0}", "desc": "initial deposit of a final good capital firm"}
-        self.mDepositInitial={"val": 0, "symbol": r"D^{M}_{i,0}", "desc": "initial deposit of a material firm"}
-        self.mcDepositInitial={"val": 300, "symbol": r"D^{K_{M}}_{i,0}", "desc": "initial deposit of a material capital firm"}
+        self.mDepositInitial={"val": 0, "symbol": r"D^{M}_{i,0}", "desc": "initial deposit of a metal firm"}
+        self.mcDepositInitial={"val": 300, "symbol": r"D^{K_{M}}_{i,0}", "desc": "initial deposit of a metal capital firm"}
         self.feDepositInitial={"val": 0, "symbol": r"D^{FE}_{i,0}", "desc": "initial deposit of a fossil-fuel energy power plant"}
         self.reDepositInitial={"val": 0, "symbol": r"D^{RE}_{i,0}", "desc": "initial deposit of a renewable energy power plant"}
         self.fecDepositInitial={"val": 3, "symbol": r"D^{K_{FE}}_{i,0}", "desc": "initial deposit of a fossil-fuel energy capital firm"}
@@ -170,21 +170,21 @@ class Parameters:
         # Initial Output Inventories
         self.fgOutputInventoryInitial={"val": 0, "symbol": r"inv^{FG}_{i,0}", "desc": "initial output inventory of a final good firm"}
         # self.fgcOutputInventoryInitial={"val": 10, "symbol": r"inv^{K_{FG}}_{i,0}", "desc": "initial output inventory of a final good capital firm"}
-        self.mOutputInventoryInitial={"val": 0, "symbol": r"inv^{M}_{i,0}", "desc": "initial output inventory of a material firm"}
-        # self.mcOutputInventoryInitial={"val": 10, "symbol": r"inv^{K_{M}}_{i,0}", "desc": "initial output inventory of a material capital firm"}
+        self.mOutputInventoryInitial={"val": 0, "symbol": r"inv^{M}_{i,0}", "desc": "initial output inventory of a metal firm"}
+        # self.mcOutputInventoryInitial={"val": 10, "symbol": r"inv^{K_{M}}_{i,0}", "desc": "initial output inventory of a metal capital firm"}
         # self.fecOutputInventoryInitial={"val": 10, "symbol": r"inv^{K_{FE}}_{i,0}", "desc": "initial output inventory of a fossil-fuel energy capital firm"}
         # self.recOutputInventoryInitial={"val": 10, "symbol": r"inv^{K_{RE}}_{i,0}", "desc": "initial output inventory of a renewable energy capital firm"}
         # Initial Capital Stocks
         self.fgCapitalStockInitial={"val": 1, "symbol": r"K^{FG}_{i,0}", "desc": "initial capital stock of a final good firm"}
-        self.mCapitalStockInitial={"val": 1, "symbol": r"K^{M}_{i,0}", "desc": "initial capital stock of a material firm"}
+        self.mCapitalStockInitial={"val": 1, "symbol": r"K^{M}_{i,0}", "desc": "initial capital stock of a metal firm"}
         # Initial Power Generation Capacities
         self.feCapitalStockInitial={"val": 1, "symbol": r"K^{FE}_{i,0}", "desc": "initial capital stock of a fossil-fuel energy power plant"}
         self.reCapitalStockInitial={"val": 1, "symbol": r"K^{RE}_{i,0}", "desc": "initial capital stock of a renewable energy power plant"}
-        # Initial Material Stocks
-        self.fgcMaterialInventoryInitial={"val": 0, "symbol": r"M^{K_{FG}}_{i,0}", "desc": "initial material inventory of a final good capital firm"}
-        self.recMaterialInventoryInitial={"val": 0, "symbol": r"M^{K_{RE}}_{i,0}", "desc": "initial material inventory of a renewable energy capital firm"}
-        self.fecMaterialInventoryInitial={"val": 0, "symbol": r"M^{K_{FE}}_{i,0}", "desc": "initial material inventory of a fossil-fuel energy capital firm"}
-        self.mcMaterialInventoryInitial={"val": 0, "symbol": r"M^{K_{M}}_{i,0}", "desc": "initial material inventory of a material capital firm"}
+        # Initial Metal Stocks
+        self.fgcMetalInventoryInitial={"val": 0, "symbol": r"M^{K_{FG}}_{i,0}", "desc": "initial metal inventory of a final good capital firm"}
+        self.recMetalInventoryInitial={"val": 0, "symbol": r"M^{K_{RE}}_{i,0}", "desc": "initial metal inventory of a renewable energy capital firm"}
+        self.fecMetalInventoryInitial={"val": 0, "symbol": r"M^{K_{FE}}_{i,0}", "desc": "initial metal inventory of a fossil-fuel energy capital firm"}
+        self.mcMetalInventoryInitial={"val": 0, "symbol": r"M^{K_{M}}_{i,0}", "desc": "initial metal inventory of a metal capital firm"}
         
         self.foreignEconomyFuelInventoryInitial={"val": 1000000000, "symbol": r"\hat{F}^{FE}_{i,0}", "desc": "initial fuel inventory of the foreign economy"}
         self.feFuelInventoryInitial={"val": 0, "symbol": r"F_{i,0}", "desc": "initial fuel inventory of a fossil-fuel energy power plant"}
@@ -196,7 +196,7 @@ class Parameters:
         # self.xCapitalLoanDuration={"val": 0, "symbol": r"\eta^{K_{x}}", "desc": "duration of a loan to cover x type of capital investment"}
         # self.xLoanDuration={"val": 0, "symbol": r"\eta^{x}", "desc": "duration of a loan in sector x"}
         # self.xGracePeriod={"val": 0, "symbol": r"{gp}^{x}", "desc": "grace period of a loan in sector x"}
-        # self.xMaterialProductivity={"val": 0, "symbol": r"m^{K_{x}}", "desc": "material productivity in x type of capital sector"}
+        # self.xMetalProductivity={"val": 0, "symbol": r"m^{K_{x}}", "desc": "metal productivity in x type of capital sector"}
         # self.xDeliveryTime={"val": 0, "symbol": r"{dt}^{x}", "desc": "time to deliver x type of good"}
         # self.xCapitalRiskAversion={"val": 0, "symbol": r"\varsigma_{K_{x}}", "desc": "risk aversion of firms in x type of capital sector"}
 

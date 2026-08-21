@@ -1,8 +1,8 @@
 from parent import Parent
-from goods import Good, FinalGood, Capital, Material, Energy, Ore, Fuel, FinalGoodCapital, MaterialCapital, RenewableEnergyCapital, FossilFuelEnergyCapital, Labor
+from goods import Good, FinalGood, Capital, Metal, Energy, Ore, Fuel, FinalGoodCapital, MetalCapital, RenewableEnergyCapital, FossilFuelEnergyCapital, Labor
 # from agent import Agent
 from parameters import Parameters
-# from firmswithcapitalinputs import FirmWithCapitalInputs, FinalGoodFirm, MaterialFirm, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, ForeignEconomy
+# from firmswithcapitalinputs import FirmWithCapitalInputs, FinalGoodFirm, MetalFirm, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, ForeignEconomy
 # from capitalfirms import CapitalFirm
 # from basefirm import Firm
 # from markets import Contract
@@ -156,10 +156,10 @@ class FinalGoodCapitalInventory(CapitalInventory):
         self.goods_en_route: list[self.type_of_good] = []
 
 
-class MaterialCapitalInventory(CapitalInventory):
+class MetalCapitalInventory(CapitalInventory):
     def __init__(self, params, owner):
         super().__init__(params, owner)
-        self.type_of_good = MaterialCapital
+        self.type_of_good = MetalCapital
         self.goods: list[self.type_of_good] = []
         self.goods_en_route: list[self.type_of_good] = []
 
@@ -188,10 +188,10 @@ class FinalGoodInventory(Inventory):
         self.goods_en_route: list[self.type_of_good] = []
 
         
-class MaterialInventory(Inventory):
+class MetalInventory(Inventory):
     def __init__(self, params, owner):
         super().__init__(params, owner)
-        self.type_of_good = Material
+        self.type_of_good = Metal
         self.goods: list[self.type_of_good] = []
         self.goods_en_route: list[self.type_of_good] = []
 
@@ -199,7 +199,7 @@ class MaterialInventory(Inventory):
     def compute_productive_capacity(self):
         # self.owner: CapitalFirm
         return (sum([x.quantity for x in self.goods]) *
-                self.owner.material_productivity)
+                self.owner.metal_productivity)
 
 
 class EnergyInventory(Inventory):
@@ -224,7 +224,7 @@ class OreInventory(Inventory):
 
 
     def compute_productive_capacity(self):
-        # self.owner: MaterialFirm
+        # self.owner: MetalFirm
         return (sum([x.quantity for x in self.goods]) *
                 self.owner.ore_productivity)
     

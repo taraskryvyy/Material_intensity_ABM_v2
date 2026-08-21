@@ -39,7 +39,7 @@ class Bank(Agent):
                     grace_period=0,
                     comment=comment)
         if (sender.deposit.balance - amount) >= 0:
-            if sender.deposit.balance == amount and sender.__class__.__name__ == "MaterialFirm" and amount > 0:
+            if sender.deposit.balance == amount and sender.__class__.__name__ == "MetalFirm" and amount > 0:
                 pass
             # reduce own balance sheet
             self.deposit.balance -= amount
@@ -49,7 +49,7 @@ class Bank(Agent):
             recipient.deposit.balance += amount
             sender.cash_flows.append((comment, amount))
             recipient.cash_flows.append((comment, amount))
-            # if sender.deposit.balance == 0 and sender.__class__.__name__ == "MaterialFirm" and amount > 0:
+            # if sender.deposit.balance == 0 and sender.__class__.__name__ == "MetalFirm" and amount > 0:
             #     pass
             return True
         else:
@@ -129,7 +129,7 @@ class CommercialBank(Bank):
               borrower.__class__.__name__ == "FossilFuelEnergyPowerPlant")):
             granting_decision = True
         elif ((comment == "ore" or comment == "wage") and sum(borrower.past_output) == 0 
-              and borrower.__class__.__name__ == "MaterialFirm"):
+              and borrower.__class__.__name__ == "MetalFirm"):
             granting_decision = True
         elif comment == "wage" or comment == 'energy':
             granting_decision = True

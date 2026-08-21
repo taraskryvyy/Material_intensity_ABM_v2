@@ -32,10 +32,10 @@ class FinalGood(Good):
     def __init__(self, params, quantity, unit_price=1):
         super().__init__(params, quantity, unit_price)
 
-class Material(Good):
+class Metal(Good):
     def __init__(self, params, quantity, unit_price=1):
         super().__init__(params, quantity, unit_price)
-        self.delivery_time = params.materialDeliveryTime['val']
+        self.delivery_time = params.metalDeliveryTime['val']
 
 class Energy(Good):
     def __init__(self, params, quantity, unit_price=1):
@@ -57,7 +57,7 @@ class FinalGoodCapital(Capital):
         self.capital_depreciation_rate = params.fgCapitalDepreciationRate['val']
         self.delivery_time = params.fgCapitalDeliveryTime['val']
 
-class MaterialCapital(Capital):
+class MetalCapital(Capital):
     def __init__(self, params: Parameters, quantity, productivity, unit_price=1):
         super().__init__(params, quantity, unit_price, productivity)
         self.productivity = productivity

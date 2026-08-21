@@ -1,8 +1,8 @@
 from scipy.stats import norm
 from basefirm import Firm
 from agent import Agent
-from inventories import EnergyInventory, FinalGoodInventory, MaterialInventory, FinalGoodCapitalInventory, MaterialCapitalInventory, RenewableEnergyCapitalInventory, FossilFuelEnergyCapitalInventory, OreInventory, CapitalInventory, FuelInventory
-from goods import Ore, Material, FinalGood, Fuel, Energy
+from inventories import EnergyInventory, FinalGoodInventory, MetalInventory, FinalGoodCapitalInventory, MetalCapitalInventory, RenewableEnergyCapitalInventory, FossilFuelEnergyCapitalInventory, OreInventory, CapitalInventory, FuelInventory
+from goods import Ore, Metal, FinalGood, Fuel, Energy
 from parameters import Parameters
 from parent import Parent
 import random
@@ -156,24 +156,24 @@ class FinalGoodFirm(FirmWithCapitalInputs):
               self.market_share_change < 0):
             self.markup = self.markup * (1 - FN_markup)
 
-class MaterialFirm(FirmWithCapitalInputs):
+class MetalFirm(FirmWithCapitalInputs):
     instances = []
     retained_earnings = 0
     def __init__(self, params):
         super().__init__(params)
         self.__class__.instances.append(self)
-        self.capital_inventory: MaterialCapitalInventory = (
-            MaterialCapitalInventory(params, self))
-        self.output_inventory: MaterialInventory = (
-            MaterialInventory(params, self))
+        self.capital_inventory: MetalCapitalInventory = (
+            MetalCapitalInventory(params, self))
+        self.output_inventory: MetalInventory = (
+            MetalInventory(params, self))
         self.ore_inventory = OreInventory(params, self)
         self.mining_site = None
 
         self.labor_productivity = params.mLaborProductivity['val']
         self.ore_productivity = params.oreProductivity['val']
-        self_minimum_material_buffer = params.materialBuffer['val']
-        self_maximum_material_buffer = params.maximumMaterialBuffer['val']
-        self.material_buffer = params.materialBuffer['val']
+        self_minimum_metal_buffer = params.metalBuffer['val']
+        self_maximum_metal_buffer = params.maximumMetalBuffer['val']
+        self.metal_buffer = params.metalBuffer['val']
         self.markup = params.mMarkupInitial['val']
         self.capital_loan_duration = params.mCapitalLoanDuration['val']
         self.capital_delivery_time = params.mCapitalDeliveryTime['val']
@@ -213,9 +213,9 @@ class MaterialFirm(FirmWithCapitalInputs):
     #     self.mining_site: MiningSite = mining_site
     #     return mining_site
     
-    def compute_material_buffer(self, carbon_tax_growth_rate=0):
-        self.material_buffer = max(self.minimum_material_buffer, 
-                                   min(self.maximum_material_buffer, 
+    def compute_metal_buffer(self, carbon_tax_growth_rate=0):
+        self.metal_buffer = max(self.minimum_metal_buffer, 
+                                   min(self.maximum_metal_buffer, 
                                        carbon_tax_growth_rate))
 
     def pick_mining_site(self, mining_sites: list):
@@ -262,12 +262,12 @@ class MaterialFirm(FirmWithCapitalInputs):
             
             return best_site
     
-    # def compute_extra_material_buffer(self, ):
+    # def compute_extra_metal_buffer(self, ):
 
 
     def compute_desired_production(self):
         self.desired_production = max(0, (self.expected_demand * 
-                                   (1 + self.material_buffer) - 
+                                   (1 + self.metal_buffer) - 
                                    self.output_inventory.compute_capacity()))
         
     def compute_labor_demand(self):
@@ -355,10 +355,10 @@ class MaterialFirm(FirmWithCapitalInputs):
         self.capital_inventory.compute_capital_depreciation()
         if self.output > 0:
             self.compute_unit_cost()
-            material_produced = Material(params=self.params,
+            metal_produced = Metal(params=self.params,
                                         quantity=self.output,
                                         unit_price=self.unit_cost)
-            self.output_inventory.add_good(material_produced)
+            self.output_inventory.add_good(metal_produced)
         if len(self.capital_inventory.goods) > 0:
             self.age += 1
 

@@ -134,14 +134,14 @@ def generate_sensitivity_table():
         'oreCostParamTwo_0.1',
         'oreCostParamTwo_0.5',
         'oreCostParamTwo_0.9',
-        # Material Productivity of Renewable Energy Capital
-        'recMaterialProductivity_0.9',
-        'recMaterialProductivity_1.25',
-        'recMaterialProductivity_2',
-        # Material Productivity of Final Good Capital
-        'fgcMaterialProductivity_0.9',
-        'fgcMaterialProductivity_1',
-        'fgcMaterialProductivity_2',
+        # Metal Productivity of Renewable Energy Capital
+        'recMetalProductivity_0.9',
+        'recMetalProductivity_1.25',
+        'recMetalProductivity_2',
+        # Metal Productivity of Final Good Capital
+        'fgcMetalProductivity_0.9',
+        'fgcMetalProductivity_1',
+        'fgcMetalProductivity_2',
         # Useful Lifespan of Capital for Renewable Energy Sector
         'reCapitalLifeSpan_15',
         'reCapitalLifeSpan_20',
@@ -158,10 +158,10 @@ def generate_sensitivity_table():
         'sigmaSqOreDeposit_400',
         'sigmaSqOreDeposit_8000',
         'sigmaSqOreDeposit_16000',
-        # Adaptive Expectation of Material Price
-        'adaptiveExpectationMaterialPrice_0.1',
-        'adaptiveExpectationMaterialPrice_0.5',
-        'adaptiveExpectationMaterialPrice_0.9',
+        # Adaptive Expectation of Metal Price
+        'adaptiveExpectationMetalPrice_0.1',
+        'adaptiveExpectationMetalPrice_0.5',
+        'adaptiveExpectationMetalPrice_0.9',
         # Logit Competition Parameter When Picking Mining Site
         'logitCompetitionParamMining_0.01',
         'logitCompetitionParamMining_10',

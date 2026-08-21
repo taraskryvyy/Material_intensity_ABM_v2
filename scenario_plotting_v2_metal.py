@@ -6,14 +6,14 @@ import numpy as np
 
 from scenarios import scenarios as original_scenarios
 
-# Process all scenarios dynamically to replace 'material'/'Material' with 'metal'/'Metal' in names and groups
+# Process all scenarios dynamically to replace 'metal'/'Metal' with 'metal'/'Metal' in names and groups
 scenarios = {}
 for name, params in original_scenarios.items():
-    new_name = name.replace('Material', 'Metal').replace('material', 'metal')
+    new_name = name.replace('Metal', 'Metal').replace('metal', 'metal')
     new_params = {}
     for k, v in params.items():
         if k == 'group' and isinstance(v, str):
-            new_params[k] = v.replace('Material', 'Metal').replace('material', 'metal')
+            new_params[k] = v.replace('Metal', 'Metal').replace('metal', 'metal')
         else:
             new_params[k] = v
     scenarios[new_name] = new_params
@@ -42,8 +42,8 @@ def load_data(filepath='latest_results_agg_scenario_sims.csv'):
     print(f"Reading from {filepath}...")
     df = pd.read_csv(filepath)
     
-    # Rename scenarios (replace 'material' with 'metal')
-    df['Scenario'] = df['Scenario'].str.replace('Material', 'Metal').str.replace('material', 'metal')
+    # Rename scenarios (replace 'metal' with 'metal')
+    df['Scenario'] = df['Scenario'].str.replace('Metal', 'Metal').str.replace('metal', 'metal')
     
     df.set_index(['Scenario', 'Timestep Number', 'Metric'], inplace=True)
     new_order = ['Metric', 'Scenario', 'Timestep Number']
@@ -56,24 +56,24 @@ def plot_metrics_to_pdfs(df):
     smooth_figs = [
         'Renewable Energy capital price', 
         "Average ore extraction cost", 
-        "Material price", 
+        "Metal price", 
         "Bankruptcy rate", 
         "Total household dividend income", 
         "Electricity price",
         'Total GDP (Value Added)',
         'Final good GDP (Value Added)',
-        'Material GDP (Value Added)',
+        'Metal GDP (Value Added)',
         'Renewable Energy GDP (Value Added)',
         'Fossil Fuel Energy GDP (Value Added)',
         'Final good capital GDP (Value Added)',
         'Renewable Energy capital GDP (Value Added)',
         'Fossil Fuel Energy capital GDP (Value Added)',
-        'Material capital GDP (Value Added)',
+        'Metal capital GDP (Value Added)',
         'Mining GDP (Value Added)',
         # 'Ratio of total ore extraction cost to Total GDP (Value Added)',
-        'Material inventory-to-sales ratio',
-        'Total material sales (real)',
-        'Total material sales (nominal)',
+        'Metal inventory-to-sales ratio',
+        'Total metal sales (real)',
+        'Total metal sales (nominal)',
         # 'Renewable Energy market share'
     ]
     smooth_window = 10
@@ -87,23 +87,23 @@ def plot_metrics_to_pdfs(df):
         ('Total NPL balance', 'Total NPL balance', 'Total NPL balance', None),
         ('Commercial bank loan-to-deposit-ratio', 'Commercial bank loan-to-deposit-ratio', 'Commercial bank loan-to-deposit-ratio', None),
         ('Cumulative number of bankruptcies', 'Cumulative Number of Bankruptcies', 'Cumulative Number of Bankruptcies', None),
-        ('Cumulative number of bankrupt material firms', 'Cumulative Number of Bankrupt Material Firms', 'Cumulative Number of Bankrupt Material Firms', None),
+        ('Cumulative number of bankrupt metal firms', 'Cumulative Number of Bankrupt Metal Firms', 'Cumulative Number of Bankrupt Metal Firms', None),
         ('Cumulative number of bankrupt final good firms', 'Cumulative Number of Bankrupt Final Good Firms', 'Cumulative Number of Bankrupt Final Good Firms', None),
         ('Total household dividend income', 'Total Household Dividend Income', 'Total Household Dividend Income', None),
         ('Fuel price', 'Fuel Price', 'Fuel Price', None),
         ('Renewable Energy market share', 'Renewable Energy Market Share', 'Renewable Energy Market Share', None),
-        ('Material price', 'Material Price', 'Material Price', None),
-        ('Total material inventory', 'Total Material Inventory', 'Total Material Inventory', None),
+        ('Metal price', 'Metal Price', 'Metal Price', None),
+        ('Total metal inventory', 'Total Metal Inventory', 'Total Metal Inventory', None),
         ('Average ore extraction cost', 'Average Ore Extraction Cost', 'Average Ore Extraction Cost', None),
         ('Total ore reserves', 'Total Ore Reserves', 'Total Ore Reserves', None),
         ('Number of active mining sites', 'Number of Active Mining Sites', 'Number of Active Mining Sites', None),
         ('Average reserves per active mining site', 'Average Reserves per Active Mining site', 'Average Reserves per Active Mining Site', None),
         ('Final good NPL balance', 'Final good NPL balance', 'NPL balance', None),
-        ('Material NPL balance', 'Material NPL balance', 'NPL balance', None),
+        ('Metal NPL balance', 'Metal NPL balance', 'NPL balance', None),
         ('Renewable Energy NPL balance', 'Renewable Energy NPL balance', 'NPL balance', None),
         ('Fossil Fuel Energy NPL balance', 'Fossil Fuel Energy NPL balance', 'NPL balance', None),
-        ('Material average leverage ratio', 'Material average leverage ratio', 'Average leverage ratio', None),
-        ('Material inventory-to-assets ratio', 'Material inventory-to-assets ratio', 'Inventory / Assets', None),
+        ('Metal average leverage ratio', 'Metal average leverage ratio', 'Average leverage ratio', None),
+        ('Metal inventory-to-assets ratio', 'Metal inventory-to-assets ratio', 'Inventory / Assets', None),
         ('Final good output', 'Total Output', 'Total Output', None),
     ]
 
@@ -174,8 +174,8 @@ def plot_metrics_to_pdfs(df):
                     plt.plot(x, y, label=scenario, color=color)
                     plt.fill_between(x, y - y_err, y + y_err, color=color, alpha=0.2)
                 
-                display_title = title.replace('Material', 'Metal').replace('material', 'metal')
-                display_ylabel = ylabel.replace('Material', 'Metal').replace('material', 'metal')
+                display_title = title.replace('Metal', 'Metal').replace('metal', 'metal')
+                display_ylabel = ylabel.replace('Metal', 'Metal').replace('metal', 'metal')
                 plt.title(display_title)
                 plt.xlabel('Timestep Number')
                 plt.ylabel(display_ylabel)

@@ -7,7 +7,7 @@ from agent import Agent
 from basefirm import Firm
 from parameters import Parameters
 from household import Household
-from firmswithcapitalinputs import FirmWithCapitalInputs, FinalGoodFirm, MaterialFirm, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, PowerPlant
+from firmswithcapitalinputs import FirmWithCapitalInputs, FinalGoodFirm, MetalFirm, RenewableEnergyPowerPlant, FossilFuelEnergyPowerPlant, MiningSite, PowerPlant
 from capitalfirms import CapitalFirm
 
 class Order(Parent):
@@ -27,7 +27,7 @@ class BuyOrder(Order):
         self.budget = budget
         self.desired_extra_output = desired_extra_output
 
-# in case of capital goods, quantity = materials / mat_prod
+# in case of capital goods, quantity = metals / mat_prod
 class SellOrder(Order):
     def __init__(self, params, seller: Firm, 
                  seller_inventory: Inventory,
@@ -148,8 +148,8 @@ class Market(Parent):
         '''
         if isinstance(self, EnergyMarket):
             print("Energy market")
-        elif isinstance(self, MaterialMarket):
-            print("Material market")
+        elif isinstance(self, MetalMarket):
+            print("Metal market")
         # print("Sell prices: " + str([round(x,2) for x in self.sell_prices]))
         # print("Sell quants: " + str([round(x,2) for x in self.sell_quants]))
         print("Total demand: {:.2f}".format(self.total_demand))
@@ -432,20 +432,20 @@ class EnergyContract(Contract):
             # print("Energy sold at Price: {:.2f} Quantity: {:.2f}".format(self.price, self.quantity) + 
             #     " to " + self.buyer.__class__.__name__ + " " +  str(self.buyer.id) + " from " + str(self.seller.id))
 
-####################### MATERIAL MARKET #######################################
-class MaterialMarket(Market):
+####################### METAL MARKET #######################################
+class MetalMarket(Market):
     def __init__(self, params, buyers : list[CapitalFirm], 
                  sellers: list[Firm]):
         super().__init__(params)
         for buyer in buyers:
-            if buyer.material_demand > 0:
+            if buyer.metal_demand > 0:
                 buy_order = BuyOrder(params=self.params,
                                      buyer=buyer,
-                                     buyer_inventory=buyer.material_inventory,
-                                     quantity=buyer.material_demand)   
+                                     buyer_inventory=buyer.metal_inventory,
+                                     quantity=buyer.metal_demand)   
                 self.buy_orders.append(buy_order)
         for seller in sellers:
-            if isinstance(seller, MaterialFirm):
+            if isinstance(seller, MetalFirm):
                 seller_inventory = seller.output_inventory
                 sell_price = seller.price
                 supply = seller_inventory.compute_capacity()
@@ -456,10 +456,10 @@ class MaterialMarket(Market):
                     quantity=supply,
                     price=sell_price)
                 self.sell_orders.append(sell_order)
-            # elif isinstance(seller, CapitalFirm) and seller.material_demand < 0:
-            #     seller_inventory = seller.material_inventory
+            # elif isinstance(seller, CapitalFirm) and seller.metal_demand < 0:
+            #     seller_inventory = seller.metal_inventory
             #     sell_price = seller_inventory.compute_average_unit_price()
-            #     supply = -seller.material_demand
+            #     supply = -seller.metal_demand
             #     sell_order = SellOrder(
             #         params=self.params,
             #         seller=seller,
@@ -473,14 +473,14 @@ class MaterialMarket(Market):
         self.total_demand = sum([x.quantity for x in self.buy_orders])
         self.total_supply = sum([x.quantity for x in self.sell_orders])
         if self.total_supply == 0:
-            print("Zero material supply error")
+            print("Zero metal supply error")
 
     def sign_contracts(self):
         super().sign_contracts(demand_constraint="quantity",
-                               contract_type=MaterialContract,
+                               contract_type=MetalContract,
                                matching_criterion="price")
 
-class MaterialContract(Contract):
+class MetalContract(Contract):
     def __init__(self, params, buy_order, sell_order):
         super().__init__(params, buy_order, sell_order)
         self.quantity = min(buy_order.quantity, sell_order.quantity)
@@ -490,11 +490,11 @@ class MaterialContract(Contract):
     def get_settled(self):
         if self.buyer.deposit.transfer_cash(amount=self.price * self.quantity,
                                          recipient=self.seller,
-                                         comment='material'):
+                                         comment='metal'):
             self.seller_inventory.give_good(self)
-            self.buyer.income_statement.materials_cost += (self.price *
+            self.buyer.income_statement.metals_cost += (self.price *
                                                         self.quantity)
-            if isinstance(self.seller, MaterialFirm):
+            if isinstance(self.seller, MetalFirm):
                 self.seller.sales_real += self.quantity
                 self.seller.income_statement.sales_income += (self.price *
                                                             self.quantity)
@@ -507,9 +507,9 @@ class MaterialContract(Contract):
                 if self.round == 4:
                     self.seller.demand += 0.125 * self.quant_demanded
             # elif isinstance(self.seller, CapitalFirm):
-            #     self.buyer.income_statement.materials_cost -= (self.price *
+            #     self.buyer.income_statement.metals_cost -= (self.price *
             #                                                 self.quantity)
-            # print("Material sold at Price: {:.2f} Quantity: {:.2f}".format(self.price, self.quantity) + 
+            # print("Metal sold at Price: {:.2f} Quantity: {:.2f}".format(self.price, self.quantity) + 
             #     " to " + self.buyer.__class__.__name__ + " " +  str(self.buyer.id) + " from " + str(self.seller.id))
 
 ####################### CAPITAL GOOD MARKET ###################################
@@ -528,7 +528,7 @@ class CapitalGoodMarket(Market):
                                       buyer.desired_extra_output)   
                 self.buy_orders.append(buy_order)
         for seller in sellers:
-            # supply = seller.material_inventory.compute_productive_capacity()
+            # supply = seller.metal_inventory.compute_productive_capacity()
             # if supply > 0:
             sell_order = SellOrder(
                 params=self.params,

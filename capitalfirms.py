@@ -3,8 +3,8 @@ from scipy import stats
 from scipy.stats import norm
 import random
 import math
-from inventories import MaterialInventory, FinalGoodCapitalInventory, MaterialCapitalInventory, RenewableEnergyCapitalInventory, FossilFuelEnergyCapitalInventory
-from goods import FinalGoodCapital, MaterialCapital, RenewableEnergyCapital, FossilFuelEnergyCapital
+from inventories import MetalInventory, FinalGoodCapitalInventory, MetalCapitalInventory, RenewableEnergyCapitalInventory, FossilFuelEnergyCapitalInventory
+from goods import FinalGoodCapital, MetalCapital, RenewableEnergyCapital, FossilFuelEnergyCapital
 from parameters import Parameters
 
 class CapitalFirm(Firm):
@@ -18,10 +18,10 @@ class CapitalFirm(Firm):
         self.sigmaSqProductInnovation = params.sigmaSqProductInnovation['val']
         self.muProcessInnovation = params.muProcessInnovation['val']
         self.sigmaSqProcessInnovation = params.sigmaSqProcessInnovation['val']
-        self.material_demand = 0
-        self.material_buffer = params.materialBuffer['val']
+        self.metal_demand = 0
+        self.metal_buffer = params.metalBuffer['val']
         self.cash_buffer = params.cashBuffer['val']
-        self.material_productivity: float
+        self.metal_productivity: float
         self.RD_labor_demand = 0
         self.labor_demand = 0
         self.RD_budget = 0
@@ -29,7 +29,7 @@ class CapitalFirm(Firm):
         self.innovation_budget = 0
         self.imitation_budget = 0
         self.capital_orders = []
-        self.material_inventory = MaterialInventory(params, self)
+        self.metal_inventory = MetalInventory(params, self)
 
     def compute_price(self):
         # if self.output_inventory.compute_capacity() > 0:
@@ -37,11 +37,11 @@ class CapitalFirm(Firm):
         #         self.output_inventory.compute_average_unit_price())
         self.price = self.inventory_unit_cost * (1 + self.markup)
 
-    def compute_material_demand(self):
-        self.material_demand = ((1 + self.material_buffer) *
-                                self.desired_production / self.material_productivity -
-                                self.material_inventory.compute_capacity())
-        self.material_demand = max(0, self.material_demand)
+    def compute_metal_demand(self):
+        self.metal_demand = ((1 + self.metal_buffer) *
+                                self.desired_production / self.metal_productivity -
+                                self.metal_inventory.compute_capacity())
+        self.metal_demand = max(0, self.metal_demand)
 
     def compute_labor_demand(self):
         self.labor_demand = (self.RD_labor_demand +
@@ -59,12 +59,12 @@ class CapitalFirm(Firm):
         
     def produce_output(self):
         self.labor_capacity = self.labor_force.compute_productive_capacity()
-        self.material_capacity = (
-            self.material_inventory.compute_productive_capacity())
+        self.metal_capacity = (
+            self.metal_inventory.compute_productive_capacity())
         self.output = min(
             self.labor_capacity,
-            self.material_capacity)
-        if self.material_capacity > self.labor_capacity:
+            self.metal_capacity)
+        if self.metal_capacity > self.labor_capacity:
             pass
         if self.output < self.desired_production:
             pass
@@ -72,8 +72,8 @@ class CapitalFirm(Firm):
         if self.output > 0:
             self.labor_force.utilize_good(self.output / 
                                           self.labor_productivity)
-            self.material_inventory.utilize_good(self.output 
-                                                / self.material_productivity)
+            self.metal_inventory.utilize_good(self.output 
+                                                / self.metal_productivity)
 
         if self.output > 0:
             if self.__class__.__name__ == "FossilFuelEnergyCapitalFirm":
@@ -91,10 +91,10 @@ class CapitalFirm(Firm):
         self.capital_orders = []
 
 
-    def compute_material_price(self):
-        value = self.material_inventory.compute_inventory_value()
-        quantity = self.material_inventory.compute_capacity()
-        self.material_price = value / quantity
+    def compute_metal_price(self):
+        value = self.metal_inventory.compute_inventory_value()
+        quantity = self.metal_inventory.compute_capacity()
+        self.metal_price = value / quantity
 
     def plan_RD_budget(self):
         self.RD_budget = (
@@ -213,20 +213,20 @@ class FinalGoodCapitalFirm(CapitalFirm):
         self.__class__.instances.append(self)
         self.output_inventory = FinalGoodCapitalInventory(params, self)
         self.type_of_good = FinalGoodCapital
-        self.material_productivity = params.fgcMaterialProductivity['val']
+        self.metal_productivity = params.fgcMetalProductivity['val']
         self.capital_productivity = params.fgcCapitalProductivityInitial['val']
         self.labor_productivity = params.fgcLaborProductivityInitial['val']
         self.markup = params.fgcMarkup['val']
 
 
-class MaterialCapitalFirm(CapitalFirm):
+class MetalCapitalFirm(CapitalFirm):
     instances = []
     def __init__(self, params):
         super().__init__(params)
         self.__class__.instances.append(self)
-        self.output_inventory = MaterialCapitalInventory(params, self)
-        self.type_of_good = MaterialCapital
-        self.material_productivity = params.mcMaterialProductivity['val']
+        self.output_inventory = MetalCapitalInventory(params, self)
+        self.type_of_good = MetalCapital
+        self.metal_productivity = params.mcMetalProductivity['val']
         self.capital_productivity = params.mcCapitalProductivityInitial['val']
         self.labor_productivity = params.mcLaborProductivityInitial['val']
         self.markup = params.mcMarkup['val']
@@ -240,7 +240,7 @@ class RenewableEnergyCapitalFirm(CapitalFirm):
         self.__class__.instances.append(self)
         self.output_inventory = RenewableEnergyCapitalInventory(params, self)
         self.type_of_good = RenewableEnergyCapital
-        self.material_productivity = params.recMaterialProductivity['val']
+        self.metal_productivity = params.recMetalProductivity['val']
         self.capital_productivity = params.recCapitalProductivityInitial['val']
         self.labor_productivity = params.recLaborProductivityInitial['val']
         self.markup = params.recMarkup['val']
@@ -253,7 +253,7 @@ class FossilFuelEnergyCapitalFirm(CapitalFirm):
         self.__class__.instances.append(self)
         self.output_inventory = FossilFuelEnergyCapitalInventory(params, self)
         self.type_of_good = FossilFuelEnergyCapital
-        self.material_productivity = params.fecMaterialProductivity['val']
+        self.metal_productivity = params.fecMetalProductivity['val']
         self.capital_productivity = params.fecCapitalProductivityInitial['val']
         self.labor_productivity = params.fecLaborProductivityInitial['val']
         self.markup = params.fecMarkup['val']
